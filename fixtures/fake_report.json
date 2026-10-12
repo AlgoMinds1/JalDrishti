@@ -1,0 +1,22 @@
+{
+  "id": "uuid-placeholder",
+  "lat": 18.552,
+  "lon": 73.847,
+  "snapped_segment_id": "way/123456",
+  "time_server": "2026-10-12T15:23:00+05:30",
+  "text_original": "रस्त्यावर पाणी साचलंय",
+  "language": "mr",
+  "text_en": "Water has accumulated on the road",
+  "photo_path": null,
+  "reporter_id": "device_abc123",
+  "trust_score": 45,
+  "trust_reasons": {
+    "corroboration": 0,
+    "rain_plausibility": 20,
+    "terrain_plausibility": 15,
+    "reputation": 10,
+    "photo": 0,
+    "text_consistency": 0
+  },
+  "state": "Likely"
+}

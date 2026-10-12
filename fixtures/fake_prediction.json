@@ -1,0 +1,17 @@
+{
+  "segment_id": "way/123456",
+  "horizon_h": 2,
+  "risk_class": "high",
+  "probability": 0.72,
+  "confidence_level": "Medium",
+  "confidence_score": 0.61,
+  "conf_set_size": 2,
+  "top_reasons": [
+    "Low-lying terrain (HAND 1.2 m)",
+    "38 mm rain in last 3 h",
+    "2 past incidents on this segment"
+  ],
+  "rain_data_age_min": 18,
+  "is_ood": false,
+  "computed_at": "2026-10-12T15:00:00+05:30"
+}

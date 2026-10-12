@@ -1,0 +1,67 @@
+# ── Virtual Environments ─────────────────────────
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# ── Frontend & Node Dependencies ──────────────────
+node_modules/
+**/node_modules/
+frontend/dist/
+dist/
+build/
+.npm/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── Python Bytecode & Cache ───────────────────────
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# ── Secrets & Local Config ────────────────────────
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+!.env.example
+
+# ── Caches & Databases ────────────────────────────
+.cache/
+cache/
+*.sqlite
+*.sqlite3
+*.db
+
+# ── Heavy GIS / Raw Data Assets ───────────────────
+# Geotiffs & large graphs exceed GitHub file size limits (100MB limit).
+# Re-download anytime using `python scripts/download_*.py`.
+data/raw/*.tif
+data/raw/*.tiff
+data/raw/*.graphml
+data/raw/era5_*.csv
+
+# Keep sample / seed data and folder structures tracked:
+!data/raw/incidents.csv
+!data/raw/pmc/README.md
+!data/raw/**/.gitkeep
+
+# ── IDE & OS Files ────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
