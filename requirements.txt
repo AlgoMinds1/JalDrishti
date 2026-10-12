@@ -1,0 +1,59 @@
+# ── Core API ──────────────────────────────────────────────────────
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-multipart==0.0.9        # file uploads
+python-dotenv==1.0.1
+slowapi==0.1.9                 # rate limiting (replaces Redis for hackathon)
+httpx==0.27.2                  # async HTTP client for API calls
+
+# ── Database ───────────────────────────────────────────────────────
+sqlalchemy==2.0.35
+geoalchemy2==0.15.2
+psycopg2-binary==2.9.9         # Neon/Supabase postgres driver
+alembic==1.13.3                # DB migrations
+
+# ── ML / Data Science ─────────────────────────────────────────────
+lightgbm==4.5.0
+xgboost==2.1.1
+scikit-learn==1.5.2
+shap==0.46.0
+mapie==0.8.6                   # conformal prediction sets
+pandas==2.2.3
+numpy==1.26.4
+geopandas==1.0.1
+rasterio==1.3.11
+pysheds==0.4                   # flow accumulation / HAND computation
+osmnx==1.9.4                   # OSM road graph
+networkx==3.4.1
+
+# ── Rainfall / Terrain data ────────────────────────────────────────
+openmeteo-requests==1.3.0      # Open-Meteo API client
+retry-requests==2.0.0
+imdlib==0.1.22                 # IMD gridded rainfall
+
+# ── Image Processing ──────────────────────────────────────────────
+Pillow==10.4.0
+piexif==1.1.3                  # EXIF stripping
+imagehash==4.3.1               # perceptual hash for duplicate photo detection
+
+# ── LLM / AI ──────────────────────────────────────────────────────
+groq==0.11.0                   # Groq LLM + Whisper STT
+google-generativeai==0.8.1     # Gemini backup
+
+# ── Alerts ────────────────────────────────────────────────────────
+sib-api-v3-sdk==7.6.0          # Brevo (formerly Sendinblue) email
+python-telegram-bot==21.6      # Telegram bot alerts
+pywebpush==2.0.0               # Web Push VAPID notifications
+
+# ── Auth / Security ────────────────────────────────────────────────
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+
+# ── Caching (no Redis needed!) ─────────────────────────────────────
+cachetools==5.5.0              # TTL in-memory cache (replaces Redis)
+diskcache==5.6.3               # disk-backed cache for forecast fixtures
+
+# ── Utilities ─────────────────────────────────────────────────────
+pydantic==2.9.2
+pydantic-settings==2.5.2
+structlog==24.4.0              # structured logging
