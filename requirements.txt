@@ -3,63 +3,33 @@ fastapi>=0.110.0
 uvicorn[standard]>=0.30.0
 python-multipart>=0.0.9        # file uploads
 python-dotenv>=1.0.1
-slowapi>=0.1.9                 # rate limiting (replaces Redis for hackathon)
-httpx>=0.27.0                  # async HTTP client for API calls
+slowapi>=0.1.9                 # in-memory rate limiting
+httpx>=0.27.0                  # async HTTP client
 
 # ── Database ───────────────────────────────────────────────────────
 sqlalchemy>=2.0.30
 geoalchemy2>=0.15.0
-psycopg[binary]>=3.2.0            # Neon postgres driver (psycopg 3)
-alembic>=1.13.0                # DB migrations
+psycopg[binary]>=3.2.0         # Neon postgres driver (psycopg 3)
 
-# ── ML / Data Science ─────────────────────────────────────────────
-lightgbm>=4.5.0
-xgboost>=2.1.0
-scikit-learn>=1.5.0
-shap>=0.46.0
+# ── ML / Inference Runtime (model_v1.pkl serving) ──────────────────
+lightgbm>=4.5.0                # core classifier model
+scikit-learn>=1.5.0            # IsolationForest anomaly detection & metrics
+shap>=0.46.0                   # TreeExplainer plain-language reasons
 mapie>=0.8.0                   # conformal prediction sets
 pandas>=2.2.0
 numpy>=1.26.0
-geopandas>=0.14.0
 shapely>=2.0.0
-scipy>=1.13.0
-joblib>=1.4.0
-rasterio>=1.3.10
-pysheds>=0.4
-osmnx>=1.9.0                   # OSM road graph
-networkx>=3.0
+scipy>=1.13.0                  # KDTree spatial snapping in routing
+joblib>=1.4.0                  # model artifact deserialization
+networkx>=3.0                  # road network routing engine
 
-# ── Rainfall / Terrain data ────────────────────────────────────────
-openmeteo-requests>=1.3.0      # Open-Meteo API client
-retry-requests>=2.0.0
-requests-cache>=1.2.0
-imdlib>=0.1.22                 # IMD gridded rainfall
-
-# ── Image Processing ──────────────────────────────────────────────
-Pillow>=10.4.0
-piexif>=1.1.3                  # EXIF stripping
-imagehash>=4.3.1               # perceptual hash for duplicate photo detection
-
-# ── LLM / AI ──────────────────────────────────────────────────────
-groq>=0.11.0                   # Groq LLM + Whisper STT
-google-generativeai>=0.8.0     # Gemini backup
-
-# ── Alerts ────────────────────────────────────────────────────────
-sib-api-v3-sdk>=7.6.0          # Brevo (formerly Sendinblue) email
-python-telegram-bot>=21.6      # Telegram bot alerts
-pywebpush>=2.0.0               # Web Push VAPID notifications
-
-# ── Auth / Security ────────────────────────────────────────────────
-python-jose[cryptography]>=3.3.0
-passlib[bcrypt]>=1.7.4
-
-# ── Caching (no Redis needed!) ─────────────────────────────────────
-cachetools>=5.5.0              # TTL in-memory cache (replaces Redis)
+# ── Caching ────────────────────────────────────────────────────────
+cachetools>=5.5.0              # TTL in-memory cache
 diskcache>=5.6.0               # disk-backed cache for forecast fixtures
 
-# ── Utilities ─────────────────────────────────────────────────────
+# ── Utilities ──────────────────────────────────────────────────────
 pydantic>=2.9.0
 pydantic-settings>=2.5.0
-structlog>=24.4.0              # structured logging
-boto3                          # S3 downloads for DEM/HAND
-py-vapid                       # VAPID keys for Web Push
+
+# Note: Training-only and spatial ingestion packages (xgboost-cpu, rasterio,
+# geopandas, osmnx, etc.) are in requirements-train.txt.

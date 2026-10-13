@@ -26,14 +26,21 @@ app = FastAPI(
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# CORS middleware for React frontend (supports Vercel, localhost, and custom domains)
-cors_env = os.getenv("CORS_ORIGINS", "")
+# CORS middleware for React frontend (supports Vercel production & preview deployments)
+cors_env = os.getenv(
+    "CORS_ORIGINS",
+    "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:8000"
+)
 allowed_origins = [o.strip() for o in cors_env.split(",") if o.strip()]
+
+# Regex to match Vercel production/preview subdomains (e.g. https://*-team.vercel.app) and local dev
+default_cors_regex = r"https://.*\.vercel\.app|https://.*\.onrender\.com|https?://localhost(:\d+)?|https?://127\.0\.0\.1(:\d+)?"
+cors_origin_regex = os.getenv("CORS_ORIGIN_REGEX", default_cors_regex)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
-    allow_origin_regex=r"https?://.*",
+    allow_origin_regex=cors_origin_regex if cors_origin_regex else None,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

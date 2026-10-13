@@ -1,0 +1,24 @@
+# Backend code and serverless function detection prevention
+api/
+data/
+ml/
+pipeline/
+trust/
+scripts/
+fixtures/
+tests/
+sources/
+
+# Python configuration and dependencies
+requirements.txt
+requirements-train.txt
+runtime.txt
+.python-version
+render.yaml
+
+# Local data caches and models
+cache/
+*.pkl
+*.graphml
+*.tif
+*.geojson
