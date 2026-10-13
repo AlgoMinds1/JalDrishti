@@ -10,4 +10,4 @@ services:
       - key: CORS_ORIGIN_REGEX
         value: "https?://.*"
       - key: PYTHON_VERSION
-        value: "3.11.9"
+        value: "3.12.8"

@@ -9,7 +9,7 @@ httpx>=0.27.0                  # async HTTP client for API calls
 # ── Database ───────────────────────────────────────────────────────
 sqlalchemy>=2.0.30
 geoalchemy2>=0.15.0
-psycopg2-binary>=2.9.9         # Neon postgres driver
+psycopg[binary]>=3.2.0            # Neon postgres driver (psycopg 3)
 alembic>=1.13.0                # DB migrations
 
 # ── ML / Data Science ─────────────────────────────────────────────
@@ -21,6 +21,9 @@ mapie>=0.8.0                   # conformal prediction sets
 pandas>=2.2.0
 numpy>=1.26.0
 geopandas>=0.14.0
+shapely>=2.0.0
+scipy>=1.13.0
+joblib>=1.4.0
 rasterio>=1.3.10
 pysheds>=0.4
 osmnx>=1.9.0                   # OSM road graph
