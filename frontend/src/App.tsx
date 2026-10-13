@@ -25,6 +25,14 @@ export function App() {
   const [rainAgeMin, setRainAgeMin] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [stats, setStats] = useState({ low: 0, moderate: 0, high: 0, severe: 0 });
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    return (localStorage.getItem('jaldrishti_theme') as 'light' | 'dark') || 'light';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('jaldrishti_theme', theme);
+  }, [theme]);
 
   // Fetch predictions for the active horizon and scenario
   const fetchPredictions = useCallback(async () => {
@@ -105,6 +113,8 @@ export function App() {
         isRoutePlannerOpen={isRoutePlannerOpen}
         onToggleRoutePlanner={() => setIsRoutePlannerOpen(!isRoutePlannerOpen)}
         onOpenAdminModal={() => setIsAdminModalOpen(true)}
+        theme={theme}
+        setTheme={setTheme}
       />
 
       {/* Main Content Area */}

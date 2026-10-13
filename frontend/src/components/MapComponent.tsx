@@ -92,14 +92,14 @@ const CustomZoomControl: FC = () => {
           width: '36px',
           height: '36px',
           borderRadius: '8px',
-          border: '1px solid rgba(255,255,255,0.15)',
-          background: 'rgba(19, 27, 46, 0.92)',
-          color: '#f8fafc',
+          border: '1px solid var(--border-color)',
+          background: 'var(--bg-widget)',
+          color: 'var(--text-main)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           cursor: 'pointer',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+          boxShadow: 'var(--shadow-card)',
           transition: 'all 0.15s ease'
         }}
       >
@@ -112,14 +112,14 @@ const CustomZoomControl: FC = () => {
           width: '36px',
           height: '36px',
           borderRadius: '8px',
-          border: '1px solid rgba(255,255,255,0.15)',
-          background: 'rgba(19, 27, 46, 0.92)',
-          color: '#f8fafc',
+          border: '1px solid var(--border-color)',
+          background: 'var(--bg-widget)',
+          color: 'var(--text-main)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           cursor: 'pointer',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+          boxShadow: 'var(--shadow-card)',
           transition: 'all 0.15s ease'
         }}
       >
@@ -244,29 +244,29 @@ export const MapComponent: FC<MapComponentProps> = ({
             gap: '8px',
             padding: '8px 14px',
             borderRadius: '10px',
-            border: '1px solid rgba(255, 255, 255, 0.16)',
-            background: 'rgba(19, 27, 46, 0.92)',
+            border: '1px solid var(--border-color)',
+            background: 'var(--bg-widget)',
             backdropFilter: 'blur(12px)',
-            color: '#f8fafc',
+            color: 'var(--text-main)',
             fontSize: '13px',
             fontWeight: 600,
             cursor: 'pointer',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+            boxShadow: 'var(--shadow-widget)',
             transition: 'all 0.2s ease'
           }}
         >
-          <Layers size={16} color="#38bdf8" />
+          <Layers size={16} color="var(--accent-cyan)" />
           <span>Map: {activeBasemap.name}</span>
         </button>
 
         {isLayerMenuOpen && (
           <div style={{
-            background: 'rgba(19, 27, 46, 0.96)',
+            background: 'var(--bg-widget)',
             backdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255, 255, 255, 0.14)',
+            border: '1px solid var(--border-color)',
             borderRadius: '12px',
             padding: '8px',
-            boxShadow: '0 12px 30px rgba(0,0,0,0.5)',
+            boxShadow: 'var(--shadow-widget)',
             display: 'flex',
             flexDirection: 'column',
             gap: '4px',
@@ -276,7 +276,7 @@ export const MapComponent: FC<MapComponentProps> = ({
               fontSize: '11px',
               textTransform: 'uppercase',
               letterSpacing: '0.5px',
-              color: '#94a3b8',
+              color: 'var(--text-muted)',
               fontWeight: 700,
               padding: '4px 8px 6px'
             }}>
@@ -295,15 +295,15 @@ export const MapComponent: FC<MapComponentProps> = ({
                     padding: '8px 10px',
                     borderRadius: '8px',
                     border: 'none',
-                    background: isSelected ? 'rgba(56, 189, 248, 0.18)' : 'transparent',
-                    color: isSelected ? '#38bdf8' : '#e2e8f0',
+                    background: isSelected ? 'var(--accent-cyan-light)' : 'transparent',
+                    color: isSelected ? 'var(--accent-cyan)' : 'var(--text-main)',
                     fontSize: '12px',
                     cursor: 'pointer',
                     textAlign: 'left',
                     transition: 'background 0.15s ease'
                   }}
                   onMouseEnter={(e) => {
-                    if (!isSelected) e.currentTarget.style.background = 'rgba(255,255,255,0.06)';
+                    if (!isSelected) e.currentTarget.style.background = 'var(--bg-pill-hover)';
                   }}
                   onMouseLeave={(e) => {
                     if (!isSelected) e.currentTarget.style.background = 'transparent';
@@ -311,9 +311,9 @@ export const MapComponent: FC<MapComponentProps> = ({
                 >
                   <div>
                     <div style={{ fontWeight: 600 }}>{opt.name}</div>
-                    <div style={{ fontSize: '10px', color: '#94a3b8' }}>{opt.tag}</div>
+                    <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{opt.tag}</div>
                   </div>
-                  {isSelected && <Check size={14} color="#38bdf8" />}
+                  {isSelected && <Check size={14} color="var(--accent-cyan)" />}
                 </button>
               );
             })}

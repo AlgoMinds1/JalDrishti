@@ -93,7 +93,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
       left: 0,
       width: '100vw',
       height: '100vh',
-      background: 'rgba(2, 6, 23, 0.85)',
+      background: 'rgba(2, 6, 23, 0.65)',
       backdropFilter: 'blur(8px)',
       zIndex: 2500,
       display: 'flex',
@@ -109,8 +109,8 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
-        boxShadow: '0 25px 60px rgba(0,0,0,0.85)',
-        border: '1px solid rgba(255, 255, 255, 0.12)'
+        boxShadow: 'var(--shadow-widget)',
+        border: '1px solid var(--border-color)'
       }}>
         {/* Prominent Simulation Watermark Banner */}
         <div style={{
@@ -137,20 +137,20 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
+          borderBottom: '1px solid var(--border-color)'
         }}>
           <div>
-            <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Sliders size={20} color="#38bdf8" />
+            <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Sliders size={20} color="var(--accent-cyan)" />
               Admin Operations & What-If Storm Sandbox
             </h2>
-            <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 0 0' }}>
+            <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
               Evaluate hypothetical cloudburst stress tests, inspect prioritized road queues, and audit civic repairs.
             </p>
           </div>
           <button
             onClick={onClose}
-            style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '4px' }}
+            style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}
           >
             <X size={20} />
           </button>
@@ -161,8 +161,8 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
           display: 'flex',
           gap: '8px',
           padding: '12px 24px',
-          background: 'rgba(15, 23, 42, 0.5)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
+          background: 'var(--bg-pill)',
+          borderBottom: '1px solid var(--border-color)'
         }}>
           {[
             { id: 'sandbox', label: 'What-If Storm Sandbox', icon: <Sliders size={14} /> },
@@ -180,7 +180,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                 borderRadius: '6px',
                 border: 'none',
                 background: activeSubTab === tab.id ? '#0284c7' : 'transparent',
-                color: activeSubTab === tab.id ? '#ffffff' : '#94a3b8',
+                color: activeSubTab === tab.id ? '#ffffff' : 'var(--text-muted)',
                 fontSize: '12px',
                 fontWeight: 600,
                 cursor: 'pointer'
@@ -326,15 +326,15 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                         fontSize: '12px'
                       }}>
                         <div>
-                          <span style={{ fontWeight: 700, color: '#f8fafc' }}>#{idx + 1} {fc.name}</span>
-                          <span style={{ color: '#94a3b8', marginLeft: '8px' }}>({fc.road_class}{fc.is_underpass ? ' • UNDERPASS' : ''})</span>
+                          <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>#{idx + 1} {fc.name}</span>
+                          <span style={{ color: 'var(--text-muted)', marginLeft: '8px' }}>({fc.road_class}{fc.is_underpass ? ' • UNDERPASS' : ''})</span>
                         </div>
                         <span style={{
                           padding: '3px 8px',
                           borderRadius: '4px',
                           fontWeight: 700,
-                          background: fc.risk_class === 'severe' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(249, 115, 22, 0.2)',
-                          color: fc.risk_class === 'severe' ? '#ef4444' : '#f97316'
+                          background: fc.risk_class === 'severe' ? 'var(--risk-severe-bg)' : 'var(--risk-high-bg)',
+                          color: fc.risk_class === 'severe' ? 'var(--risk-severe)' : 'var(--risk-high)'
                         }}>
                           {fc.risk_class.toUpperCase()} ({Math.round(fc.probability * 100)}%)
                         </span>
@@ -351,34 +351,34 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
                 <div>
-                  <h4 style={{ fontSize: '14px', color: '#f8fafc', margin: 0, fontWeight: 700 }}>
+                  <h4 style={{ fontSize: '14px', color: 'var(--text-main)', margin: 0, fontWeight: 700 }}>
                     Priority-Ranked Deployment Queue (At {rainfallMm} mm Stress Test)
                   </h4>
-                  <p style={{ fontSize: '11px', color: '#94a3b8', margin: '2px 0 0 0' }}>
+                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: '2px 0 0 0' }}>
                     Ranked by Priority Score = Risk Weight × Exposure Score × Citizen Corroboration
                   </p>
                 </div>
-                <span style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 600 }}>Top 10 High-Priority Dispatches</span>
+                <span style={{ fontSize: '11px', color: 'var(--accent-cyan)', fontWeight: 600 }}>Top 10 High-Priority Dispatches</span>
               </div>
 
               <div style={{ overflowX: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
                   <thead>
-                    <tr style={{ background: 'rgba(15, 23, 42, 0.8)', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                      <th style={{ padding: '10px 8px', color: '#94a3b8' }}>Rank</th>
-                      <th style={{ padding: '10px 8px', color: '#94a3b8' }}>Segment Name</th>
-                      <th style={{ padding: '10px 8px', color: '#94a3b8' }}>Priority</th>
-                      <th style={{ padding: '10px 8px', color: '#94a3b8' }}>Risk Class</th>
-                      <th style={{ padding: '10px 8px', color: '#94a3b8' }}>Recommended Action</th>
+                    <tr style={{ background: 'var(--bg-pill)', borderBottom: '1px solid var(--border-color)' }}>
+                      <th style={{ padding: '10px 8px', color: 'var(--text-muted)' }}>Rank</th>
+                      <th style={{ padding: '10px 8px', color: 'var(--text-muted)' }}>Segment Name</th>
+                      <th style={{ padding: '10px 8px', color: 'var(--text-muted)' }}>Priority</th>
+                      <th style={{ padding: '10px 8px', color: 'var(--text-muted)' }}>Risk Class</th>
+                      <th style={{ padding: '10px 8px', color: 'var(--text-muted)' }}>Recommended Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {queueData.map((item: any) => (
-                      <tr key={item.rank} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
-                        <td style={{ padding: '10px 8px', fontWeight: 700, color: '#38bdf8' }}>#{item.rank}</td>
-                        <td style={{ padding: '10px 8px', color: '#f8fafc', fontWeight: 600 }}>
+                      <tr key={item.rank} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                        <td style={{ padding: '10px 8px', fontWeight: 700, color: 'var(--accent-cyan)' }}>#{item.rank}</td>
+                        <td style={{ padding: '10px 8px', color: 'var(--text-main)', fontWeight: 600 }}>
                           {item.name}
-                          {item.is_underpass && <span style={{ color: '#ef4444', marginLeft: '6px', fontSize: '10px' }}>[UNDERPASS]</span>}
+                          {item.is_underpass && <span style={{ color: 'var(--risk-severe)', marginLeft: '6px', fontSize: '10px' }}>[UNDERPASS]</span>}
                         </td>
                         <td style={{ padding: '10px 8px', fontWeight: 700, color: '#e2e8f0' }}>{item.priority_score}</td>
                         <td style={{ padding: '10px 8px' }}>
@@ -407,10 +407,10 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
-                  <h4 style={{ fontSize: '14px', color: '#f8fafc', margin: 0, fontWeight: 700 }}>
+                  <h4 style={{ fontSize: '14px', color: 'var(--text-main)', margin: 0, fontWeight: 700 }}>
                     Civic Drainage Intervention Effectiveness Ledger
                   </h4>
-                  <p style={{ fontSize: '11px', color: '#94a3b8', margin: '2px 0 0 0' }}>
+                  <p style={{ fontSize: '11px', color: 'var(--text-muted)', margin: '2px 0 0 0' }}>
                     Before vs After flood frequency comparison for comparable rainfall events (±20% intensity window).
                   </p>
                 </div>
@@ -438,19 +438,19 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {ledgerData.map((item: any) => (
                   <div key={item.intervention_id} style={{
-                    background: 'rgba(15, 23, 42, 0.6)',
+                    background: 'var(--bg-pill)',
                     borderRadius: '12px',
                     padding: '16px',
-                    border: '1px solid rgba(255, 255, 255, 0.08)'
+                    border: '1px solid var(--border-color)'
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                       <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 600 }}>{item.intervention_id}</span>
-                          <span style={{ fontSize: '11px', color: '#64748b' }}>• Completed: {item.completion_date}</span>
+                          <span style={{ fontSize: '11px', color: 'var(--accent-cyan)', fontWeight: 600 }}>{item.intervention_id}</span>
+                          <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>• Completed: {item.completion_date}</span>
                         </div>
-                        <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#f8fafc', margin: '4px 0' }}>{item.name}</h4>
-                        <div style={{ fontSize: '12px', color: '#94a3b8' }}>Target: {item.segment_name} ({item.agency})</div>
+                        <h4 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-main)', margin: '4px 0' }}>{item.name}</h4>
+                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Target: {item.segment_name} ({item.agency})</div>
                       </div>
                       <div style={{
                         background: 'rgba(16, 185, 129, 0.15)',
@@ -532,41 +532,41 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                     gap: '12px'
                   }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <h4 style={{ margin: 0, color: '#f8fafc', fontSize: '15px' }}>Log Civic Intervention</h4>
-                      <button onClick={() => setShowLogModal(false)} style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+                      <h4 style={{ margin: 0, color: 'var(--text-main)', fontSize: '15px' }}>Log Civic Intervention</h4>
+                      <button onClick={() => setShowLogModal(false)} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
                         <X size={18} />
                       </button>
                     </div>
 
                     <form onSubmit={handleLogIntervention} style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12px' }}>
                       <div>
-                        <label style={{ color: '#94a3b8' }}>Intervention Name:</label>
+                        <label style={{ color: 'var(--text-muted)' }}>Intervention Name:</label>
                         <input
                           type="text"
                           required
                           value={newIntervention.name}
                           onChange={(e) => setNewIntervention({ ...newIntervention, name: e.target.value })}
                           placeholder="e.g. Pashan Lake Outlet Desilting"
-                          style={{ width: '100%', padding: '8px', background: 'rgba(15,23,42,0.8)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '6px', marginTop: '4px' }}
+                          style={{ width: '100%', padding: '8px', background: 'var(--bg-pill)', border: '1px solid var(--border-color)', color: 'var(--text-main)', borderRadius: '6px', marginTop: '4px' }}
                         />
                       </div>
                       <div>
-                        <label style={{ color: '#94a3b8' }}>Target Road Segment Name:</label>
+                        <label style={{ color: 'var(--text-muted)' }}>Target Road Segment Name:</label>
                         <input
                           type="text"
                           required
                           value={newIntervention.segment_name}
                           onChange={(e) => setNewIntervention({ ...newIntervention, segment_name: e.target.value })}
                           placeholder="e.g. Pashan Circle / Ramnadi Canal"
-                          style={{ width: '100%', padding: '8px', background: 'rgba(15,23,42,0.8)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '6px', marginTop: '4px' }}
+                          style={{ width: '100%', padding: '8px', background: 'var(--bg-pill)', border: '1px solid var(--border-color)', color: 'var(--text-main)', borderRadius: '6px', marginTop: '4px' }}
                         />
                       </div>
                       <div>
-                        <label style={{ color: '#94a3b8' }}>Intervention Type:</label>
+                        <label style={{ color: 'var(--text-muted)' }}>Intervention Type:</label>
                         <select
                           value={newIntervention.type}
                           onChange={(e) => setNewIntervention({ ...newIntervention, type: e.target.value })}
-                          style={{ width: '100%', padding: '8px', background: 'rgba(15,23,42,0.8)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '6px', marginTop: '4px' }}
+                          style={{ width: '100%', padding: '8px', background: 'var(--bg-pill)', border: '1px solid var(--border-color)', color: 'var(--text-main)', borderRadius: '6px', marginTop: '4px' }}
                         >
                           <option value="desilting">Drainage & Nala Desilting</option>
                           <option value="pump_installation">High-Capacity Dewatering Pump</option>
@@ -575,13 +575,13 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                         </select>
                       </div>
                       <div>
-                        <label style={{ color: '#94a3b8' }}>Scope Description:</label>
+                        <label style={{ color: 'var(--text-muted)' }}>Scope Description:</label>
                         <textarea
                           rows={2}
                           value={newIntervention.description}
                           onChange={(e) => setNewIntervention({ ...newIntervention, description: e.target.value })}
                           placeholder="Details of civil work..."
-                          style={{ width: '100%', padding: '8px', background: 'rgba(15,23,42,0.8)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '6px', marginTop: '4px' }}
+                          style={{ width: '100%', padding: '8px', background: 'var(--bg-pill)', border: '1px solid var(--border-color)', color: 'var(--text-main)', borderRadius: '6px', marginTop: '4px' }}
                         />
                       </div>
                       <button

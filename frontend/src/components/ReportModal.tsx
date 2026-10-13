@@ -103,18 +103,18 @@ export const ReportModal: FC<ReportModalProps> = ({
         maxWidth: '480px',
         borderRadius: '16px',
         padding: '24px',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.8)',
+        boxShadow: 'var(--shadow-widget)',
         position: 'relative'
       }}>
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <MapPin size={20} color="#38bdf8" />
-            <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#f8fafc' }}>
+            <MapPin size={20} color="var(--accent-cyan)" />
+            <h3 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-main)' }}>
               Report Road Waterlogging
             </h3>
           </div>
-          <button onClick={handleReset} style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+          <button onClick={handleReset} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
             <X size={20} />
           </button>
         </div>
@@ -122,27 +122,27 @@ export const ReportModal: FC<ReportModalProps> = ({
         {submissionResult ? (
           /* Submission Feedback with Trust Engine Score */
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', textAlign: 'center', padding: '12px 0' }}>
-            <div style={{ margin: '0 auto', width: '48px', height: '48px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <CheckCircle2 size={28} color="#10b981" />
+            <div style={{ margin: '0 auto', width: '48px', height: '48px', borderRadius: '50%', background: 'var(--risk-low-bg)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <CheckCircle2 size={28} color="var(--risk-low)" />
             </div>
-            <h4 style={{ fontSize: '17px', fontWeight: 700, color: '#f8fafc' }}>
+            <h4 style={{ fontSize: '17px', fontWeight: 700, color: 'var(--text-main)' }}>
               Report Ingested by Trust Engine
             </h4>
-            <div style={{ background: 'rgba(15, 23, 42, 0.6)', padding: '14px', borderRadius: '10px', fontSize: '13px', textAlign: 'left' }}>
+            <div style={{ background: 'var(--bg-pill)', border: '1px solid var(--border-color)', padding: '14px', borderRadius: '10px', fontSize: '13px', textAlign: 'left' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <span style={{ color: '#94a3b8' }}>Trust Score:</span>
-                <span style={{ fontWeight: 700, color: '#38bdf8' }}>{submissionResult.trust_score} / 100</span>
+                <span style={{ color: 'var(--text-muted)' }}>Trust Score:</span>
+                <span style={{ fontWeight: 700, color: 'var(--accent-cyan)' }}>{submissionResult.trust_score} / 100</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <span style={{ color: '#94a3b8' }}>Verification State:</span>
+                <span style={{ color: 'var(--text-muted)' }}>Verification State:</span>
                 <span style={{
                   fontWeight: 700,
-                  color: submissionResult.state === 'Likely' ? '#f59e0b' : (submissionResult.state === 'Confirmed' ? '#10b981' : '#94a3b8')
+                  color: submissionResult.state === 'Likely' ? 'var(--risk-moderate)' : (submissionResult.state === 'Confirmed' ? 'var(--risk-low)' : 'var(--text-muted)')
                 }}>
                   {submissionResult.state}
                 </span>
               </div>
-              <div style={{ fontSize: '11px', color: '#64748b', marginTop: '8px', lineHeight: '1.4' }}>
+              <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '8px', lineHeight: '1.4' }}>
                 ℹ️ Strict Safety Rule: No single report triggers an alert alone. Independent corroboration from a second nearby citizen is required to elevate to Likely/Confirmed.
               </div>
             </div>
@@ -165,30 +165,30 @@ export const ReportModal: FC<ReportModalProps> = ({
           /* Report Intake Form */
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {errorMessage && (
-              <div style={{ background: 'rgba(239, 68, 68, 0.2)', border: '1px solid #ef4444', borderRadius: '8px', padding: '10px', fontSize: '12px', color: '#fca5a5', display: 'flex', gap: '8px', alignItems: 'center' }}>
+              <div style={{ background: 'var(--risk-severe-bg)', border: '1px solid var(--risk-severe)', borderRadius: '8px', padding: '10px', fontSize: '12px', color: 'var(--risk-severe)', display: 'flex', gap: '8px', alignItems: 'center' }}>
                 <AlertCircle size={16} />
                 <span>{errorMessage}</span>
               </div>
             )}
 
             {/* Coordinates / Road Snap preview */}
-            <div style={{ background: 'rgba(15, 23, 42, 0.5)', padding: '10px 12px', borderRadius: '8px', fontSize: '12px', color: '#94a3b8', display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ background: 'var(--bg-pill)', border: '1px solid var(--border-color)', padding: '10px 12px', borderRadius: '8px', fontSize: '12px', color: 'var(--text-muted)', display: 'flex', justifyContent: 'space-between' }}>
               <span>Location: {lat.toFixed(4)}° N, {lon.toFixed(4)}° E</span>
-              <span style={{ color: '#38bdf8', fontWeight: 600 }}>Pune Pilot Corridor</span>
+              <span style={{ color: 'var(--accent-cyan)', fontWeight: 600 }}>Pune Pilot Corridor</span>
             </div>
 
             {/* Language Selector */}
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <span style={{ fontSize: '12px', color: '#94a3b8' }}>Language:</span>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Language:</span>
               {(['mr', 'hi', 'en'] as const).map((lang) => (
                 <button
                   type="button"
                   key={lang}
                   onClick={() => setLanguage(lang)}
                   style={{
-                    background: language === lang ? '#0284c7' : 'rgba(30, 41, 59, 0.6)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    color: language === lang ? '#fff' : '#94a3b8',
+                    background: language === lang ? '#0284c7' : 'var(--bg-pill)',
+                    border: '1px solid var(--border-color)',
+                    color: language === lang ? '#fff' : 'var(--text-main)',
                     padding: '3px 8px',
                     borderRadius: '5px',
                     fontSize: '11px',
@@ -202,7 +202,7 @@ export const ReportModal: FC<ReportModalProps> = ({
 
             {/* Description Text Input */}
             <div>
-              <label style={{ fontSize: '12px', color: '#cbd5e1', fontWeight: 600, display: 'block', marginBottom: '6px' }}>
+              <label style={{ fontSize: '12px', color: 'var(--text-main)', fontWeight: 600, display: 'block', marginBottom: '6px' }}>
                 Water Condition Description:
               </label>
               <textarea
@@ -212,10 +212,10 @@ export const ReportModal: FC<ReportModalProps> = ({
                 rows={3}
                 style={{
                   width: '100%',
-                  background: 'rgba(15, 23, 42, 0.8)',
-                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  background: 'var(--bg-pill)',
+                  border: '1px solid var(--border-color)',
                   borderRadius: '8px',
-                  color: '#f8fafc',
+                  color: 'var(--text-main)',
                   padding: '10px',
                   fontSize: '13px',
                   fontFamily: 'inherit',
@@ -234,9 +234,9 @@ export const ReportModal: FC<ReportModalProps> = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                background: isListening ? '#ef4444' : 'rgba(30, 41, 59, 0.8)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                color: '#f8fafc',
+                background: isListening ? '#ef4444' : 'var(--bg-pill)',
+                border: '1px solid var(--border-color)',
+                color: isListening ? '#ffffff' : 'var(--text-main)',
                 padding: '9px',
                 borderRadius: '8px',
                 fontSize: '13px',

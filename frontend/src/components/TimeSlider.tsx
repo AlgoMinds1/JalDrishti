@@ -31,16 +31,16 @@ export const TimeSlider: FC<TimeSliderProps> = ({ currentHour, setHour, stats })
         display: 'flex',
         flexDirection: 'column',
         gap: '12px',
-        boxShadow: '0 12px 30px rgba(0, 0, 0, 0.6)'
+        boxShadow: 'var(--shadow-widget)'
       }}>
         {/* Top Info Row */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Clock size={16} color="#38bdf8" />
-            <span style={{ fontSize: '14px', fontWeight: 700, color: '#f8fafc' }}>
+            <Clock size={16} color="var(--accent-cyan)" />
+            <span style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-main)' }}>
               +{currentHour}h Forecast Horizon
             </span>
-            <span style={{ fontSize: '12px', color: '#94a3b8' }}>
+            <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
               ({currentHour === 1 ? 'Next 60 minutes' : `Peak Inundation Window: +${currentHour} Hours`})
             </span>
           </div>
@@ -48,38 +48,38 @@ export const TimeSlider: FC<TimeSliderProps> = ({ currentHour, setHour, stats })
           {/* Risk Level Stat Counters */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px', fontWeight: 600 }}>
             <span style={{
-              background: 'rgba(16, 185, 129, 0.15)',
-              color: '#34d399',
+              background: 'var(--risk-low-bg)',
+              color: 'var(--risk-low)',
               padding: '3px 8px',
               borderRadius: '6px',
-              border: '1px solid rgba(16, 185, 129, 0.3)'
+              border: '1px solid var(--risk-low-border)'
             }}>
               Low: {stats.low}
             </span>
             <span style={{
-              background: 'rgba(245, 158, 11, 0.15)',
-              color: '#fbbf24',
+              background: 'var(--risk-moderate-bg)',
+              color: 'var(--risk-moderate)',
               padding: '3px 8px',
               borderRadius: '6px',
-              border: '1px solid rgba(245, 158, 11, 0.3)'
+              border: '1px solid var(--risk-moderate-border)'
             }}>
               Mod: {stats.moderate}
             </span>
             <span style={{
-              background: 'rgba(249, 115, 22, 0.15)',
-              color: '#fb923c',
+              background: 'var(--risk-high-bg)',
+              color: 'var(--risk-high)',
               padding: '3px 8px',
               borderRadius: '6px',
-              border: '1px solid rgba(249, 115, 22, 0.3)'
+              border: '1px solid var(--risk-high-border)'
             }}>
               High: {stats.high}
             </span>
             <span style={{
-              background: 'rgba(239, 68, 68, 0.18)',
-              color: '#f87171',
+              background: 'var(--risk-severe-bg)',
+              color: 'var(--risk-severe)',
               padding: '3px 8px',
               borderRadius: '6px',
-              border: '1px solid rgba(239, 68, 68, 0.35)'
+              border: '1px solid var(--risk-severe-border)'
             }}>
               Severe: {stats.severe}
             </span>
@@ -99,16 +99,16 @@ export const TimeSlider: FC<TimeSliderProps> = ({ currentHour, setHour, stats })
                 key={h}
                 onClick={() => setHour(h)}
                 style={{
-                  background: isSelected ? 'linear-gradient(135deg, #0284c7, #0ea5e9)' : 'rgba(30, 41, 59, 0.7)',
-                  border: isSelected ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.08)',
-                  color: isSelected ? '#ffffff' : '#94a3b8',
+                  background: isSelected ? 'linear-gradient(135deg, #0284c7, #0ea5e9)' : 'var(--bg-pill)',
+                  border: isSelected ? '1px solid #38bdf8' : '1px solid var(--border-color)',
+                  color: isSelected ? '#ffffff' : 'var(--text-main)',
                   padding: '10px 4px',
                   borderRadius: '10px',
                   cursor: 'pointer',
                   fontWeight: isSelected ? 700 : 500,
                   fontSize: '13px',
                   transition: 'all 0.15s ease',
-                  boxShadow: isSelected ? '0 4px 14px rgba(2, 132, 199, 0.45)' : 'none',
+                  boxShadow: isSelected ? '0 4px 14px rgba(2, 132, 199, 0.35)' : 'none',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
@@ -116,7 +116,7 @@ export const TimeSlider: FC<TimeSliderProps> = ({ currentHour, setHour, stats })
                 }}
               >
                 <span>+{h}h</span>
-                <span style={{ fontSize: '10px', opacity: isSelected ? 0.9 : 0.6 }}>
+                <span style={{ fontSize: '10px', opacity: isSelected ? 0.9 : 0.65, color: isSelected ? '#ffffff' : 'var(--text-muted)' }}>
                   {h === 1 ? '1 Hour' : `${h} Hours`}
                 </span>
               </button>

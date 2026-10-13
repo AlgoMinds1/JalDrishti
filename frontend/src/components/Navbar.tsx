@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { CloudRain, ShieldAlert, BarChart3, Info, Zap, RefreshCw, MapPin, Eye, Navigation, Sliders } from 'lucide-react';
+import { CloudRain, ShieldAlert, BarChart3, Info, Zap, RefreshCw, MapPin, Eye, Navigation, Sliders, Sun, Moon } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: 'map' | 'evaluate' | 'limits';
@@ -15,6 +15,8 @@ interface NavbarProps {
   isRoutePlannerOpen: boolean;
   onToggleRoutePlanner: () => void;
   onOpenAdminModal: () => void;
+  theme?: 'light' | 'dark';
+  setTheme?: (theme: 'light' | 'dark') => void;
 }
 
 export const Navbar: FC<NavbarProps> = ({
@@ -30,7 +32,9 @@ export const Navbar: FC<NavbarProps> = ({
   setShowReportsLayer,
   isRoutePlannerOpen,
   onToggleRoutePlanner,
-  onOpenAdminModal
+  onOpenAdminModal,
+  theme = 'light',
+  setTheme
 }) => {
   return (
     <header style={{ position: 'relative', zIndex: 1000, width: '100%' }}>
@@ -58,7 +62,7 @@ export const Navbar: FC<NavbarProps> = ({
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '12px 24px',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        borderBottom: '1px solid var(--border-color)',
         flexWrap: 'wrap',
         gap: '12px'
       }}>
@@ -78,10 +82,10 @@ export const Navbar: FC<NavbarProps> = ({
             <CloudRain size={22} />
           </div>
           <div>
-            <div style={{ fontSize: '18px', fontWeight: 700, letterSpacing: '-0.3px', color: '#f8fafc' }}>
-              JalDrishti <span style={{ fontSize: '12px', fontWeight: 500, color: '#38bdf8', background: 'rgba(56, 189, 248, 0.12)', padding: '2px 6px', borderRadius: '4px', marginLeft: '6px' }}>Pune Pilot</span>
+            <div style={{ fontSize: '18px', fontWeight: 700, letterSpacing: '-0.3px', color: 'var(--text-main)' }}>
+              JalDrishti <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--accent-cyan)', background: 'var(--accent-cyan-light)', padding: '2px 6px', borderRadius: '4px', marginLeft: '6px' }}>Pune Pilot</span>
             </div>
-            <div style={{ fontSize: '11px', color: '#94a3b8' }}>
+            <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
               Hyperlocal Road Inundation Forecasting (1–6 Hours Ahead)
             </div>
           </div>
@@ -91,10 +95,10 @@ export const Navbar: FC<NavbarProps> = ({
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          background: 'rgba(15, 23, 42, 0.6)',
+          background: 'var(--bg-pill)',
           borderRadius: '8px',
           padding: '3px',
-          border: '1px solid rgba(255, 255, 255, 0.06)'
+          border: '1px solid var(--border-color)'
         }}>
           <button
             onClick={() => setActiveTab('map')}
@@ -106,7 +110,7 @@ export const Navbar: FC<NavbarProps> = ({
               borderRadius: '6px',
               border: 'none',
               background: activeTab === 'map' ? '#0284c7' : 'transparent',
-              color: activeTab === 'map' ? '#fff' : '#94a3b8',
+              color: activeTab === 'map' ? '#fff' : 'var(--text-muted)',
               fontSize: '13px',
               fontWeight: activeTab === 'map' ? 600 : 500,
               cursor: 'pointer',
@@ -126,7 +130,7 @@ export const Navbar: FC<NavbarProps> = ({
               borderRadius: '6px',
               border: 'none',
               background: activeTab === 'evaluate' ? '#0284c7' : 'transparent',
-              color: activeTab === 'evaluate' ? '#fff' : '#94a3b8',
+              color: activeTab === 'evaluate' ? '#fff' : 'var(--text-muted)',
               fontSize: '13px',
               fontWeight: activeTab === 'evaluate' ? 600 : 500,
               cursor: 'pointer',
@@ -146,7 +150,7 @@ export const Navbar: FC<NavbarProps> = ({
               borderRadius: '6px',
               border: 'none',
               background: activeTab === 'limits' ? '#0284c7' : 'transparent',
-              color: activeTab === 'limits' ? '#fff' : '#94a3b8',
+              color: activeTab === 'limits' ? '#fff' : 'var(--text-muted)',
               fontSize: '13px',
               fontWeight: activeTab === 'limits' ? 600 : 500,
               cursor: 'pointer',
@@ -158,7 +162,32 @@ export const Navbar: FC<NavbarProps> = ({
         </div>
 
         {/* Right Controls: Freshness & Scenario Toggle */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {/* Theme Toggle Button */}
+          {setTheme && (
+            <button
+              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+              title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px',
+                padding: '6px 10px',
+                borderRadius: '7px',
+                border: '1px solid var(--border-color)',
+                background: 'var(--bg-pill)',
+                color: 'var(--text-main)',
+                fontSize: '12px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              {theme === 'light' ? <Moon size={13} color="#0284c7" /> : <Sun size={13} color="#f59e0b" />}
+              <span>{theme === 'light' ? 'Dark' : 'Light'}</span>
+            </button>
+          )}
+
           {/* Citizen Report Toggle */}
           <button
             onClick={() => setShowReportsLayer(!showReportsLayer)}
@@ -169,9 +198,9 @@ export const Navbar: FC<NavbarProps> = ({
               gap: '6px',
               padding: '6px 10px',
               borderRadius: '7px',
-              border: showReportsLayer ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.1)',
-              background: showReportsLayer ? 'rgba(56, 189, 248, 0.18)' : 'rgba(30, 41, 59, 0.5)',
-              color: showReportsLayer ? '#38bdf8' : '#94a3b8',
+              border: showReportsLayer ? '1px solid var(--accent-cyan)' : '1px solid var(--border-color)',
+              background: showReportsLayer ? 'var(--accent-cyan-light)' : 'var(--bg-pill)',
+              color: showReportsLayer ? 'var(--accent-cyan)' : 'var(--text-muted)',
               fontSize: '12px',
               fontWeight: 500,
               cursor: 'pointer',
@@ -192,9 +221,9 @@ export const Navbar: FC<NavbarProps> = ({
               gap: '6px',
               padding: '6px 12px',
               borderRadius: '7px',
-              border: isRoutePlannerOpen ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.12)',
-              background: isRoutePlannerOpen ? 'rgba(56, 189, 248, 0.22)' : 'rgba(30, 41, 59, 0.6)',
-              color: isRoutePlannerOpen ? '#38bdf8' : '#e2e8f0',
+              border: isRoutePlannerOpen ? '1px solid var(--accent-cyan)' : '1px solid var(--border-color)',
+              background: isRoutePlannerOpen ? 'var(--accent-cyan-light)' : 'var(--bg-pill)',
+              color: isRoutePlannerOpen ? 'var(--accent-cyan)' : 'var(--text-main)',
               fontSize: '12px',
               fontWeight: 600,
               cursor: 'pointer',
@@ -215,9 +244,9 @@ export const Navbar: FC<NavbarProps> = ({
               gap: '6px',
               padding: '6px 12px',
               borderRadius: '7px',
-              border: '1px solid rgba(56, 189, 248, 0.3)',
-              background: 'rgba(15, 23, 42, 0.7)',
-              color: '#38bdf8',
+              border: '1px solid var(--border-color)',
+              background: 'var(--bg-pill)',
+              color: 'var(--accent-cyan)',
               fontSize: '12px',
               fontWeight: 600,
               cursor: 'pointer',
@@ -262,9 +291,9 @@ export const Navbar: FC<NavbarProps> = ({
               gap: '6px',
               padding: '6px 12px',
               borderRadius: '7px',
-              border: scenario === 'storm_july2024' ? '1px solid #f97316' : '1px solid rgba(255, 255, 255, 0.12)',
-              background: scenario === 'storm_july2024' ? 'rgba(249, 115, 22, 0.2)' : 'rgba(30, 41, 59, 0.6)',
-              color: scenario === 'storm_july2024' ? '#fdba74' : '#cbd5e1',
+              border: scenario === 'storm_july2024' ? '1px solid #f97316' : '1px solid var(--border-color)',
+              background: scenario === 'storm_july2024' ? 'var(--risk-high-bg)' : 'var(--bg-pill)',
+              color: scenario === 'storm_july2024' ? 'var(--risk-high)' : 'var(--text-main)',
               fontSize: '12px',
               fontWeight: 600,
               cursor: 'pointer',
@@ -273,11 +302,11 @@ export const Navbar: FC<NavbarProps> = ({
           >
             {scenario === 'storm_july2024' ? (
               <>
-                <Zap size={14} color="#f97316" /> July 2024 Cloudburst Simulation
+                <Zap size={14} color="#f97316" /> July 2024 Storm Simulation
               </>
             ) : (
               <>
-                <CloudRain size={14} color="#38bdf8" /> Live Open-Meteo Mode
+                <CloudRain size={14} color="#0284c7" /> Live Open-Meteo Mode
               </>
             )}
           </button>
@@ -288,18 +317,18 @@ export const Navbar: FC<NavbarProps> = ({
             alignItems: 'center',
             gap: '6px',
             fontSize: '12px',
-            color: rainAgeMin > 45 ? '#f87171' : (rainAgeMin > 20 ? '#fbbf24' : '#34d399'),
-            background: 'rgba(15, 23, 42, 0.7)',
+            color: rainAgeMin > 45 ? '#dc2626' : (rainAgeMin > 20 ? '#d97706' : '#059669'),
+            background: 'var(--bg-pill)',
             padding: '5px 10px',
             borderRadius: '6px',
-            border: '1px solid rgba(255, 255, 255, 0.08)'
+            border: '1px solid var(--border-color)'
           }}>
             <span style={{
               width: '7px',
               height: '7px',
               borderRadius: '50%',
-              backgroundColor: rainAgeMin > 45 ? '#ef4444' : (rainAgeMin > 20 ? '#f59e0b' : '#10b981'),
-              boxShadow: `0 0 6px ${rainAgeMin > 45 ? '#ef4444' : (rainAgeMin > 20 ? '#f59e0b' : '#10b981')}`
+              backgroundColor: rainAgeMin > 45 ? '#dc2626' : (rainAgeMin > 20 ? '#d97706' : '#059669'),
+              boxShadow: `0 0 6px ${rainAgeMin > 45 ? '#dc2626' : (rainAgeMin > 20 ? '#d97706' : '#059669')}`
             }} />
             <span>Rain Data: {rainAgeMin}m ago</span>
           </div>
@@ -310,11 +339,11 @@ export const Navbar: FC<NavbarProps> = ({
             disabled={isLoading}
             title="Refresh forecast predictions"
             style={{
-              background: 'rgba(30, 41, 59, 0.6)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
+              background: 'var(--bg-pill)',
+              border: '1px solid var(--border-color)',
               borderRadius: '6px',
               padding: '6px 8px',
-              color: '#94a3b8',
+              color: 'var(--text-muted)',
               cursor: isLoading ? 'not-allowed' : 'pointer',
               display: 'flex',
               alignItems: 'center',

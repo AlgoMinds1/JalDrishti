@@ -80,17 +80,17 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
         display: 'flex',
         flexDirection: 'column',
         gap: '14px',
-        boxShadow: '0 16px 36px rgba(0, 0, 0, 0.7)'
+        boxShadow: 'var(--shadow-widget)'
       }}>
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Navigation size={18} color="#38bdf8" />
-            <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#f8fafc' }}>
+            <Navigation size={18} color="var(--accent-cyan)" />
+            <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-main)' }}>
               Mode-Aware Route Planner
             </h3>
           </div>
-          <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+          <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
             <X size={18} />
           </button>
         </div>
@@ -106,9 +106,9 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
               key={m.id}
               onClick={() => setMode(m.id as any)}
               style={{
-                background: mode === m.id ? '#0284c7' : 'rgba(30, 41, 59, 0.6)',
-                border: mode === m.id ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.08)',
-                color: mode === m.id ? '#ffffff' : '#94a3b8',
+                background: mode === m.id ? '#0284c7' : 'var(--bg-pill)',
+                border: mode === m.id ? '1px solid #38bdf8' : '1px solid var(--border-color)',
+                color: mode === m.id ? '#ffffff' : 'var(--text-main)',
                 padding: '8px 4px',
                 borderRadius: '8px',
                 fontSize: '12px',
@@ -124,15 +124,15 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
         {/* Origin & Destination Selectors */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px' }}>
           <div>
-            <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600 }}>Origin:</label>
+            <label style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>Origin:</label>
             <select
               value={origin}
               onChange={(e) => setOrigin(e.target.value)}
               style={{
                 width: '100%',
-                background: 'rgba(15, 23, 42, 0.8)',
-                color: '#f8fafc',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: 'var(--bg-pill)',
+                color: 'var(--text-main)',
+                border: '1px solid var(--border-color)',
                 padding: '8px',
                 borderRadius: '6px',
                 marginTop: '4px',
@@ -147,15 +147,15 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
           </div>
 
           <div>
-            <label style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600 }}>Destination:</label>
+            <label style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>Destination:</label>
             <select
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
               style={{
                 width: '100%',
-                background: 'rgba(15, 23, 42, 0.8)',
-                color: '#f8fafc',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
+                background: 'var(--bg-pill)',
+                color: 'var(--text-main)',
+                border: '1px solid var(--border-color)',
                 padding: '8px',
                 borderRadius: '6px',
                 marginTop: '4px',
@@ -190,13 +190,14 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
         </button>
 
         {errorMessage && (
-          <div style={{ fontSize: '12px', color: '#f87171' }}>{errorMessage}</div>
+          <div style={{ fontSize: '12px', color: 'var(--risk-severe)' }}>{errorMessage}</div>
         )}
 
         {/* Route Details Card */}
         {routeInfo && (
           <div style={{
-            background: 'rgba(15, 23, 42, 0.7)',
+            background: 'var(--bg-pill)',
+            border: '1px solid var(--border-color)',
             borderRadius: '10px',
             padding: '12px',
             fontSize: '12px',
@@ -205,28 +206,28 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
             gap: '8px'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: '#94a3b8' }}>Distance & Time:</span>
-              <span style={{ fontWeight: 700, color: '#f8fafc' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Distance & Time:</span>
+              <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>
                 {(routeInfo.total_distance_m / 1000).toFixed(1)} km • ~{routeInfo.estimated_time_min} mins
               </span>
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: '#94a3b8' }}>Riskiest Corridor:</span>
+              <span style={{ color: 'var(--text-muted)' }}>Riskiest Corridor:</span>
               <span style={{
                 fontWeight: 600,
-                color: routeInfo.riskiest_segment.risk_class === 'severe' ? '#ef4444' : (routeInfo.riskiest_segment.risk_class === 'high' ? '#f97316' : '#34d399')
+                color: routeInfo.riskiest_segment.risk_class === 'severe' ? 'var(--risk-severe)' : (routeInfo.riskiest_segment.risk_class === 'high' ? 'var(--risk-high)' : 'var(--risk-low)')
               }}>
                 {routeInfo.riskiest_segment.name} ({Math.round(routeInfo.riskiest_segment.probability * 100)}%)
               </span>
             </div>
 
             <div style={{
-              background: 'rgba(2, 132, 199, 0.15)',
-              borderLeft: '3px solid #38bdf8',
+              background: 'var(--accent-cyan-light)',
+              borderLeft: '3px solid var(--accent-cyan)',
               padding: '6px 8px',
               borderRadius: '4px',
-              color: '#38bdf8',
+              color: 'var(--accent-cyan)',
               fontSize: '11px',
               fontWeight: 500
             }}>
@@ -239,9 +240,9 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
                 if (onClearRoute) onClearRoute();
               }}
               style={{
-                background: 'rgba(239, 68, 68, 0.15)',
-                border: '1px solid rgba(239, 68, 68, 0.3)',
-                color: '#fca5a5',
+                background: 'var(--risk-severe-bg)',
+                border: '1px solid var(--risk-severe-border)',
+                color: 'var(--risk-severe)',
                 padding: '6px',
                 borderRadius: '6px',
                 fontSize: '11px',

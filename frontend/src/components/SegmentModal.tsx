@@ -30,30 +30,30 @@ export const SegmentModal: FC<SegmentModalProps> = ({ segment, onClose }) => {
     switch (risk) {
       case 'severe':
         return {
-          bg: 'rgba(239, 68, 68, 0.2)',
-          border: '#ef4444',
-          text: '#f87171',
+          bg: 'var(--risk-severe-bg)',
+          border: 'var(--risk-severe)',
+          text: 'var(--risk-severe)',
           label: 'Severe Inundation Risk'
         };
       case 'high':
         return {
-          bg: 'rgba(249, 115, 22, 0.2)',
-          border: '#f97316',
-          text: '#fb923c',
+          bg: 'var(--risk-high-bg)',
+          border: 'var(--risk-high)',
+          text: 'var(--risk-high)',
           label: 'High Waterlogging Risk'
         };
       case 'moderate':
         return {
-          bg: 'rgba(245, 158, 11, 0.2)',
-          border: '#f59e0b',
-          text: '#fbbf24',
+          bg: 'var(--risk-moderate-bg)',
+          border: 'var(--risk-moderate)',
+          text: 'var(--risk-moderate)',
           label: 'Moderate Waterlogging Risk'
         };
       default:
         return {
-          bg: 'rgba(16, 185, 129, 0.2)',
-          border: '#10b981',
-          text: '#34d399',
+          bg: 'var(--risk-low-bg)',
+          border: 'var(--risk-low)',
+          text: 'var(--risk-low)',
           label: 'Low Waterlogging Risk'
         };
     }
@@ -77,18 +77,18 @@ export const SegmentModal: FC<SegmentModalProps> = ({ segment, onClose }) => {
         display: 'flex',
         flexDirection: 'column',
         gap: '14px',
-        boxShadow: '0 16px 36px rgba(0, 0, 0, 0.7)'
+        boxShadow: 'var(--shadow-widget)'
       }}>
         {/* Header & Close */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
           <div>
-            <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#f8fafc', marginBottom: '4px' }}>
+            <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-main)', marginBottom: '4px' }}>
               {segment.name || segment.segment_id}
             </h3>
-            <div style={{ fontSize: '12px', color: '#94a3b8', display: 'flex', gap: '8px' }}>
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', display: 'flex', gap: '8px' }}>
               <span>Class: {segment.road_class || 'arterial'}</span>
               {segment.length_m ? <span>• {Math.round(segment.length_m)}m length</span> : null}
-              {segment.is_underpass ? <span style={{ color: '#f97316', fontWeight: 600 }}>• Underpass</span> : null}
+              {segment.is_underpass ? <span style={{ color: 'var(--risk-high)', fontWeight: 600 }}>• Underpass</span> : null}
             </div>
           </div>
           <button
@@ -96,7 +96,7 @@ export const SegmentModal: FC<SegmentModalProps> = ({ segment, onClose }) => {
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#94a3b8',
+              color: 'var(--text-muted)',
               cursor: 'pointer',
               padding: '4px'
             }}
@@ -119,35 +119,38 @@ export const SegmentModal: FC<SegmentModalProps> = ({ segment, onClose }) => {
             <div style={{ fontSize: '11px', textTransform: 'uppercase', fontWeight: 700, color: riskStyle.text }}>
               {riskStyle.label}
             </div>
-            <div style={{ fontSize: '22px', fontWeight: 800, color: '#ffffff' }}>
+            <div style={{ fontSize: '22px', fontWeight: 800, color: 'var(--text-main)' }}>
               {Math.round(segment.probability * 100)}%
-              <span style={{ fontSize: '13px', fontWeight: 500, color: '#cbd5e1', marginLeft: '6px' }}>
+              <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-muted)', marginLeft: '6px' }}>
                 Probability (+{segment.horizon_h}h)
               </span>
             </div>
           </div>
           <div style={{
             fontSize: '11px',
-            background: 'rgba(15, 23, 42, 0.6)',
+            background: 'var(--bg-widget)',
             padding: '4px 8px',
             borderRadius: '6px',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            color: '#e2e8f0',
+            border: '1px solid var(--border-color)',
+            color: 'var(--text-main)',
             textAlign: 'right'
           }}>
             <div>{segment.confidence_level} Confidence</div>
-            <div style={{ fontSize: '9px', color: '#94a3b8' }}>MAPIE Set: {segment.conf_set_size}</div>
+            <div style={{ fontSize: '9px', color: 'var(--text-muted)' }}>MAPIE Set: {segment.conf_set_size}</div>
           </div>
         </div>
 
         {/* Action Recommendation */}
         <div style={{
-          background: 'rgba(15, 23, 42, 0.6)',
+          background: 'var(--bg-pill)',
           borderRadius: '8px',
           padding: '10px 12px',
           fontSize: '12px',
-          color: '#e2e8f0',
-          borderLeft: `3px solid ${riskStyle.border}`
+          color: 'var(--text-main)',
+          borderLeft: `3px solid ${riskStyle.border}`,
+          borderTop: '1px solid var(--border-subtle)',
+          borderRight: '1px solid var(--border-subtle)',
+          borderBottom: '1px solid var(--border-subtle)'
         }}>
           {segment.risk_class === 'severe' ? (
             <div><strong>🛑 AVOID ROUTE:</strong> Impassable water pooling forecast. High likelihood of stalled vehicles.</div>
@@ -162,7 +165,7 @@ export const SegmentModal: FC<SegmentModalProps> = ({ segment, onClose }) => {
 
         {/* Plain English SHAP Explainability Reasons */}
         <div>
-          <div style={{ fontSize: '12px', fontWeight: 600, color: '#cbd5e1', marginBottom: '6px' }}>
+          <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-main)', marginBottom: '6px' }}>
             Top Explanatory Factors (SHAP AI):
           </div>
           <ul style={{
@@ -171,11 +174,11 @@ export const SegmentModal: FC<SegmentModalProps> = ({ segment, onClose }) => {
             flexDirection: 'column',
             gap: '6px',
             fontSize: '12px',
-            color: '#94a3b8'
+            color: 'var(--text-muted)'
           }}>
             {segment.top_reasons && segment.top_reasons.map((reason, idx) => (
               <li key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '6px' }}>
-                <span style={{ color: '#38bdf8', marginTop: '2px' }}>•</span>
+                <span style={{ color: 'var(--accent-cyan)', marginTop: '2px' }}>•</span>
                 <span>{reason}</span>
               </li>
             ))}
