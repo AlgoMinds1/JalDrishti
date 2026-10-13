@@ -5,6 +5,7 @@ import { MapComponent } from './components/MapComponent';
 import { TimeSlider } from './components/TimeSlider';
 import { SegmentModal, type SegmentPredictionData } from './components/SegmentModal';
 import { ReportModal } from './components/ReportModal';
+import { RoutePlanner } from './components/RoutePlanner';
 import { EvaluationPage } from './pages/EvaluationPage';
 import { LimitationsPage } from './pages/LimitationsPage';
 
@@ -16,6 +17,8 @@ export function App() {
   const [reportsData, setReportsData] = useState<any>(null);
   const [showReportsLayer, setShowReportsLayer] = useState<boolean>(true);
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
+  const [isRoutePlannerOpen, setIsRoutePlannerOpen] = useState<boolean>(false);
+  const [activeRouteGeojson, setActiveRouteGeojson] = useState<any>(null);
   const [selectedSegment, setSelectedSegment] = useState<SegmentPredictionData | null>(null);
   const [rainAgeMin, setRainAgeMin] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -97,6 +100,8 @@ export function App() {
         onOpenReportModal={() => setIsReportModalOpen(true)}
         showReportsLayer={showReportsLayer}
         setShowReportsLayer={setShowReportsLayer}
+        isRoutePlannerOpen={isRoutePlannerOpen}
+        onToggleRoutePlanner={() => setIsRoutePlannerOpen(!isRoutePlannerOpen)}
       />
 
       {/* Main Content Area */}
@@ -107,6 +112,7 @@ export function App() {
               geojsonData={geojsonData}
               reportsData={reportsData}
               showReports={showReportsLayer}
+              routeGeojson={activeRouteGeojson}
               onSelectSegment={(seg) => setSelectedSegment(seg)}
             />
             <TimeSlider
@@ -117,6 +123,15 @@ export function App() {
             <SegmentModal
               segment={selectedSegment}
               onClose={() => setSelectedSegment(null)}
+            />
+            <RoutePlanner
+              isOpen={isRoutePlannerOpen}
+              onClose={() => setIsRoutePlannerOpen(false)}
+              onRouteCalculated={(routeGeo) => {
+                setActiveRouteGeojson(routeGeo);
+              }}
+              onClearRoute={() => setActiveRouteGeojson(null)}
+              currentHour={currentHour}
             />
             <ReportModal
               isOpen={isReportModalOpen}

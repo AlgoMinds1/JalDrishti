@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { CloudRain, ShieldAlert, BarChart3, Info, Zap, RefreshCw, MapPin, Eye } from 'lucide-react';
+import { CloudRain, ShieldAlert, BarChart3, Info, Zap, RefreshCw, MapPin, Eye, Navigation } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: 'map' | 'evaluate' | 'limits';
@@ -12,6 +12,8 @@ interface NavbarProps {
   onOpenReportModal: () => void;
   showReportsLayer: boolean;
   setShowReportsLayer: (val: boolean) => void;
+  isRoutePlannerOpen: boolean;
+  onToggleRoutePlanner: () => void;
 }
 
 export const Navbar: FC<NavbarProps> = ({
@@ -24,7 +26,9 @@ export const Navbar: FC<NavbarProps> = ({
   onRefresh,
   onOpenReportModal,
   showReportsLayer,
-  setShowReportsLayer
+  setShowReportsLayer,
+  isRoutePlannerOpen,
+  onToggleRoutePlanner
 }) => {
   return (
     <header style={{ position: 'relative', zIndex: 1000, width: '100%' }}>
@@ -174,6 +178,29 @@ export const Navbar: FC<NavbarProps> = ({
           >
             <Eye size={13} />
             <span>Reports {showReportsLayer ? 'ON' : 'OFF'}</span>
+          </button>
+
+          {/* Plan Dry Route Action Button */}
+          <button
+            onClick={onToggleRoutePlanner}
+            title="Mode-aware dry routing avoiding waterlogged roads"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              borderRadius: '7px',
+              border: isRoutePlannerOpen ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.12)',
+              background: isRoutePlannerOpen ? 'rgba(56, 189, 248, 0.22)' : 'rgba(30, 41, 59, 0.6)',
+              color: isRoutePlannerOpen ? '#38bdf8' : '#e2e8f0',
+              fontSize: '12px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            <Navigation size={13} />
+            <span>Plan Dry Route</span>
           </button>
 
           {/* + Report Waterlogging Action Button */}

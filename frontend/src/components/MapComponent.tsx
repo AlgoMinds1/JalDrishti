@@ -7,15 +7,23 @@ interface MapComponentProps {
   geojsonData: any;
   reportsData?: any;
   showReports?: boolean;
+  routeGeojson?: any;
   onSelectSegment: (segment: SegmentPredictionData) => void;
 }
 
 // Helper to center and adjust map view
-const MapController: FC = () => {
+const MapController: FC<{ routeGeojson?: any }> = ({ routeGeojson }) => {
   const map = useMap();
   useEffect(() => {
-    map.setView([18.552, 73.815], 13);
-  }, [map]);
+    if (routeGeojson && routeGeojson.geometry && routeGeojson.geometry.coordinates?.length) {
+      const coords = routeGeojson.geometry.coordinates;
+      const latlngs = coords.map((c: [number, number]) => [c[1], c[0]]);
+      const bounds = L.latLngBounds(latlngs);
+      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+    } else {
+      map.setView([18.552, 73.815], 13);
+    }
+  }, [map, routeGeojson]);
   return null;
 };
 
@@ -23,6 +31,7 @@ export const MapComponent: FC<MapComponentProps> = ({
   geojsonData,
   reportsData,
   showReports = true,
+  routeGeojson,
   onSelectSegment
 }) => {
   const geojsonLayerRef = useRef<L.GeoJSON | null>(null);
@@ -108,7 +117,7 @@ export const MapComponent: FC<MapComponentProps> = ({
         style={{ width: '100%', height: '100%' }}
         zoomControl={false}
       >
-        <MapController />
+        <MapController routeGeojson={routeGeojson} />
         {/* Crisp Carto Voyager Tiles */}
         <TileLayer
           attribution='&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/">OSM</a>'
@@ -123,6 +132,31 @@ export const MapComponent: FC<MapComponentProps> = ({
             data={geojsonData}
             style={styleFeature}
             onEachFeature={onEachFeature}
+          />
+        )}
+
+        {/* Planned Dry Navigation Route */}
+        {routeGeojson && (
+          <GeoJSON
+            key={"nav_route_" + JSON.stringify(routeGeojson.geometry?.coordinates?.length)}
+            data={routeGeojson}
+            style={() => ({
+              color: '#0284c7',
+              weight: 7,
+              opacity: 0.95,
+              lineCap: 'round',
+              lineJoin: 'round',
+              dashArray: undefined
+            })}
+            onEachFeature={(feat, layer) => {
+              const p = feat.properties || {};
+              layer.bindTooltip(
+                `<strong>Dry Navigation Route (${p.mode?.toUpperCase() || 'MODE'})</strong><br/>` +
+                `Distance: ${(p.distance_m / 1000).toFixed(1)} km (~${p.estimated_time_min} mins)<br/>` +
+                `<span style="color:#0284c7;font-weight:600;">${p.advisory}</span>`,
+                { sticky: true, className: 'leaflet-tooltip' }
+              );
+            }}
           />
         )}
 
