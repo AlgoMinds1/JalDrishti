@@ -1,7 +1,7 @@
 """
-Phase 1.4 — Label Engineering & Event Dataset Generation
+Phase 1.4 — Label Engineering & Realistic Hydraulic Event Dataset Generation
 Snaps incident hotspots to road segments, enriches with antecedent ERA5 rainfall,
-and builds the training segment_events table.
+and builds the training segment_events table using physical inundation criteria.
 """
 import os
 import json
@@ -11,10 +11,11 @@ import numpy as np
 import geopandas as gpd
 from shapely.geometry import Point
 from data.db import SessionLocal
-from data.models import Segment, SegmentEvent, RainfallHistory
+from data.models import Segment, SegmentEvent
 
 HOTSPOTS_PATH = "data/raw/incidents.csv"
 SEGMENTS_PATH = "data/processed/pilot_segments.geojson"
+FEATURES_PATH = "data/processed/segment_features.json"
 ERA5_PATH = "data/raw/era5_pune_2018_2026.csv"
 EVENTS_JSON_OUT = "data/processed/segment_events.json"
 
@@ -65,7 +66,6 @@ def load_era5_rainfall():
 def get_rainfall_window(df_era5, target_dt):
     """Compute antecedent rainfall in 1h, 3h, 6h, 24h, 72h windows."""
     try:
-        # Round target datetime to nearest hour
         idx = df_era5.index.get_indexer([target_dt], method="nearest")[0]
         actual_time = df_era5.index[idx]
 
@@ -77,83 +77,131 @@ def get_rainfall_window(df_era5, target_dt):
         sm = float(df_era5.loc[actual_time, "soil_moisture"])
         return float(r1), float(r3), float(r6), float(r24), float(r72), float(sm)
     except Exception:
-        return 5.0, 15.0, 25.0, 50.0, 80.0, 0.45
+        return 0.0, 0.0, 0.0, 0.0, 0.0, 0.25
 
 def build_label_dataset():
-    print("Loading incidents and segments...")
+    print("Loading incidents, features, and segments...")
     df_incidents = pd.read_csv(HOTSPOTS_PATH)
     gdf_segments = gpd.read_file(SEGMENTS_PATH)
+    with open(FEATURES_PATH, "r", encoding="utf-8") as f:
+        features_list = json.load(f)
+    features_by_id = {f["segment_id"]: f for f in features_list}
 
-    # Project to UTM 43N for spatial distance snapping
     gdf_utm = gdf_segments.to_crs("EPSG:32643")
     df_era5 = load_era5_rainfall()
 
     print("Snapping hotspots to pilot segments...")
-    snapped_hotspots = []
+    snapped_hotspots = {}
 
     for _, row in df_incidents.iterrows():
         name = row["segment_name"]
         lon, lat = HOTSPOT_COORDS.get(name, (73.815, 18.530))
         pt_utm = gpd.GeoSeries([Point(lon, lat)], crs="EPSG:4326").to_crs("EPSG:32643").iloc[0]
 
-        # Find nearest segment
         dists = gdf_utm.distance(pt_utm)
         nearest_idx = dists.idxmin()
-        min_dist = dists.loc[nearest_idx]
         nearest_seg_id = gdf_segments.loc[nearest_idx, "id"]
-        seg_name = gdf_segments.loc[nearest_idx, "name"]
-
-        snapped_hotspots.append({
-            "hotspot_name": name,
-            "segment_id": nearest_seg_id,
-            "matched_road": seg_name,
-            "distance_m": round(min_dist, 1),
-            "ward": row["ward"],
-            "base_date": row["date"],
-            "base_hour": int(str(row["approximate_hour"]).split(":")[0]),
+        
+        snapped_hotspots[nearest_seg_id] = {
+            "name": name,
             "grade": str(row["grade"]).strip(),
             "source": row["source"],
-            "notes": row["notes"]
-        })
+            "ward": row["ward"]
+        }
 
-    print(f"Successfully mapped {len(snapped_hotspots)} hotspots to nearest road segments.")
+    print(f"Mapped {len(snapped_hotspots)} distinct segments to official hotspots.")
 
-    # Generate positive events across storm events
-    # We expand across historical Pune extreme monsoon events:
-    storm_events = [
-        {"date": "2024-07-25", "hours": [14, 15, 16, 17, 18], "name": "July 2024 Cloudburst"},
-        {"date": "2024-08-04", "hours": [16, 17, 18, 19], "name": "August 2024 Heavy Downpour"},
-        {"date": "2024-09-25", "hours": [8, 9, 10, 11], "name": "September 2024 Monsoon Surge"},
-        {"date": "2019-09-24", "hours": [8, 9, 10, 11, 12], "name": "September 2019 Pune Floods"},
-        {"date": "2022-08-31", "hours": [9, 10, 11, 12], "name": "August 2022 Flash Flooding"},
-        {"date": "2020-06-17", "hours": [6, 7, 8, 9], "name": "June 2020 Monsoon Inundation"}
+    # Historical storms and sample dry dates with hours aligned to actual ERA5 peak precipitation
+    storm_dates = [
+        ("2024-07-25", [3, 4, 5, 6, 7, 8], "July 2024 Cloudburst"),
+        ("2024-08-04", [8, 9, 10, 11, 12, 13], "August 2024 Heavy Downpour"),
+        ("2024-09-25", [7, 8, 9, 10, 11, 12], "September 2024 Monsoon Surge"),
+        ("2019-09-24", [7, 8, 9, 10, 11, 12], "September 2019 Pune Floods"),
+        ("2022-08-31", [8, 9, 10, 11, 12, 13], "August 2022 Flash Flooding"),
+        ("2020-06-17", [5, 6, 7, 8, 9, 10], "June 2020 Monsoon Inundation")
     ]
+    dry_dates = ["2023-01-15", "2023-04-10", "2023-11-20", "2024-02-14", "2024-05-18", "2024-06-05"]
 
     events_list = []
     seen_events = set()
 
-    # 1. Positive Events (Hotspots during severe storms)
-    for storm in storm_events:
-        for sh in snapped_hotspots:
-            sev, risk_class = GRADE_SEVERITY.get(sh["grade"], (2, "moderate"))
+    # Sample representative segments across corridor (hotspots + arterial connectors + low-lying roads + ridges)
+    sampled_segments = list(snapped_hotspots.keys())
+    remaining_segs = [s for s in gdf_segments["id"].tolist() if s not in snapped_hotspots]
+    np.random.seed(42)
+    sampled_segments.extend(list(np.random.choice(remaining_segs, size=min(180, len(remaining_segs)), replace=False)))
 
-            for h in storm["hours"]:
-                evt_key = (sh["segment_id"], storm["date"], h)
+    # Process each storm date and hour
+    for d_str, hours, storm_name in storm_dates:
+        for h in hours:
+            dt = datetime.strptime(f"{d_str} {h:02d}:00:00", "%Y-%m-%d %H:%M:%S")
+            r1, r3, r6, r24, r72, sm = get_rainfall_window(df_era5, dt)
+
+            for seg_id in sampled_segments:
+                evt_key = (seg_id, d_str, h)
                 if evt_key in seen_events:
                     continue
                 seen_events.add(evt_key)
 
-                dt = datetime.strptime(f"{storm['date']} {h:02d}:00:00", "%Y-%m-%d %H:%M:%S")
-                r1, r3, r6, r24, r72, sm = get_rainfall_window(df_era5, dt)
+                feat = features_by_id.get(seg_id, {})
+                hand = feat.get("hand_mean", 4.0)
+                drainage = feat.get("drainage_coverage_pct", 50.0)
+                is_underpass = feat.get("is_underpass", False)
+                dist_waterway = feat.get("dist_to_waterway_m", 500.0)
 
+                is_hotspot = seg_id in snapped_hotspots
+                hotspot_info = snapped_hotspots.get(seg_id, {})
+                grade = hotspot_info.get("grade", "B")
+
+                # Physical Inundation Rule:
+                # Waterlogging requires SUFFICIENT RAINFALL exceeding local terrain & drainage capacity!
+                is_flooded = False
+                severity = 0
+                risk_class = "low"
+                source_tag = "ERA5 Physical Sensor Simulation"
+
+                if r3 >= 6.0:  # Active rain event
+                    # Criteria 1: Grade A+ hotspot during heavy rain
+                    if is_hotspot and grade == "A+" and (r3 >= 12.0 or r1 >= 8.0):
+                        is_flooded = True
+                        severity = 4
+                        risk_class = "severe"
+                        source_tag = f"Pune Police Grade A+ Hotspot ({storm_name})"
+                    # Criteria 2: Grade A hotspot during heavy rain
+                    elif is_hotspot and grade == "A" and r3 >= 14.0:
+                        is_flooded = True
+                        severity = 3
+                        risk_class = "high"
+                        source_tag = f"Pune Police Grade A Hotspot ({storm_name})"
+                    # Criteria 3: Road underpass flash flooding
+                    elif is_underpass and (r1 >= 7.0 or r3 >= 15.0):
+                        is_flooded = True
+                        severity = 4
+                        risk_class = "severe"
+                        source_tag = f"Underpass Subway Inundation ({storm_name})"
+                    # Criteria 4: Very low-lying terrain (HAND < 2.2m) near drainage channel
+                    elif hand < 2.2 and dist_waterway < 200.0 and r3 >= 16.0:
+                        is_flooded = True
+                        severity = 3
+                        risk_class = "high"
+                        source_tag = f"Low HAND Floodplain Overflow ({storm_name})"
+                    # Criteria 5: Grade B/B+ hotspot or poor drainage with moderate rain
+                    elif (is_hotspot and r3 >= 18.0) or (drainage < 35.0 and hand < 3.0 and r3 >= 22.0):
+                        is_flooded = True
+                        severity = 2
+                        risk_class = "moderate"
+                        source_tag = f"Drainage Bottleneck Inundation ({storm_name})"
+
+                # If flooded: record positive event. If dry: record negative event.
+                grade_label = grade if is_hotspot else None
                 events_list.append({
-                    "segment_id": sh["segment_id"],
-                    "event_date": storm["date"],
+                    "segment_id": seg_id,
+                    "event_date": d_str,
                     "event_hour": h,
                     "risk_class": risk_class,
-                    "severity": sev,
-                    "source": f"{sh['source']} ({storm['name']})",
-                    "source_grade": sh["grade"],
+                    "severity": severity,
+                    "source": source_tag,
+                    "source_grade": grade_label,
                     "rainfall_1h": round(r1, 2),
                     "rainfall_3h": round(r3, 2),
                     "rainfall_6h": round(r6, 2),
@@ -162,17 +210,10 @@ def build_label_dataset():
                     "soil_moisture": round(sm, 2)
                 })
 
-    positive_count = len(events_list)
-    print(f"Generated {positive_count} positive segment-hours (Threshold >= 50: PASSED [OK])")
-
-    # 2. Negative Events (Non-flooded / Dry baseline sample)
-    # Sample dry days across the dataset
-    dry_dates = ["2023-01-15", "2023-04-10", "2023-11-20", "2024-02-14", "2024-05-18", "2024-06-05"]
-    all_seg_ids = gdf_segments["id"].sample(n=min(250, len(gdf_segments)), random_state=42).tolist()
-
+    # Add dry baseline events (non-stormy days)
     for d_str in dry_dates:
-        for seg_id in all_seg_ids:
-            h = np.random.choice([8, 12, 16, 20])
+        for seg_id in sampled_segments:
+            h = int(np.random.choice([8, 12, 16, 20]))
             evt_key = (seg_id, d_str, h)
             if evt_key in seen_events:
                 continue
@@ -184,7 +225,7 @@ def build_label_dataset():
             events_list.append({
                 "segment_id": seg_id,
                 "event_date": d_str,
-                "event_hour": int(h),
+                "event_hour": h,
                 "risk_class": "low",
                 "severity": 0,
                 "source": "Historical Dry Baseline (ERA5)",
@@ -197,7 +238,10 @@ def build_label_dataset():
                 "soil_moisture": round(sm, 2)
             })
 
-    print(f"Total labelled events in dataset: {len(events_list)} (Positives: {positive_count}, Negatives: {len(events_list) - positive_count})")
+    df_evts = pd.DataFrame(events_list)
+    positives = (df_evts["risk_class"] != "low").sum()
+    negatives = (df_evts["risk_class"] == "low").sum()
+    print(f"Total events generated: {len(events_list)} (Positives: {positives}, Negatives: {negatives})")
 
     # Ingest into PostGIS
     print("Ingesting segment events into Neon PostGIS...")
