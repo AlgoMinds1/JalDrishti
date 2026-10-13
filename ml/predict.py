@@ -3,6 +3,13 @@ Unified Inference Engine for JalDrishti Road Segment Risk Forecasting
 Conforms directly to the frozen API Prediction contract.
 """
 import os
+import sys
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).resolve().parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 import json
 from datetime import datetime, timezone
 import joblib
@@ -155,8 +162,115 @@ class Predictor:
             "top_reasons": top_reasons,
             "rain_data_age_min": rain_data_age_min,
             "is_ood": is_ood,
+            "ensemble_spread": round(ensemble_spread_mm, 2),
+            "model_version": "v1.0.0-lightgbm-isotonic",
             "computed_at": datetime.now(timezone.utc).isoformat()
         }
+
+    def predict_batch(self, samples_list: list) -> list:
+        """
+        Vectorized batch inference over multiple segments.
+        Computes calibrated probability, conformal sets, confidence badges,
+        and SHAP explanations in batch.
+        """
+        if not samples_list:
+            return []
+
+        df_batch = pd.DataFrame([{col: s.get(col, 0.0) for col in self.feature_names} for s in samples_list])
+
+        # 1. Calibrated Probabilities
+        probs = self.calibrated_model.predict_proba(df_batch)[:, 1]
+
+        # 2. Conformal Prediction Set Sizes
+        try:
+            _, p_sets = self.mapie_model.predict_set(df_batch)
+            if p_sets.ndim == 3:
+                p_sets = p_sets[:, :, 0]
+            conf_set_sizes = p_sets.sum(axis=1).astype(int)
+        except Exception:
+            conf_set_sizes = np.ones(len(samples_list), dtype=int)
+
+        # 3. Batch SHAP Values
+        try:
+            shap_values = self.explainer.explainer.shap_values(df_batch)
+            if isinstance(shap_values, list):
+                shap_mat = shap_values[1]
+            elif shap_values.ndim == 2:
+                shap_mat = shap_values
+            else:
+                shap_mat = shap_values[:, :, 1]
+        except Exception:
+            shap_mat = np.zeros((len(samples_list), len(self.feature_names)))
+
+        now_iso = datetime.now(timezone.utc).isoformat()
+        results = []
+
+        for idx, sample in enumerate(samples_list):
+            prob = float(probs[idx])
+            conf_set_size = int(conf_set_sizes[idx])
+            s_row = shap_mat[idx]
+
+            # Risk Classification
+            if prob >= 0.75:
+                risk_class = "severe"
+            elif prob >= self.optimal_threshold:
+                risk_class = "high"
+            elif prob >= 0.20:
+                risk_class = "moderate"
+            else:
+                risk_class = "low"
+
+            rain_data_age_min = int(sample.get("rain_data_age_min", 15))
+            ensemble_spread_mm = float(sample.get("ensemble_spread_mm", 0.5))
+            is_stale = rain_data_age_min > 45
+            is_uncertain_spread = ensemble_spread_mm > 8.0
+
+            if conf_set_size == 1 and not is_stale and not is_uncertain_spread:
+                confidence_level = "High"
+                conf_score = round(float(np.clip(0.85 + (abs(prob - 0.5) * 0.25), 0.70, 0.98)), 2)
+            elif conf_set_size <= 2 and not is_stale:
+                confidence_level = "Medium"
+                conf_score = round(float(np.clip(0.55 + (abs(prob - 0.5) * 0.20), 0.45, 0.75)), 2)
+            else:
+                confidence_level = "Low"
+                conf_score = round(float(np.clip(0.30 + (abs(prob - 0.5) * 0.15), 0.20, 0.45)), 2)
+
+            # Top 3 SHAP explanations
+            top_indices = np.argsort(-s_row)[:3]
+            top_reasons = []
+            for feat_idx in top_indices:
+                feat_name = self.feature_names[feat_idx]
+                raw_val = float(sample.get(feat_name, 0.0))
+                s_val = float(s_row[feat_idx])
+                sentence = self.explainer._render_sentence(feat_name, raw_val, s_val)
+                if sentence:
+                    top_reasons.append(sentence)
+
+            if not top_reasons:
+                top_reasons = ["Normal urban surface runoff within drainage capacity"]
+
+            r1h = float(sample.get("rainfall_1h", 0.0))
+            r3h = float(sample.get("rainfall_3h", 0.0))
+            is_ood = r1h > 150.0 or r3h > 300.0 or ensemble_spread_mm > 40.0
+
+            results.append({
+                "segment_id": sample["segment_id"],
+                "horizon_h": int(sample["horizon_h"]),
+                "risk_class": risk_class,
+                "probability": round(prob, 2),
+                "confidence_level": confidence_level,
+                "confidence_score": conf_score,
+                "conf_set_size": conf_set_size,
+                "top_reasons": top_reasons,
+                "rain_data_age_min": rain_data_age_min,
+                "is_ood": is_ood,
+                "ensemble_spread": round(ensemble_spread_mm, 2),
+                "model_version": "v1.0.0-lightgbm-isotonic",
+                "computed_at": now_iso
+            })
+
+        return results
+
 
 if __name__ == "__main__":
     predictor = Predictor()

@@ -1,0 +1,18 @@
+{
+  "status": "success",
+  "last_run": "2026-10-13T14:22:39.269823+00:00",
+  "duration_seconds": 21.25,
+  "rain_data_age_min": 0,
+  "source": "open-meteo",
+  "total_predictions": 6000,
+  "total_segments": 1000,
+  "horizons": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "model_version": "v1.0.0-lightgbm-isotonic"
+}

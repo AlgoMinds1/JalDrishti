@@ -87,6 +87,8 @@ class Prediction(Base):
     top_reasons = Column(JSON, nullable=False)
     rain_data_age_min = Column(Integer, default=0)
     is_ood = Column(Boolean, default=False)
+    ensemble_spread = Column(Float, default=0.0)
+    model_version = Column(String(64), default="v1.0.0")
     computed_at = Column(DateTime, default=datetime.utcnow, index=True)
 
 
@@ -107,3 +109,58 @@ class Report(Base):
     trust_score = Column(Float, default=0.0)
     trust_reasons = Column(JSON, nullable=False)
     state = Column(String(32), default="Unverified")  # Unverified / Likely / Confirmed / Flagged
+
+
+class RainfallCache(Base):
+    __tablename__ = "rainfall_cache"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    fetched_at = Column(DateTime, default=datetime.utcnow, index=True)
+    source = Column(String(64), default="open-meteo")
+    lat = Column(Float, nullable=False)
+    lon = Column(Float, nullable=False)
+    precip_1h = Column(Float, default=0.0)
+    precip_3h = Column(Float, default=0.0)
+    precip_6h = Column(Float, default=0.0)
+    ensemble_spread = Column(Float, default=0.0)
+    soil_moisture = Column(Float, default=0.0)
+    valid_for_horizon_h = Column(Integer, default=1)
+
+
+class Reporter(Base):
+    __tablename__ = "reporters"
+
+    id = Column(String(128), primary_key=True, index=True)
+    device_fingerprint = Column(String(128), nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    confirmed_count = Column(Integer, default=0)
+    rejected_count = Column(Integer, default=0)
+    reputation_score = Column(Float, default=50.0)
+    is_flagged = Column(Boolean, default=False)
+    rate_limit_until = Column(DateTime, nullable=True)
+
+
+class Alert(Base):
+    __tablename__ = "alerts"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    segment_id = Column(String(64), ForeignKey("segments.id"), nullable=False, index=True)
+    triggered_at = Column(DateTime, default=datetime.utcnow, index=True)
+    trigger_reason = Column(String(255), nullable=False)
+    channel = Column(String(32), nullable=False)  # email / telegram / webpush
+    recipient_hash = Column(String(128), nullable=False)
+    language = Column(String(8), default="mr")
+
+
+class Intervention(Base):
+    __tablename__ = "interventions"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    segment_id = Column(String(64), ForeignKey("segments.id"), nullable=False, index=True)
+    type = Column(String(64), nullable=False)  # desilting / pump / inlet_widening
+    completed_at = Column(DateTime, default=datetime.utcnow)
+    description = Column(Text, nullable=True)
+    before_period = Column(String(64), nullable=True)
+    after_period = Column(String(64), nullable=True)
+    effectiveness_score = Column(Float, default=0.0)
+
