@@ -51,6 +51,9 @@ data/raw/*.tif
 data/raw/*.tiff
 data/raw/*.graphml
 data/raw/era5_*.csv
+data/raw/pmc/*.kmz
+data/raw/pmc/*.kml
+data/raw/pmc/*.geojson
 
 # Keep sample / seed data and folder structures tracked:
 !data/raw/incidents.csv
