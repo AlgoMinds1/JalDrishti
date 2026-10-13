@@ -26,21 +26,34 @@ app = FastAPI(
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# CORS middleware for React frontend
+# CORS middleware for React frontend (supports Vercel, localhost, and custom domains)
+cors_env = os.getenv("CORS_ORIGINS", "")
+allowed_origins = [o.strip() for o in cors_env.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
+    allow_origin_regex=r"https?://.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Mount Routers
+# Mount Routers (mount both at root and /api for direct calls and reverse proxies)
 app.include_router(predictions.router)
+app.include_router(predictions.router, prefix="/api")
+
 app.include_router(reports.router)
+app.include_router(reports.router, prefix="/api")
+
 app.include_router(routes.router)
+app.include_router(routes.router, prefix="/api")
+
 app.include_router(admin.admin_router)
+app.include_router(admin.admin_router, prefix="/api")
+
 app.include_router(admin.sandbox_router)
+app.include_router(admin.sandbox_router, prefix="/api")
 
 DATA_DIR = ROOT_DIR / "data" / "processed"
 FIXTURES_DIR = ROOT_DIR / "fixtures"
@@ -49,7 +62,29 @@ METADATA_PATH = DATA_DIR / "pipeline_metadata.json"
 EVAL_RESULTS_PATH = ML_DIR / "evaluation_results.json"
 
 
+@app.on_event("startup")
+def startup_event():
+    """Attempt database schema initialization on startup if DATABASE_URL is configured."""
+    try:
+        from data.db import init_db
+        init_db()
+    except Exception as e:
+        print(f"Database startup check note: {e}")
+
+
+@app.get("/", tags=["System"])
+@app.get("/api", tags=["System"])
+def root_index():
+    return {
+        "service": "JalDrishti API",
+        "status": "online",
+        "docs": "/docs",
+        "health": "/health"
+    }
+
+
 @app.get("/health", tags=["System"])
+@app.get("/api/health", tags=["System"])
 def health_check():
     """
     Returns system status, active ML model version, and exact data freshness.
@@ -77,6 +112,7 @@ def health_check():
 
 
 @app.get("/evaluate", tags=["Evaluation"])
+@app.get("/api/evaluate", tags=["Evaluation"])
 def get_evaluation_metrics():
     """
     Public transparency endpoint returning rigorous test-set evaluation metrics,

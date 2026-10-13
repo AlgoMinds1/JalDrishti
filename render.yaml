@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: jaldrishti-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: CORS_ORIGIN_REGEX
+        value: "https?://.*"
+      - key: PYTHON_VERSION
+        value: "3.11.9"
