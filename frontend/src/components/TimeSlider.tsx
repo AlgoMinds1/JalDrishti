@@ -26,12 +26,16 @@ export const TimeSlider: FC<TimeSliderProps> = ({ currentHour, setHour, stats })
       maxWidth: '780px'
     }}>
       <div className="glass" style={{
+        background: 'var(--bg-widget, rgba(255, 255, 255, 0.96))',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+        border: '1px solid var(--border-color, rgba(15, 23, 42, 0.12))',
         borderRadius: '16px',
         padding: '16px 22px',
         display: 'flex',
         flexDirection: 'column',
         gap: '12px',
-        boxShadow: 'var(--shadow-widget)'
+        boxShadow: 'var(--shadow-widget, 0 12px 30px rgba(0, 0, 0, 0.15))'
       }}>
         {/* Top Info Row */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px' }}>
@@ -99,9 +103,9 @@ export const TimeSlider: FC<TimeSliderProps> = ({ currentHour, setHour, stats })
                 key={h}
                 onClick={() => setHour(h)}
                 style={{
-                  background: isSelected ? 'linear-gradient(135deg, #0284c7, #0ea5e9)' : 'var(--bg-pill)',
-                  border: isSelected ? '1px solid #38bdf8' : '1px solid var(--border-color)',
-                  color: isSelected ? '#ffffff' : 'var(--text-main)',
+                  background: isSelected ? 'linear-gradient(135deg, #0284c7, #0ea5e9)' : 'var(--bg-pill, #f1f5f9)',
+                  border: isSelected ? '1px solid #38bdf8' : '1px solid var(--border-color, rgba(15, 23, 42, 0.1))',
+                  color: isSelected ? '#ffffff' : 'var(--text-main, #0f172a)',
                   padding: '10px 4px',
                   borderRadius: '10px',
                   cursor: 'pointer',
@@ -116,7 +120,7 @@ export const TimeSlider: FC<TimeSliderProps> = ({ currentHour, setHour, stats })
                 }}
               >
                 <span>+{h}h</span>
-                <span style={{ fontSize: '10px', opacity: isSelected ? 0.9 : 0.65, color: isSelected ? '#ffffff' : 'var(--text-muted)' }}>
+                <span style={{ fontSize: '10px', opacity: isSelected ? 0.95 : 0.75, color: isSelected ? '#ffffff' : 'var(--text-muted, #64748b)' }}>
                   {h === 1 ? '1 Hour' : `${h} Hours`}
                 </span>
               </button>

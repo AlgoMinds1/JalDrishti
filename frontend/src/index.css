@@ -2,16 +2,16 @@
   /* Default: Modern Premium Light Theme */
   --bg-primary: #f8fafc;
   --bg-secondary: #ffffff;
-  --bg-card: rgba(255, 255, 255, 0.92);
-  --bg-card-hover: rgba(241, 245, 249, 0.98);
-  --bg-widget: rgba(255, 255, 255, 0.96);
-  --bg-pill: rgba(241, 245, 249, 0.9);
+  --bg-card: rgba(255, 255, 255, 0.98);
+  --bg-card-hover: #f8fafc;
+  --bg-widget: #ffffff;
+  --bg-pill: #f1f5f9;
   --bg-pill-hover: #e2e8f0;
-  --border-color: rgba(15, 23, 42, 0.1);
-  --border-subtle: rgba(15, 23, 42, 0.06);
+  --border-color: rgba(15, 23, 42, 0.12);
+  --border-subtle: rgba(15, 23, 42, 0.08);
   --border-focus: rgba(2, 132, 199, 0.5);
   --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
-  --shadow-widget: 0 12px 30px rgba(0, 0, 0, 0.12);
+  --shadow-widget: 0 12px 32px rgba(0, 0, 0, 0.15);
 
   --text-main: #0f172a;
   --text-muted: #64748b;
@@ -46,11 +46,11 @@
 [data-theme='dark'] {
   --bg-primary: #0b0f19;
   --bg-secondary: #131b2e;
-  --bg-card: rgba(19, 27, 46, 0.88);
-  --bg-card-hover: rgba(28, 38, 64, 0.95);
-  --bg-widget: rgba(19, 27, 46, 0.95);
-  --bg-pill: rgba(30, 41, 59, 0.6);
-  --bg-pill-hover: rgba(51, 65, 85, 0.8);
+  --bg-card: rgba(19, 27, 46, 0.98);
+  --bg-card-hover: #1c2640;
+  --bg-widget: #131b2e;
+  --bg-pill: #1e293b;
+  --bg-pill-hover: #334155;
   --border-color: rgba(255, 255, 255, 0.08);
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-focus: rgba(56, 189, 248, 0.4);
