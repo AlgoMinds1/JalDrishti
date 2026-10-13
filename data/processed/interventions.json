@@ -1,0 +1,59 @@
+[
+  {
+    "intervention_id": "INT-PUNE-2024-001",
+    "name": "Sangvi Phata Underpass Dewatering Pump & Sump Upgrade",
+    "segment_id": "way/682974952",
+    "segment_name": "Sangvi Phata Underpass",
+    "type": "pump_installation",
+    "completion_date": "2024-05-15",
+    "description": "Installed dual 150 HP submersible dewatering pumps and deepened silt sump by 1.8m.",
+    "cost_inr": 4200000,
+    "agency": "PMC Stormwater Drainage Department"
+  },
+  {
+    "intervention_id": "INT-PUNE-2024-002",
+    "name": "Baner High Street Cross-Drain Culvert Widening",
+    "segment_id": "way/108928374",
+    "segment_name": "Baner Road High Street Intersection",
+    "type": "culvert_widening",
+    "completion_date": "2024-06-01",
+    "description": "Widened bottleneck cross-road culvert to 2.2m RCC box drain and cleared downstream choke point.",
+    "cost_inr": 2850000,
+    "agency": "Smart City Pune / Ward 8 Drainage Div"
+  },
+  {
+    "intervention_id": "INT-PUNE-2024-003",
+    "name": "Pashan Lake Outlet Spillway Desilting & Channel Restoration",
+    "segment_id": "way/24819203",
+    "segment_name": "Pashan Lake Spillway Canal",
+    "type": "desilting",
+    "completion_date": "2024-05-20",
+    "description": "Excavated 650 tons of accumulated silt from Ramnadi outlet canal to stop road backflow.",
+    "cost_inr": 1800000,
+    "agency": "PMC Water Resources & Environment"
+  },
+  {
+    "intervention_id": "INT-PUNE-20261013172328",
+    "name": "Pashan-Sus Road Storm Culvert Desilting Drill",
+    "segment_id": "way/24819203",
+    "segment_name": "Pashan-Sus Road Culvert",
+    "type": "desilting",
+    "completion_date": "2024-06-10",
+    "description": "Pre-monsoon emergency silt desilting by Ward 8 emergency squad",
+    "cost_inr": 350000,
+    "agency": "PMC Ward 8 Drainage Div",
+    "logged_at": "2026-10-13T17:23:28.640188+00:00"
+  },
+  {
+    "intervention_id": "INT-PUNE-20261013173204",
+    "name": "Pashan-Sus Road Storm Culvert Desilting Drill",
+    "segment_id": "way/24819203",
+    "segment_name": "Pashan-Sus Road Culvert",
+    "type": "desilting",
+    "completion_date": "2024-06-10",
+    "description": "Pre-monsoon emergency silt desilting by Ward 8 emergency squad",
+    "cost_inr": 350000,
+    "agency": "PMC Ward 8 Drainage Div",
+    "logged_at": "2026-10-13T17:32:04.467820+00:00"
+  }
+]

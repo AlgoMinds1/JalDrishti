@@ -167,7 +167,7 @@ class Predictor:
             "computed_at": datetime.now(timezone.utc).isoformat()
         }
 
-    def predict_batch(self, samples_list: list) -> list:
+    def predict_batch(self, samples_list: list, compute_shap: bool = True) -> list:
         """
         Vectorized batch inference over multiple segments.
         Computes calibrated probability, conformal sets, confidence badges,
@@ -190,16 +190,19 @@ class Predictor:
         except Exception:
             conf_set_sizes = np.ones(len(samples_list), dtype=int)
 
-        # 3. Batch SHAP Values
-        try:
-            shap_values = self.explainer.explainer.shap_values(df_batch)
-            if isinstance(shap_values, list):
-                shap_mat = shap_values[1]
-            elif shap_values.ndim == 2:
-                shap_mat = shap_values
-            else:
-                shap_mat = shap_values[:, :, 1]
-        except Exception:
+        # 3. Batch SHAP Values (optional for ultra-fast sandbox inference)
+        if compute_shap:
+            try:
+                shap_values = self.explainer.explainer.shap_values(df_batch)
+                if isinstance(shap_values, list):
+                    shap_mat = shap_values[1]
+                elif shap_values.ndim == 2:
+                    shap_mat = shap_values
+                else:
+                    shap_mat = shap_values[:, :, 1]
+            except Exception:
+                shap_mat = np.zeros((len(samples_list), len(self.feature_names)))
+        else:
             shap_mat = np.zeros((len(samples_list), len(self.feature_names)))
 
         now_iso = datetime.now(timezone.utc).isoformat()

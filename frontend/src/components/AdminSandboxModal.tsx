@@ -1,0 +1,612 @@
+import { useState, useEffect, type FC } from 'react';
+import axios from 'axios';
+import { Sliders, AlertTriangle, Wrench, X, RefreshCw, PlusCircle } from 'lucide-react';
+
+interface AdminSandboxModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onApplySimulationToMap?: (simGeojson: any) => void;
+}
+
+export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
+  isOpen,
+  onClose,
+  onApplySimulationToMap
+}) => {
+  const [activeSubTab, setActiveSubTab] = useState<'sandbox' | 'queue' | 'ledger'>('sandbox');
+  const [rainfallMm, setRainfallMm] = useState<number>(60);
+  const [durationH, setDurationH] = useState<number>(2);
+  const [isSimulating, setIsSimulating] = useState<boolean>(false);
+  const [simulationData, setSimulationData] = useState<any>(null);
+  const [queueData, setQueueData] = useState<any[]>([]);
+  const [ledgerData, setLedgerData] = useState<any[]>([]);
+  const [showLogModal, setShowLogModal] = useState<boolean>(false);
+  const [newIntervention, setNewIntervention] = useState({
+    name: '',
+    segment_name: '',
+    segment_id: 'way/682974952',
+    type: 'desilting',
+    completion_date: '2024-06-15',
+    description: '',
+    agency: 'PMC Stormwater Drainage Department'
+  });
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+
+  // Run simulation & fetch ranked queue
+  const runSimulation = async () => {
+    setIsSimulating(true);
+    setStatusMessage(null);
+    try {
+      // 1. Fetch simulation GeoJSON
+      const simRes = await axios.get(`/api/sandbox/simulate?mm=${rainfallMm}&duration_h=${durationH}`);
+      setSimulationData(simRes.data);
+      if (onApplySimulationToMap) {
+        onApplySimulationToMap(simRes.data);
+      }
+
+      // 2. Fetch ranked inspection queue for this scenario
+      const qRes = await axios.get(`/api/admin/queue?mm=${rainfallMm}&duration_h=${durationH}&top_n=10`);
+      setQueueData(qRes.data?.queue || []);
+    } catch (err: any) {
+      console.error('Failed to run sandbox simulation:', err);
+      setStatusMessage('Simulation failed to execute.');
+    } finally {
+      setIsSimulating(false);
+    }
+  };
+
+  // Fetch intervention ledger
+  const fetchLedger = async () => {
+    try {
+      const res = await axios.get('/api/admin/ledger');
+      setLedgerData(res.data || []);
+    } catch (err) {
+      console.error('Failed to load ledger:', err);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      runSimulation();
+      fetchLedger();
+    }
+  }, [isOpen]);
+
+  const handleLogIntervention = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await axios.post('/api/admin/ledger', newIntervention);
+      setShowLogModal(false);
+      fetchLedger();
+      setStatusMessage('Civic intervention logged successfully into permanent ledger.');
+    } catch (err) {
+      setStatusMessage('Failed to record intervention.');
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100vw',
+      height: '100vh',
+      background: 'rgba(2, 6, 23, 0.85)',
+      backdropFilter: 'blur(8px)',
+      zIndex: 2500,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px'
+    }}>
+      <div className="glass" style={{
+        width: '1000px',
+        maxWidth: '96vw',
+        maxHeight: '90vh',
+        borderRadius: '16px',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        boxShadow: '0 25px 60px rgba(0,0,0,0.85)',
+        border: '1px solid rgba(255, 255, 255, 0.12)'
+      }}>
+        {/* Prominent Simulation Watermark Banner */}
+        <div style={{
+          background: 'linear-gradient(90deg, #dc2626, #b91c1c)',
+          color: '#ffffff',
+          padding: '8px 16px',
+          fontSize: '12px',
+          fontWeight: 700,
+          letterSpacing: '0.5px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <AlertTriangle size={16} />
+            <span>⚠️ SIMULATION MODE — HYPOTHETICAL STRESS TEST (CANNOT TRIGGER REAL CITIZEN ALERTS)</span>
+          </div>
+          <span style={{ fontSize: '11px', opacity: 0.9 }}>ISOLATED ENVIRONMENT</span>
+        </div>
+
+        {/* Modal Header */}
+        <div style={{
+          padding: '16px 24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)'
+        }}>
+          <div>
+            <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <Sliders size={20} color="#38bdf8" />
+              Admin Operations & What-If Storm Sandbox
+            </h2>
+            <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 0 0' }}>
+              Evaluate hypothetical cloudburst stress tests, inspect prioritized road queues, and audit civic repairs.
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '4px' }}
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        {/* Sub-Tabs Navigation */}
+        <div style={{
+          display: 'flex',
+          gap: '8px',
+          padding: '12px 24px',
+          background: 'rgba(15, 23, 42, 0.5)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.06)'
+        }}>
+          {[
+            { id: 'sandbox', label: 'What-If Storm Sandbox', icon: <Sliders size={14} /> },
+            { id: 'queue', label: 'Top 10 Inspection Queue', icon: <AlertTriangle size={14} /> },
+            { id: 'ledger', label: 'Intervention Effectiveness Ledger', icon: <Wrench size={14} /> }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveSubTab(tab.id as any)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '6px 14px',
+                borderRadius: '6px',
+                border: 'none',
+                background: activeSubTab === tab.id ? '#0284c7' : 'transparent',
+                color: activeSubTab === tab.id ? '#ffffff' : '#94a3b8',
+                fontSize: '12px',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              {tab.icon} {tab.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Modal Body */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px' }}>
+          {statusMessage && (
+            <div style={{
+              background: 'rgba(56, 189, 248, 0.15)',
+              border: '1px solid #38bdf8',
+              color: '#38bdf8',
+              padding: '8px 12px',
+              borderRadius: '6px',
+              fontSize: '12px',
+              marginBottom: '14px'
+            }}>
+              {statusMessage}
+            </div>
+          )}
+
+          {/* TAB 1: What-If Storm Sandbox */}
+          {activeSubTab === 'sandbox' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              {/* Sliders Control Card */}
+              <div style={{
+                background: 'rgba(15, 23, 42, 0.6)',
+                borderRadius: '12px',
+                padding: '16px',
+                border: '1px solid rgba(255, 255, 255, 0.08)'
+              }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '20px', alignItems: 'center' }}>
+                  {/* Rain Slider */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                      <label style={{ fontSize: '12px', color: '#cbd5e1', fontWeight: 600 }}>Total Rainfall:</label>
+                      <span style={{ fontSize: '13px', color: '#38bdf8', fontWeight: 700 }}>{rainfallMm} mm</span>
+                    </div>
+                    <input
+                      type="range"
+                      min={10}
+                      max={120}
+                      step={5}
+                      value={rainfallMm}
+                      onChange={(e) => setRainfallMm(Number(e.target.value))}
+                      style={{ width: '100%', accentColor: '#38bdf8' }}
+                    />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: '#64748b', marginTop: '2px' }}>
+                      <span>10 mm (Light)</span>
+                      <span>60 mm (Cloudburst)</span>
+                      <span>120 mm (Extreme)</span>
+                    </div>
+                  </div>
+
+                  {/* Duration Slider */}
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                      <label style={{ fontSize: '12px', color: '#cbd5e1', fontWeight: 600 }}>Storm Duration:</label>
+                      <span style={{ fontSize: '13px', color: '#38bdf8', fontWeight: 700 }}>{durationH} Hours ({Math.round(rainfallMm / durationH)} mm/h)</span>
+                    </div>
+                    <input
+                      type="range"
+                      min={1}
+                      max={6}
+                      step={1}
+                      value={durationH}
+                      onChange={(e) => setDurationH(Number(e.target.value))}
+                      style={{ width: '100%', accentColor: '#38bdf8' }}
+                    />
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: '#64748b', marginTop: '2px' }}>
+                      <span>1 Hour (Flash)</span>
+                      <span>3 Hours</span>
+                      <span>6 Hours (Sustained)</span>
+                    </div>
+                  </div>
+
+                  {/* Run Button */}
+                  <button
+                    onClick={runSimulation}
+                    disabled={isSimulating}
+                    style={{
+                      background: 'linear-gradient(135deg, #0284c7, #0ea5e9)',
+                      color: '#ffffff',
+                      border: 'none',
+                      padding: '10px 18px',
+                      borderRadius: '8px',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      cursor: isSimulating ? 'not-allowed' : 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}
+                  >
+                    <RefreshCw size={15} className={isSimulating ? 'spin' : ''} />
+                    <span>{isSimulating ? 'Simulating...' : 'Run Stress Test'}</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Simulation Result Counters */}
+              {simulationData && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
+                  {[
+                    { label: 'Severe Risk Segments', val: simulationData.summary?.counts?.severe || 0, color: '#ef4444' },
+                    { label: 'High Risk Segments', val: simulationData.summary?.counts?.high || 0, color: '#f97316' },
+                    { label: 'Moderate Risk Segments', val: simulationData.summary?.counts?.moderate || 0, color: '#f59e0b' },
+                    { label: 'Inference Speed', val: `${simulationData.execution_time_ms} ms`, color: '#38bdf8' }
+                  ].map((c, i) => (
+                    <div key={i} style={{
+                      background: 'rgba(15, 23, 42, 0.7)',
+                      padding: '14px',
+                      borderRadius: '10px',
+                      border: '1px solid rgba(255, 255, 255, 0.06)'
+                    }}>
+                      <div style={{ fontSize: '11px', color: '#94a3b8' }}>{c.label}</div>
+                      <div style={{ fontSize: '20px', fontWeight: 800, color: c.color, marginTop: '4px' }}>{c.val}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Top Failing Corridors List */}
+              {simulationData?.top_failing_corridors && (
+                <div>
+                  <h4 style={{ fontSize: '13px', color: '#cbd5e1', marginBottom: '8px', fontWeight: 600 }}>
+                    First Corridors to Inundate at {rainfallMm} mm:
+                  </h4>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {simulationData.top_failing_corridors.slice(0, 5).map((fc: any, idx: number) => (
+                      <div key={idx} style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: '10px 14px',
+                        background: 'rgba(15, 23, 42, 0.5)',
+                        borderRadius: '8px',
+                        fontSize: '12px'
+                      }}>
+                        <div>
+                          <span style={{ fontWeight: 700, color: '#f8fafc' }}>#{idx + 1} {fc.name}</span>
+                          <span style={{ color: '#94a3b8', marginLeft: '8px' }}>({fc.road_class}{fc.is_underpass ? ' • UNDERPASS' : ''})</span>
+                        </div>
+                        <span style={{
+                          padding: '3px 8px',
+                          borderRadius: '4px',
+                          fontWeight: 700,
+                          background: fc.risk_class === 'severe' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(249, 115, 22, 0.2)',
+                          color: fc.risk_class === 'severe' ? '#ef4444' : '#f97316'
+                        }}>
+                          {fc.risk_class.toUpperCase()} ({Math.round(fc.probability * 100)}%)
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 2: Ranked Inspection Queue */}
+          {activeSubTab === 'queue' && (
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <div>
+                  <h4 style={{ fontSize: '14px', color: '#f8fafc', margin: 0, fontWeight: 700 }}>
+                    Priority-Ranked Deployment Queue (At {rainfallMm} mm Stress Test)
+                  </h4>
+                  <p style={{ fontSize: '11px', color: '#94a3b8', margin: '2px 0 0 0' }}>
+                    Ranked by Priority Score = Risk Weight × Exposure Score × Citizen Corroboration
+                  </p>
+                </div>
+                <span style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 600 }}>Top 10 High-Priority Dispatches</span>
+              </div>
+
+              <div style={{ overflowX: 'auto' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', textAlign: 'left' }}>
+                  <thead>
+                    <tr style={{ background: 'rgba(15, 23, 42, 0.8)', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
+                      <th style={{ padding: '10px 8px', color: '#94a3b8' }}>Rank</th>
+                      <th style={{ padding: '10px 8px', color: '#94a3b8' }}>Segment Name</th>
+                      <th style={{ padding: '10px 8px', color: '#94a3b8' }}>Priority</th>
+                      <th style={{ padding: '10px 8px', color: '#94a3b8' }}>Risk Class</th>
+                      <th style={{ padding: '10px 8px', color: '#94a3b8' }}>Recommended Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {queueData.map((item: any) => (
+                      <tr key={item.rank} style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.05)' }}>
+                        <td style={{ padding: '10px 8px', fontWeight: 700, color: '#38bdf8' }}>#{item.rank}</td>
+                        <td style={{ padding: '10px 8px', color: '#f8fafc', fontWeight: 600 }}>
+                          {item.name}
+                          {item.is_underpass && <span style={{ color: '#ef4444', marginLeft: '6px', fontSize: '10px' }}>[UNDERPASS]</span>}
+                        </td>
+                        <td style={{ padding: '10px 8px', fontWeight: 700, color: '#e2e8f0' }}>{item.priority_score}</td>
+                        <td style={{ padding: '10px 8px' }}>
+                          <span style={{
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            fontSize: '11px',
+                            fontWeight: 600,
+                            background: item.risk_class === 'severe' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(249, 115, 22, 0.2)',
+                            color: item.risk_class === 'severe' ? '#ef4444' : '#f97316'
+                          }}>
+                            {item.risk_class?.toUpperCase()}
+                          </span>
+                        </td>
+                        <td style={{ padding: '10px 8px', color: '#cbd5e1' }}>{item.recommended_action}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: Intervention Effectiveness Ledger */}
+          {activeSubTab === 'ledger' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h4 style={{ fontSize: '14px', color: '#f8fafc', margin: 0, fontWeight: 700 }}>
+                    Civic Drainage Intervention Effectiveness Ledger
+                  </h4>
+                  <p style={{ fontSize: '11px', color: '#94a3b8', margin: '2px 0 0 0' }}>
+                    Before vs After flood frequency comparison for comparable rainfall events (±20% intensity window).
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowLogModal(true)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    borderRadius: '6px',
+                    background: '#0284c7',
+                    color: '#fff',
+                    border: 'none',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  <PlusCircle size={14} /> Log Civic Intervention
+                </button>
+              </div>
+
+              {/* Intervention Cards */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {ledgerData.map((item: any) => (
+                  <div key={item.intervention_id} style={{
+                    background: 'rgba(15, 23, 42, 0.6)',
+                    borderRadius: '12px',
+                    padding: '16px',
+                    border: '1px solid rgba(255, 255, 255, 0.08)'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <span style={{ fontSize: '11px', color: '#38bdf8', fontWeight: 600 }}>{item.intervention_id}</span>
+                          <span style={{ fontSize: '11px', color: '#64748b' }}>• Completed: {item.completion_date}</span>
+                        </div>
+                        <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#f8fafc', margin: '4px 0' }}>{item.name}</h4>
+                        <div style={{ fontSize: '12px', color: '#94a3b8' }}>Target: {item.segment_name} ({item.agency})</div>
+                      </div>
+                      <div style={{
+                        background: 'rgba(16, 185, 129, 0.15)',
+                        border: '1px solid rgba(16, 185, 129, 0.3)',
+                        borderRadius: '8px',
+                        padding: '6px 12px',
+                        textAlign: 'right'
+                      }}>
+                        <div style={{ fontSize: '11px', color: '#10b981', fontWeight: 600 }}>Flood Rate Reduction</div>
+                        <div style={{ fontSize: '18px', fontWeight: 800, color: '#34d399' }}>
+                          ↓ {item.metrics?.reduction_pct}%
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Metrics Comparison Row */}
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(3, 1fr)',
+                      gap: '8px',
+                      background: 'rgba(15, 23, 42, 0.4)',
+                      padding: '10px',
+                      borderRadius: '8px',
+                      marginTop: '12px',
+                      fontSize: '11px'
+                    }}>
+                      <div>
+                        <span style={{ color: '#94a3b8' }}>Before Intervention:</span>
+                        <div style={{ fontWeight: 700, color: '#f87171' }}>
+                          {item.metrics?.before_high_severe_count} / {item.metrics?.before_events_monitored} Events ({item.metrics?.before_waterlogging_rate_pct}%)
+                        </div>
+                      </div>
+                      <div>
+                        <span style={{ color: '#94a3b8' }}>After Intervention:</span>
+                        <div style={{ fontWeight: 700, color: '#34d399' }}>
+                          {item.metrics?.after_high_severe_count} / {item.metrics?.after_events_monitored} Events ({item.metrics?.after_waterlogging_rate_pct}%)
+                        </div>
+                      </div>
+                      <div>
+                        <span style={{ color: '#94a3b8' }}>Comparable Window:</span>
+                        <div style={{ fontWeight: 600, color: '#cbd5e1' }}>{item.metrics?.comparable_rainfall_window}</div>
+                      </div>
+                    </div>
+
+                    {/* Observational Limitations Disclaimer */}
+                    <div style={{
+                      fontSize: '11px',
+                      color: '#94a3b8',
+                      marginTop: '10px',
+                      borderLeft: '3px solid #f59e0b',
+                      paddingLeft: '8px'
+                    }}>
+                      ⚠️ {item.disclaimer}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Log Intervention Modal */}
+              {showLogModal && (
+                <div style={{
+                  position: 'fixed',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                  background: 'rgba(0,0,0,0.7)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  zIndex: 3000
+                }}>
+                  <div className="glass" style={{
+                    width: '460px',
+                    borderRadius: '12px',
+                    padding: '20px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '12px'
+                  }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <h4 style={{ margin: 0, color: '#f8fafc', fontSize: '15px' }}>Log Civic Intervention</h4>
+                      <button onClick={() => setShowLogModal(false)} style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+                        <X size={18} />
+                      </button>
+                    </div>
+
+                    <form onSubmit={handleLogIntervention} style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '12px' }}>
+                      <div>
+                        <label style={{ color: '#94a3b8' }}>Intervention Name:</label>
+                        <input
+                          type="text"
+                          required
+                          value={newIntervention.name}
+                          onChange={(e) => setNewIntervention({ ...newIntervention, name: e.target.value })}
+                          placeholder="e.g. Pashan Lake Outlet Desilting"
+                          style={{ width: '100%', padding: '8px', background: 'rgba(15,23,42,0.8)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '6px', marginTop: '4px' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ color: '#94a3b8' }}>Target Road Segment Name:</label>
+                        <input
+                          type="text"
+                          required
+                          value={newIntervention.segment_name}
+                          onChange={(e) => setNewIntervention({ ...newIntervention, segment_name: e.target.value })}
+                          placeholder="e.g. Pashan Circle / Ramnadi Canal"
+                          style={{ width: '100%', padding: '8px', background: 'rgba(15,23,42,0.8)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '6px', marginTop: '4px' }}
+                        />
+                      </div>
+                      <div>
+                        <label style={{ color: '#94a3b8' }}>Intervention Type:</label>
+                        <select
+                          value={newIntervention.type}
+                          onChange={(e) => setNewIntervention({ ...newIntervention, type: e.target.value })}
+                          style={{ width: '100%', padding: '8px', background: 'rgba(15,23,42,0.8)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '6px', marginTop: '4px' }}
+                        >
+                          <option value="desilting">Drainage & Nala Desilting</option>
+                          <option value="pump_installation">High-Capacity Dewatering Pump</option>
+                          <option value="culvert_widening">Culvert / Box Drain Widening</option>
+                          <option value="inlet_clearing">Storm Inlet Grate Clearing</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label style={{ color: '#94a3b8' }}>Scope Description:</label>
+                        <textarea
+                          rows={2}
+                          value={newIntervention.description}
+                          onChange={(e) => setNewIntervention({ ...newIntervention, description: e.target.value })}
+                          placeholder="Details of civil work..."
+                          style={{ width: '100%', padding: '8px', background: 'rgba(15,23,42,0.8)', border: '1px solid rgba(255,255,255,0.1)', color: '#fff', borderRadius: '6px', marginTop: '4px' }}
+                        />
+                      </div>
+                      <button
+                        type="submit"
+                        style={{
+                          background: '#0284c7',
+                          color: '#fff',
+                          border: 'none',
+                          padding: '10px',
+                          borderRadius: '6px',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          marginTop: '6px'
+                        }}
+                      >
+                        Submit to Effectiveness Ledger
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};

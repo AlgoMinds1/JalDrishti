@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { CloudRain, ShieldAlert, BarChart3, Info, Zap, RefreshCw, MapPin, Eye, Navigation } from 'lucide-react';
+import { CloudRain, ShieldAlert, BarChart3, Info, Zap, RefreshCw, MapPin, Eye, Navigation, Sliders } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: 'map' | 'evaluate' | 'limits';
@@ -14,6 +14,7 @@ interface NavbarProps {
   setShowReportsLayer: (val: boolean) => void;
   isRoutePlannerOpen: boolean;
   onToggleRoutePlanner: () => void;
+  onOpenAdminModal: () => void;
 }
 
 export const Navbar: FC<NavbarProps> = ({
@@ -28,7 +29,8 @@ export const Navbar: FC<NavbarProps> = ({
   showReportsLayer,
   setShowReportsLayer,
   isRoutePlannerOpen,
-  onToggleRoutePlanner
+  onToggleRoutePlanner,
+  onOpenAdminModal
 }) => {
   return (
     <header style={{ position: 'relative', zIndex: 1000, width: '100%' }}>
@@ -201,6 +203,29 @@ export const Navbar: FC<NavbarProps> = ({
           >
             <Navigation size={13} />
             <span>Plan Dry Route</span>
+          </button>
+
+          {/* Admin & What-If Sandbox Button */}
+          <button
+            onClick={onOpenAdminModal}
+            title="What-If Storm Sandbox & Inspection Queue"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              borderRadius: '7px',
+              border: '1px solid rgba(56, 189, 248, 0.3)',
+              background: 'rgba(15, 23, 42, 0.7)',
+              color: '#38bdf8',
+              fontSize: '12px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            <Sliders size={13} />
+            <span>Admin & Sandbox</span>
           </button>
 
           {/* + Report Waterlogging Action Button */}

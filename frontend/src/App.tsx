@@ -6,6 +6,7 @@ import { TimeSlider } from './components/TimeSlider';
 import { SegmentModal, type SegmentPredictionData } from './components/SegmentModal';
 import { ReportModal } from './components/ReportModal';
 import { RoutePlanner } from './components/RoutePlanner';
+import { AdminSandboxModal } from './components/AdminSandboxModal';
 import { EvaluationPage } from './pages/EvaluationPage';
 import { LimitationsPage } from './pages/LimitationsPage';
 
@@ -18,6 +19,7 @@ export function App() {
   const [showReportsLayer, setShowReportsLayer] = useState<boolean>(true);
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
   const [isRoutePlannerOpen, setIsRoutePlannerOpen] = useState<boolean>(false);
+  const [isAdminModalOpen, setIsAdminModalOpen] = useState<boolean>(false);
   const [activeRouteGeojson, setActiveRouteGeojson] = useState<any>(null);
   const [selectedSegment, setSelectedSegment] = useState<SegmentPredictionData | null>(null);
   const [rainAgeMin, setRainAgeMin] = useState<number>(0);
@@ -102,6 +104,7 @@ export function App() {
         setShowReportsLayer={setShowReportsLayer}
         isRoutePlannerOpen={isRoutePlannerOpen}
         onToggleRoutePlanner={() => setIsRoutePlannerOpen(!isRoutePlannerOpen)}
+        onOpenAdminModal={() => setIsAdminModalOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -132,6 +135,11 @@ export function App() {
               }}
               onClearRoute={() => setActiveRouteGeojson(null)}
               currentHour={currentHour}
+            />
+            <AdminSandboxModal
+              isOpen={isAdminModalOpen}
+              onClose={() => setIsAdminModalOpen(false)}
+              onApplySimulationToMap={(simGeo) => setGeojsonData(simGeo)}
             />
             <ReportModal
               isOpen={isReportModalOpen}
