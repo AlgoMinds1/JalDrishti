@@ -4,6 +4,7 @@ import { Navbar } from './components/Navbar';
 import { MapComponent } from './components/MapComponent';
 import { TimeSlider } from './components/TimeSlider';
 import { SegmentModal, type SegmentPredictionData } from './components/SegmentModal';
+import { ReportModal } from './components/ReportModal';
 import { EvaluationPage } from './pages/EvaluationPage';
 import { LimitationsPage } from './pages/LimitationsPage';
 
@@ -12,6 +13,9 @@ export function App() {
   const [currentHour, setCurrentHour] = useState<number>(1);
   const [scenario, setScenario] = useState<'live' | 'storm_july2024'>('live');
   const [geojsonData, setGeojsonData] = useState<any>(null);
+  const [reportsData, setReportsData] = useState<any>(null);
+  const [showReportsLayer, setShowReportsLayer] = useState<boolean>(true);
+  const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
   const [selectedSegment, setSelectedSegment] = useState<SegmentPredictionData | null>(null);
   const [rainAgeMin, setRainAgeMin] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -48,6 +52,16 @@ export function App() {
     }
   }, [currentHour, scenario]);
 
+  // Fetch citizen reports feed
+  const fetchReports = useCallback(async () => {
+    try {
+      const res = await axios.get('/api/reports?hours=24');
+      setReportsData(res.data);
+    } catch (err) {
+      // Backend offline or no reports
+    }
+  }, []);
+
   // Fetch health data for freshness
   const fetchHealth = useCallback(async () => {
     try {
@@ -62,7 +76,8 @@ export function App() {
 
   useEffect(() => {
     fetchHealth();
-  }, [fetchHealth]);
+    fetchReports();
+  }, [fetchHealth, fetchReports]);
 
   useEffect(() => {
     fetchPredictions();
@@ -79,6 +94,9 @@ export function App() {
         rainAgeMin={rainAgeMin}
         isLoading={isLoading}
         onRefresh={fetchPredictions}
+        onOpenReportModal={() => setIsReportModalOpen(true)}
+        showReportsLayer={showReportsLayer}
+        setShowReportsLayer={setShowReportsLayer}
       />
 
       {/* Main Content Area */}
@@ -87,6 +105,8 @@ export function App() {
           <>
             <MapComponent
               geojsonData={geojsonData}
+              reportsData={reportsData}
+              showReports={showReportsLayer}
               onSelectSegment={(seg) => setSelectedSegment(seg)}
             />
             <TimeSlider
@@ -97,6 +117,14 @@ export function App() {
             <SegmentModal
               segment={selectedSegment}
               onClose={() => setSelectedSegment(null)}
+            />
+            <ReportModal
+              isOpen={isReportModalOpen}
+              onClose={() => setIsReportModalOpen(false)}
+              onReportSubmitted={() => {
+                fetchReports();
+              }}
+              defaultCoords={{ lat: 18.574, lon: 73.806 }}
             />
           </>
         )}

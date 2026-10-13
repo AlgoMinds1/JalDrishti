@@ -5,6 +5,8 @@ import type { SegmentPredictionData } from './SegmentModal';
 
 interface MapComponentProps {
   geojsonData: any;
+  reportsData?: any;
+  showReports?: boolean;
   onSelectSegment: (segment: SegmentPredictionData) => void;
 }
 
@@ -17,7 +19,12 @@ const MapController: FC = () => {
   return null;
 };
 
-export const MapComponent: FC<MapComponentProps> = ({ geojsonData, onSelectSegment }) => {
+export const MapComponent: FC<MapComponentProps> = ({
+  geojsonData,
+  reportsData,
+  showReports = true,
+  onSelectSegment
+}) => {
   const geojsonLayerRef = useRef<L.GeoJSON | null>(null);
 
   const getSegmentColor = (riskClass: string) => {
@@ -116,6 +123,32 @@ export const MapComponent: FC<MapComponentProps> = ({ geojsonData, onSelectSegme
             data={geojsonData}
             style={styleFeature}
             onEachFeature={onEachFeature}
+          />
+        )}
+
+        {showReports && reportsData && (
+          <GeoJSON
+            key={"citizen_reports_" + reportsData.features?.length}
+            data={reportsData}
+            pointToLayer={(feature, latlng) => {
+              const state = feature.properties?.state || "Unverified";
+              const fillColor = state === "Confirmed" ? "#38bdf8" : (state === "Likely" ? "#f59e0b" : "#94a3b8");
+              return L.circleMarker(latlng, {
+                radius: 7,
+                fillColor: fillColor,
+                color: "#ffffff",
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.95
+              });
+            }}
+            onEachFeature={(feature, layer) => {
+              const p = feature.properties || {};
+              layer.bindTooltip(
+                `<strong>Citizen Report (${p.state})</strong><br/>"${p.text}"<br/><span style="color:#38bdf8;">Trust: ${p.trust_score}/100</span>`,
+                { sticky: true, className: 'leaflet-tooltip' }
+              );
+            }}
           />
         )}
       </MapContainer>

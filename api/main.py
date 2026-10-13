@@ -13,7 +13,7 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from api.routers import predictions
+from api.routers import predictions, reports
 from pipeline.refresh import refresh_predictions
 
 limiter = Limiter(key_func=get_remote_address, default_limits=["120/minute"])
@@ -37,6 +37,7 @@ app.add_middleware(
 
 # Mount Routers
 app.include_router(predictions.router)
+app.include_router(reports.router)
 
 DATA_DIR = ROOT_DIR / "data" / "processed"
 FIXTURES_DIR = ROOT_DIR / "fixtures"

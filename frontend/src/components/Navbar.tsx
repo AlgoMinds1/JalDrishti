@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { CloudRain, ShieldAlert, BarChart3, Info, Zap, RefreshCw } from 'lucide-react';
+import { CloudRain, ShieldAlert, BarChart3, Info, Zap, RefreshCw, MapPin, Eye } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: 'map' | 'evaluate' | 'limits';
@@ -9,6 +9,9 @@ interface NavbarProps {
   rainAgeMin: number;
   isLoading: boolean;
   onRefresh: () => void;
+  onOpenReportModal: () => void;
+  showReportsLayer: boolean;
+  setShowReportsLayer: (val: boolean) => void;
 }
 
 export const Navbar: FC<NavbarProps> = ({
@@ -18,7 +21,10 @@ export const Navbar: FC<NavbarProps> = ({
   setScenario,
   rainAgeMin,
   isLoading,
-  onRefresh
+  onRefresh,
+  onOpenReportModal,
+  showReportsLayer,
+  setShowReportsLayer
 }) => {
   return (
     <header style={{ position: 'relative', zIndex: 1000, width: '100%' }}>
@@ -147,6 +153,53 @@ export const Navbar: FC<NavbarProps> = ({
 
         {/* Right Controls: Freshness & Scenario Toggle */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* Citizen Report Toggle */}
+          <button
+            onClick={() => setShowReportsLayer(!showReportsLayer)}
+            title="Toggle Citizen Reports Layer"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 10px',
+              borderRadius: '7px',
+              border: showReportsLayer ? '1px solid #38bdf8' : '1px solid rgba(255, 255, 255, 0.1)',
+              background: showReportsLayer ? 'rgba(56, 189, 248, 0.18)' : 'rgba(30, 41, 59, 0.5)',
+              color: showReportsLayer ? '#38bdf8' : '#94a3b8',
+              fontSize: '12px',
+              fontWeight: 500,
+              cursor: 'pointer',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            <Eye size={13} />
+            <span>Reports {showReportsLayer ? 'ON' : 'OFF'}</span>
+          </button>
+
+          {/* + Report Waterlogging Action Button */}
+          <button
+            onClick={onOpenReportModal}
+            title="Report localized waterlogging or road pooling"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '6px 12px',
+              borderRadius: '7px',
+              border: 'none',
+              background: 'linear-gradient(135deg, #0284c7, #0ea5e9)',
+              color: '#ffffff',
+              fontSize: '12px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              boxShadow: '0 2px 10px rgba(2, 132, 199, 0.35)',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            <MapPin size={13} />
+            <span>+ Report Flooding</span>
+          </button>
+
           {/* Scenario Toggle */}
           <button
             onClick={() => setScenario(scenario === 'live' ? 'storm_july2024' : 'live')}
