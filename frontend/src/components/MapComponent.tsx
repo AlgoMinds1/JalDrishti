@@ -1,6 +1,7 @@
-import { useEffect, useRef, type FC } from 'react';
+import { useEffect, useRef, useState, type FC } from 'react';
 import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
+import { Layers, ZoomIn, ZoomOut, Check } from 'lucide-react';
 import type { SegmentPredictionData } from './SegmentModal';
 
 interface MapComponentProps {
@@ -11,6 +12,52 @@ interface MapComponentProps {
   onSelectSegment: (segment: SegmentPredictionData) => void;
 }
 
+export type BasemapKey = 'osm' | 'esri_dark' | 'esri_streets' | 'esri_topo';
+
+interface BasemapOption {
+  id: BasemapKey;
+  name: string;
+  tag: string;
+  url: string;
+  attribution: string;
+  maxZoom: number;
+}
+
+const BASEMAP_OPTIONS: BasemapOption[] = [
+  {
+    id: 'osm',
+    name: 'OpenStreetMap',
+    tag: 'Free · Default',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
+    maxZoom: 19
+  },
+  {
+    id: 'esri_dark',
+    name: 'Dark Canvas',
+    tag: 'Sleek Dark',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+    maxZoom: 16
+  },
+  {
+    id: 'esri_streets',
+    name: 'Esri World Street',
+    tag: 'Clean Topo',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles &copy; Esri &mdash; Esri, TomTom',
+    maxZoom: 19
+  },
+  {
+    id: 'esri_topo',
+    name: 'Topographic Terrain',
+    tag: 'Elevation & Relief',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+    attribution: 'Tiles &copy; Esri &mdash; USGS, Esri',
+    maxZoom: 19
+  }
+];
+
 // Helper to center and adjust map view
 const MapController: FC<{ routeGeojson?: any }> = ({ routeGeojson }) => {
   const map = useMap();
@@ -20,11 +67,66 @@ const MapController: FC<{ routeGeojson?: any }> = ({ routeGeojson }) => {
       const latlngs = coords.map((c: [number, number]) => [c[1], c[0]]);
       const bounds = L.latLngBounds(latlngs);
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
-    } else {
-      map.setView([18.552, 73.815], 13);
     }
   }, [map, routeGeojson]);
   return null;
+};
+
+// Custom Zoom Controls inside Leaflet
+const CustomZoomControl: FC = () => {
+  const map = useMap();
+  return (
+    <div style={{
+      position: 'absolute',
+      right: '16px',
+      bottom: '120px',
+      zIndex: 1000,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '6px'
+    }}>
+      <button
+        onClick={() => map.zoomIn()}
+        title="Zoom In"
+        style={{
+          width: '36px',
+          height: '36px',
+          borderRadius: '8px',
+          border: '1px solid rgba(255,255,255,0.15)',
+          background: 'rgba(19, 27, 46, 0.92)',
+          color: '#f8fafc',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+          transition: 'all 0.15s ease'
+        }}
+      >
+        <ZoomIn size={18} />
+      </button>
+      <button
+        onClick={() => map.zoomOut()}
+        title="Zoom Out"
+        style={{
+          width: '36px',
+          height: '36px',
+          borderRadius: '8px',
+          border: '1px solid rgba(255,255,255,0.15)',
+          background: 'rgba(19, 27, 46, 0.92)',
+          color: '#f8fafc',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+          transition: 'all 0.15s ease'
+        }}
+      >
+        <ZoomOut size={18} />
+      </button>
+    </div>
+  );
 };
 
 export const MapComponent: FC<MapComponentProps> = ({
@@ -35,6 +137,18 @@ export const MapComponent: FC<MapComponentProps> = ({
   onSelectSegment
 }) => {
   const geojsonLayerRef = useRef<L.GeoJSON | null>(null);
+  const [selectedBasemap, setSelectedBasemap] = useState<BasemapKey>(() => {
+    return (localStorage.getItem('jaldrishti_basemap') as BasemapKey) || 'osm';
+  });
+  const [isLayerMenuOpen, setIsLayerMenuOpen] = useState<boolean>(false);
+
+  const activeBasemap = BASEMAP_OPTIONS.find((b) => b.id === selectedBasemap) || BASEMAP_OPTIONS[0];
+
+  const handleBasemapChange = (id: BasemapKey) => {
+    setSelectedBasemap(id);
+    localStorage.setItem('jaldrishti_basemap', id);
+    setIsLayerMenuOpen(false);
+  };
 
   const getSegmentColor = (riskClass: string) => {
     switch (riskClass) {
@@ -111,6 +225,102 @@ export const MapComponent: FC<MapComponentProps> = ({
 
   return (
     <div style={{ position: 'relative', width: '100%', height: 'calc(100vh - 95px)', overflow: 'hidden' }}>
+      {/* Floating Basemap Selector Widget */}
+      <div style={{
+        position: 'absolute',
+        top: '16px',
+        right: '16px',
+        zIndex: 1000,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        gap: '6px'
+      }}>
+        <button
+          onClick={() => setIsLayerMenuOpen(!isLayerMenuOpen)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '8px 14px',
+            borderRadius: '10px',
+            border: '1px solid rgba(255, 255, 255, 0.16)',
+            background: 'rgba(19, 27, 46, 0.92)',
+            backdropFilter: 'blur(12px)',
+            color: '#f8fafc',
+            fontSize: '13px',
+            fontWeight: 600,
+            cursor: 'pointer',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+            transition: 'all 0.2s ease'
+          }}
+        >
+          <Layers size={16} color="#38bdf8" />
+          <span>Map: {activeBasemap.name}</span>
+        </button>
+
+        {isLayerMenuOpen && (
+          <div style={{
+            background: 'rgba(19, 27, 46, 0.96)',
+            backdropFilter: 'blur(16px)',
+            border: '1px solid rgba(255, 255, 255, 0.14)',
+            borderRadius: '12px',
+            padding: '8px',
+            boxShadow: '0 12px 30px rgba(0,0,0,0.5)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '4px',
+            minWidth: '220px'
+          }}>
+            <div style={{
+              fontSize: '11px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px',
+              color: '#94a3b8',
+              fontWeight: 700,
+              padding: '4px 8px 6px'
+            }}>
+              Select Basemap (No Key Needed)
+            </div>
+            {BASEMAP_OPTIONS.map((opt) => {
+              const isSelected = opt.id === selectedBasemap;
+              return (
+                <button
+                  key={opt.id}
+                  onClick={() => handleBasemapChange(opt.id)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '8px 10px',
+                    borderRadius: '8px',
+                    border: 'none',
+                    background: isSelected ? 'rgba(56, 189, 248, 0.18)' : 'transparent',
+                    color: isSelected ? '#38bdf8' : '#e2e8f0',
+                    fontSize: '12px',
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    transition: 'background 0.15s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSelected) e.currentTarget.style.background = 'rgba(255,255,255,0.06)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isSelected) e.currentTarget.style.background = 'transparent';
+                  }}
+                >
+                  <div>
+                    <div style={{ fontWeight: 600 }}>{opt.name}</div>
+                    <div style={{ fontSize: '10px', color: '#94a3b8' }}>{opt.tag}</div>
+                  </div>
+                  {isSelected && <Check size={14} color="#38bdf8" />}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
       <MapContainer
         center={[18.552, 73.815]}
         zoom={13}
@@ -118,11 +328,14 @@ export const MapComponent: FC<MapComponentProps> = ({
         zoomControl={false}
       >
         <MapController routeGeojson={routeGeojson} />
-        {/* Crisp Carto Voyager Tiles */}
+        <CustomZoomControl />
+
+        {/* Dynamic Basemap Layer */}
         <TileLayer
-          attribution='&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/">OSM</a>'
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-          maxZoom={19}
+          key={activeBasemap.id}
+          attribution={activeBasemap.attribution}
+          url={activeBasemap.url}
+          maxZoom={activeBasemap.maxZoom}
         />
 
         {geojsonData && (
@@ -189,3 +402,4 @@ export const MapComponent: FC<MapComponentProps> = ({
     </div>
   );
 };
+

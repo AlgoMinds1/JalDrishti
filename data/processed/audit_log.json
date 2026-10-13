@@ -34,5 +34,17 @@
     "admin_id": "admin_ops_01",
     "timestamp": "2026-10-13T17:32:04.480832+00:00",
     "details": "Logged intervention INT-PUNE-20261013173204: Pashan-Sus Road Storm Culvert Desilting Drill on Pashan-Sus Road Culvert"
+  },
+  {
+    "action": "INSPECTION_QUEUE_GENERATED",
+    "admin_id": "admin_ops_01",
+    "timestamp": "2026-10-13T17:52:08.701859+00:00",
+    "details": "Generated inspection queue for scenario 'What-If Sandbox (60.0mm in 2h)'. Top priority: Wakad Road Underpass / Wakad Road"
+  },
+  {
+    "action": "INSPECTION_QUEUE_GENERATED",
+    "admin_id": "admin_ops_01",
+    "timestamp": "2026-10-13T17:58:44.181830+00:00",
+    "details": "Generated inspection queue for scenario 'What-If Sandbox (60.0mm in 2h)'. Top priority: Wakad Road Underpass / Wakad Road"
   }
 ]
