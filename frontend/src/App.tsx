@@ -186,10 +186,8 @@ export function App() {
         }}>
           {activeTab === 'map' && (
             <>
-              {/* Floating Top Controls (Search location, Quick Horizon pills, Live Rainfall toggle) */}
+              {/* Floating Top Controls (Search location, Live Rainfall toggle) */}
               <TopControls
-                currentHour={currentHour}
-                setHour={(h) => setCurrentHour(h)}
                 showRainfall={showRainfall}
                 setShowRainfall={setShowRainfall}
                 onSelectLocation={(lat, lon, name) => setTargetCoords({ lat, lon, name })}

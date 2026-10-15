@@ -1,9 +1,7 @@
 import { useState, type FC } from 'react';
-import { Search, Clock, CloudRain } from 'lucide-react';
+import { Search, CloudRain } from 'lucide-react';
 
 interface TopControlsProps {
-  currentHour: number;
-  setHour: (hour: number) => void;
   showRainfall: boolean;
   setShowRainfall: (show: boolean) => void;
   onSelectLocation: (lat: number, lon: number, name: string) => void;
@@ -25,8 +23,6 @@ const PUNE_PRESET_LOCATIONS = [
 ];
 
 export const TopControls: FC<TopControlsProps> = ({
-  currentHour,
-  setHour,
   showRainfall,
   setShowRainfall,
   onSelectLocation
@@ -37,13 +33,6 @@ export const TopControls: FC<TopControlsProps> = ({
   const filteredLocations = PUNE_PRESET_LOCATIONS.filter((loc) =>
     loc.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-  const horizonPills = [
-    { label: 'Next 1 Hour', hour: 1 },
-    { label: '2 Hours', hour: 2 },
-    { label: '3 Hours', hour: 3 },
-    { label: '6 Hours', hour: 6 }
-  ];
 
   return (
     <div style={{
@@ -140,46 +129,6 @@ export const TopControls: FC<TopControlsProps> = ({
             )}
           </div>
         )}
-      </div>
-
-      {/* Center: Horizon Quick Selectors in Warm Beige / Camel */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        pointerEvents: 'auto'
-      }}>
-        {horizonPills.map((pill) => {
-          const isSelected = currentHour === pill.hour;
-          return (
-            <button
-              key={pill.hour}
-              onClick={() => setHour(pill.hour)}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '7px 16px',
-                borderRadius: '9999px',
-                border: isSelected ? 'none' : '1px solid var(--border-color, #d8c6af)',
-                background: isSelected
-                  ? 'linear-gradient(135deg, #b8905e, #8f6738)'
-                  : 'var(--bg-widget, #faf5ec)',
-                color: isSelected ? '#ffffff' : '#4a3823',
-                fontSize: '12.5px',
-                fontWeight: isSelected ? 700 : 600,
-                cursor: 'pointer',
-                boxShadow: isSelected
-                  ? '0 3px 12px rgba(143, 103, 56, 0.35)'
-                  : '0 2px 8px rgba(80, 60, 40, 0.05)',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              <Clock size={13} color={isSelected ? '#ffffff' : '#8f6738'} />
-              <span>{pill.label}</span>
-            </button>
-          );
-        })}
       </div>
 
       {/* Right: Live Rainfall Toggle Pill in Beige */}
