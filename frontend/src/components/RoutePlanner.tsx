@@ -95,7 +95,7 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
           </button>
         </div>
 
-        {/* Travel Mode Selector */}
+        {/* Travel Mode Selector in Beige */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
           {[
             { id: 'walk', label: '🚶 Walk' },
@@ -106,14 +106,16 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
               key={m.id}
               onClick={() => setMode(m.id as any)}
               style={{
-                background: mode === m.id ? '#0284c7' : 'var(--bg-pill)',
-                border: mode === m.id ? '1px solid #38bdf8' : '1px solid var(--border-color)',
-                color: mode === m.id ? '#ffffff' : 'var(--text-main)',
+                background: mode === m.id ? 'linear-gradient(135deg, #b8905e, #8f6738)' : 'var(--bg-widget, #fdfcf9)',
+                border: mode === m.id ? '1px solid #7a5022' : '1px solid var(--border-color, #e5dcce)',
+                color: mode === m.id ? '#ffffff' : 'var(--text-main, #2e2214)',
                 padding: '8px 4px',
                 borderRadius: '8px',
                 fontSize: '12px',
-                fontWeight: mode === m.id ? 600 : 500,
-                cursor: 'pointer'
+                fontWeight: mode === m.id ? 700 : 500,
+                cursor: 'pointer',
+                boxShadow: mode === m.id ? '0 2px 8px rgba(143, 103, 56, 0.3)' : 'none',
+                transition: 'all 0.15s ease'
               }}
             >
               {m.label}
@@ -124,19 +126,20 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
         {/* Origin & Destination Selectors */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px' }}>
           <div>
-            <label style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>Origin:</label>
+            <label style={{ fontSize: '11px', color: 'var(--text-muted, #735d47)', fontWeight: 600 }}>Origin:</label>
             <select
               value={origin}
               onChange={(e) => setOrigin(e.target.value)}
               style={{
                 width: '100%',
-                background: 'var(--bg-pill)',
-                color: 'var(--text-main)',
-                border: '1px solid var(--border-color)',
-                padding: '8px',
-                borderRadius: '6px',
+                background: 'var(--bg-widget, #fdfcf9)',
+                color: 'var(--text-main, #2e2214)',
+                border: '1px solid var(--border-color, #e5dcce)',
+                padding: '8px 10px',
+                borderRadius: '8px',
                 marginTop: '4px',
-                outline: 'none'
+                outline: 'none',
+                fontSize: '12.5px'
               }}
             >
               <option value="baner">Baner Road Corridor</option>
@@ -147,19 +150,20 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
           </div>
 
           <div>
-            <label style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 600 }}>Destination:</label>
+            <label style={{ fontSize: '11px', color: 'var(--text-muted, #735d47)', fontWeight: 600 }}>Destination:</label>
             <select
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
               style={{
                 width: '100%',
-                background: 'var(--bg-pill)',
-                color: 'var(--text-main)',
-                border: '1px solid var(--border-color)',
-                padding: '8px',
-                borderRadius: '6px',
+                background: 'var(--bg-widget, #fdfcf9)',
+                color: 'var(--text-main, #2e2214)',
+                border: '1px solid var(--border-color, #e5dcce)',
+                padding: '8px 10px',
+                borderRadius: '8px',
                 marginTop: '4px',
-                outline: 'none'
+                outline: 'none',
+                fontSize: '12.5px'
               }}
             >
               <option value="aundh">Aundh Corridor</option>
@@ -170,20 +174,21 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
           </div>
         </div>
 
-        {/* Calculate Button */}
+        {/* Calculate Button in Warm Beige/Camel */}
         <button
           onClick={handleCalculateRoute}
           disabled={isLoading}
           style={{
-            background: 'linear-gradient(135deg, #0284c7, #0ea5e9)',
+            background: 'linear-gradient(135deg, #b8905e, #8f6738)',
             color: '#ffffff',
-            padding: '10px',
-            borderRadius: '8px',
+            padding: '11px',
+            borderRadius: '10px',
             border: 'none',
             fontSize: '13px',
-            fontWeight: 600,
+            fontWeight: 700,
             cursor: isLoading ? 'not-allowed' : 'pointer',
-            boxShadow: '0 4px 14px rgba(2, 132, 199, 0.4)'
+            boxShadow: '0 4px 14px rgba(143, 103, 56, 0.35)',
+            transition: 'all 0.15s ease'
           }}
         >
           {isLoading ? 'Calculating Risk Path...' : 'Find Route With Lower Predicted Risk'}

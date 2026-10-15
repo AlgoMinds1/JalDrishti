@@ -149,13 +149,14 @@ export const ReportModal: FC<ReportModalProps> = ({
             <button
               onClick={handleReset}
               style={{
-                background: '#0284c7',
+                background: 'linear-gradient(135deg, #b8905e, #8f6738)',
                 color: '#fff',
                 padding: '10px 16px',
                 borderRadius: '8px',
                 border: 'none',
-                fontWeight: 600,
-                cursor: 'pointer'
+                fontWeight: 700,
+                cursor: 'pointer',
+                boxShadow: '0 4px 14px rgba(143, 103, 56, 0.35)'
               }}
             >
               Done & Return to Map
@@ -179,19 +180,20 @@ export const ReportModal: FC<ReportModalProps> = ({
 
             {/* Language Selector */}
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-              <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Language:</span>
+              <span style={{ fontSize: '12px', color: 'var(--text-muted, #735d47)' }}>Language:</span>
               {(['mr', 'hi', 'en'] as const).map((lang) => (
                 <button
                   type="button"
                   key={lang}
                   onClick={() => setLanguage(lang)}
                   style={{
-                    background: language === lang ? '#0284c7' : 'var(--bg-pill)',
-                    border: '1px solid var(--border-color)',
-                    color: language === lang ? '#fff' : 'var(--text-main)',
-                    padding: '3px 8px',
-                    borderRadius: '5px',
+                    background: language === lang ? 'linear-gradient(135deg, #b8905e, #8f6738)' : 'var(--bg-widget, #fdfcf9)',
+                    border: language === lang ? '1px solid #7a5022' : '1px solid var(--border-color, #e5dcce)',
+                    color: language === lang ? '#fff' : 'var(--text-main, #2e2214)',
+                    padding: '4px 10px',
+                    borderRadius: '6px',
                     fontSize: '11px',
+                    fontWeight: language === lang ? 700 : 500,
                     cursor: 'pointer'
                   }}
                 >
@@ -202,7 +204,7 @@ export const ReportModal: FC<ReportModalProps> = ({
 
             {/* Description Text Input */}
             <div>
-              <label style={{ fontSize: '12px', color: 'var(--text-main)', fontWeight: 600, display: 'block', marginBottom: '6px' }}>
+              <label style={{ fontSize: '12px', color: 'var(--text-main, #2e2214)', fontWeight: 600, display: 'block', marginBottom: '6px' }}>
                 Water Condition Description:
               </label>
               <textarea
@@ -212,10 +214,10 @@ export const ReportModal: FC<ReportModalProps> = ({
                 rows={3}
                 style={{
                   width: '100%',
-                  background: 'var(--bg-pill)',
-                  border: '1px solid var(--border-color)',
+                  background: 'var(--bg-widget, #fdfcf9)',
+                  border: '1px solid var(--border-color, #e5dcce)',
                   borderRadius: '8px',
-                  color: 'var(--text-main)',
+                  color: 'var(--text-main, #2e2214)',
                   padding: '10px',
                   fontSize: '13px',
                   fontFamily: 'inherit',
@@ -234,9 +236,9 @@ export const ReportModal: FC<ReportModalProps> = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                background: isListening ? '#ef4444' : 'var(--bg-pill)',
-                border: '1px solid var(--border-color)',
-                color: isListening ? '#ffffff' : 'var(--text-main)',
+                background: isListening ? '#ef4444' : 'var(--bg-widget, #fdfcf9)',
+                border: '1px solid var(--border-color, #e5dcce)',
+                color: isListening ? '#ffffff' : 'var(--text-main, #2e2214)',
                 padding: '9px',
                 borderRadius: '8px',
                 fontSize: '13px',
@@ -248,7 +250,7 @@ export const ReportModal: FC<ReportModalProps> = ({
               <span>{isListening ? 'Listening (Speak now)...' : 'Speak Note (Voice Input)'}</span>
             </button>
 
-            {/* Submit Button */}
+            {/* Submit Button in Warm Camel/Beige */}
             <button
               type="submit"
               disabled={isSubmitting}
@@ -257,15 +259,16 @@ export const ReportModal: FC<ReportModalProps> = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                background: 'linear-gradient(135deg, #0284c7, #0ea5e9)',
+                background: 'linear-gradient(135deg, #b8905e, #8f6738)',
                 color: '#fff',
                 padding: '12px',
                 borderRadius: '8px',
                 border: 'none',
                 fontSize: '14px',
-                fontWeight: 600,
+                fontWeight: 700,
                 cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                boxShadow: '0 4px 14px rgba(2, 132, 199, 0.4)'
+                boxShadow: '0 4px 14px rgba(143, 103, 56, 0.35)',
+                transition: 'all 0.15s ease'
               }}
             >
               <Send size={16} />

@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState, type FC } from 'react';
-import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { Layers, ZoomIn, ZoomOut, Check } from 'lucide-react';
+import {
+  Layers,
+  Plus,
+  Minus,
+  Crosshair,
+  Check
+} from 'lucide-react';
 import type { SegmentPredictionData } from './SegmentModal';
 
 interface MapComponentProps {
@@ -9,10 +15,12 @@ interface MapComponentProps {
   reportsData?: any;
   showReports?: boolean;
   routeGeojson?: any;
+  showRainfall?: boolean;
+  targetCoords?: { lat: number; lon: number; name: string } | null;
   onSelectSegment: (segment: SegmentPredictionData) => void;
 }
 
-export type BasemapKey = 'osm' | 'esri_dark' | 'esri_streets' | 'esri_topo';
+export type BasemapKey = 'osm' | 'voyager' | 'esri_dark' | 'esri_streets';
 
 interface BasemapOption {
   id: BasemapKey;
@@ -27,9 +35,17 @@ const BASEMAP_OPTIONS: BasemapOption[] = [
   {
     id: 'osm',
     name: 'OpenStreetMap',
-    tag: 'Free · Default',
+    tag: 'Free · Standard',
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 19
+  },
+  {
+    id: 'voyager',
+    name: 'CartoDB Voyager',
+    tag: 'Vibrant & Clean',
+    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    attribution: '&copy; CARTO, &copy; OpenStreetMap contributors',
     maxZoom: 19
   },
   {
@@ -37,7 +53,7 @@ const BASEMAP_OPTIONS: BasemapOption[] = [
     name: 'Dark Canvas',
     tag: 'Sleek Dark',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}',
-    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ',
+    attribution: 'Tiles &copy; Esri',
     maxZoom: 16
   },
   {
@@ -45,22 +61,24 @@ const BASEMAP_OPTIONS: BasemapOption[] = [
     name: 'Esri World Street',
     tag: 'Clean Topo',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
-    attribution: 'Tiles &copy; Esri &mdash; Esri, TomTom',
-    maxZoom: 19
-  },
-  {
-    id: 'esri_topo',
-    name: 'Topographic Terrain',
-    tag: 'Elevation & Relief',
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
-    attribution: 'Tiles &copy; Esri &mdash; USGS, Esri',
+    attribution: 'Tiles &copy; Esri',
     maxZoom: 19
   }
 ];
 
 // Helper to center and adjust map view
-const MapController: FC<{ routeGeojson?: any }> = ({ routeGeojson }) => {
+const MapController: FC<{
+  routeGeojson?: any;
+  targetCoords?: { lat: number; lon: number } | null;
+}> = ({ routeGeojson, targetCoords }) => {
   const map = useMap();
+
+  useEffect(() => {
+    if (targetCoords) {
+      map.flyTo([targetCoords.lat, targetCoords.lon], 14, { duration: 1.2 });
+    }
+  }, [map, targetCoords]);
+
   useEffect(() => {
     if (routeGeojson && routeGeojson.geometry && routeGeojson.geometry.coordinates?.length) {
       const coords = routeGeojson.geometry.coordinates;
@@ -69,108 +87,289 @@ const MapController: FC<{ routeGeojson?: any }> = ({ routeGeojson }) => {
       map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
     }
   }, [map, routeGeojson]);
+
   return null;
 };
 
-// Custom Zoom Controls inside Leaflet
-const CustomZoomControl: FC = () => {
+// Custom Right-Hand Controls (Zoom In, Zoom Out, Center, Layer menu)
+const RightControls: FC<{
+  onToggleLayerMenu: () => void;
+  onResetCenter: () => void;
+}> = ({ onToggleLayerMenu, onResetCenter }) => {
   const map = useMap();
+
   return (
     <div style={{
       position: 'absolute',
-      right: '16px',
-      bottom: '120px',
-      zIndex: 1000,
+      right: '18px',
+      top: '50%',
+      transform: 'translateY(-50%)',
+      zIndex: 900,
       display: 'flex',
       flexDirection: 'column',
       gap: '6px'
     }}>
-      <button
-        onClick={() => map.zoomIn()}
-        title="Zoom In"
-        style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: '8px',
-          border: '1px solid var(--border-color)',
-          background: 'var(--bg-widget)',
-          color: 'var(--text-main)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          boxShadow: 'var(--shadow-card)',
-          transition: 'all 0.15s ease'
-        }}
-      >
-        <ZoomIn size={18} />
-      </button>
-      <button
-        onClick={() => map.zoomOut()}
-        title="Zoom Out"
-        style={{
-          width: '36px',
-          height: '36px',
-          borderRadius: '8px',
-          border: '1px solid var(--border-color)',
-          background: 'var(--bg-widget)',
-          color: 'var(--text-main)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          cursor: 'pointer',
-          boxShadow: 'var(--shadow-card)',
-          transition: 'all 0.15s ease'
-        }}
-      >
-        <ZoomOut size={18} />
-      </button>
+      <div style={{
+        background: 'var(--bg-widget, #faf5ec)',
+        borderRadius: '12px',
+        border: '1px solid var(--border-color, #d8c6af)',
+        boxShadow: '0 4px 16px rgba(80, 60, 40, 0.1)',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden'
+      }}>
+        {/* Zoom In */}
+        <button
+          onClick={() => map.zoomIn()}
+          title="Zoom In"
+          style={{
+            width: '38px',
+            height: '38px',
+            border: 'none',
+            background: 'transparent',
+            color: '#4a3823',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            borderBottom: '1px solid var(--border-color, #d8c6af)',
+            transition: 'background 0.15s ease'
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-pill, #e5d5be)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+        >
+          <Plus size={18} />
+        </button>
+
+        {/* Zoom Out */}
+        <button
+          onClick={() => map.zoomOut()}
+          title="Zoom Out"
+          style={{
+            width: '38px',
+            height: '38px',
+            border: 'none',
+            background: 'transparent',
+            color: '#4a3823',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            borderBottom: '1px solid var(--border-color, #d8c6af)',
+            transition: 'background 0.15s ease'
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-pill, #e5d5be)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+        >
+          <Minus size={18} />
+        </button>
+
+        {/* Center to Pune */}
+        <button
+          onClick={onResetCenter}
+          title="Reset View to Pune Pilot"
+          style={{
+            width: '38px',
+            height: '38px',
+            border: 'none',
+            background: 'transparent',
+            color: '#4a3823',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            borderBottom: '1px solid var(--border-color, #d8c6af)',
+            transition: 'background 0.15s ease'
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-pill, #e5d5be)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+        >
+          <Crosshair size={18} />
+        </button>
+
+        {/* Layers */}
+        <button
+          onClick={onToggleLayerMenu}
+          title="Change Basemap Layers"
+          style={{
+            width: '38px',
+            height: '38px',
+            border: 'none',
+            background: 'transparent',
+            color: '#4a3823',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            transition: 'background 0.15s ease'
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-pill, #e5d5be)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+        >
+          <Layers size={18} />
+        </button>
+      </div>
     </div>
   );
 };
+
+// Custom Leaflet Icons for Badges
+const warningIcon = L.divIcon({
+  className: 'custom-warning-marker',
+  html: `
+    <div style="
+      background: #fbbf24;
+      width: 26px;
+      height: 26px;
+      clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 2px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+      filter: drop-shadow(0px 2px 4px rgba(245, 158, 11, 0.5));
+    ">
+      <div style="
+        background: #000000;
+        width: 3px;
+        height: 9px;
+        border-radius: 1px;
+        margin-bottom: 2px;
+      "></div>
+    </div>
+  `,
+  iconSize: [26, 26],
+  iconAnchor: [13, 20]
+});
+
+const floodWaveIcon = L.divIcon({
+  className: 'custom-flood-marker',
+  html: `
+    <div style="
+      background: #ef4444;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.5);
+    ">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 12c2.5-3 5-3 7.5 0s5 3 7.5 0 5-3 7.5 0"/>
+        <path d="M2 17c2.5-3 5-3 7.5 0s5 3 7.5 0 5-3 7.5 0"/>
+      </svg>
+    </div>
+  `,
+  iconSize: [26, 26],
+  iconAnchor: [13, 13]
+});
+
+const localityLabelIcon = (name: string, isBig: boolean = false) => L.divIcon({
+  className: 'locality-label',
+  html: `
+    <div style="
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: ${isBig ? '18px' : '11px'};
+      font-weight: ${isBig ? '800' : '600'};
+      color: ${isBig ? '#0f172a' : '#334155'};
+      text-shadow: 0 0 4px #ffffff, 0 0 8px #ffffff;
+      white-space: nowrap;
+      pointer-events: none;
+      letter-spacing: ${isBig ? '-0.5px' : '0.2px'};
+    ">
+      ${name}
+    </div>
+  `,
+  iconSize: [100, 20],
+  iconAnchor: [50, 10]
+});
+
+const airportIcon = L.divIcon({
+  className: 'airport-marker',
+  html: `
+    <div style="
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b21a8;
+      text-shadow: 0 0 4px #ffffff, 0 0 6px #ffffff;
+      white-space: nowrap;
+    ">
+      <span style="font-size: 14px;">✈️</span>
+      <span>Pune International Airport</span>
+    </div>
+  `,
+  iconSize: [180, 20],
+  iconAnchor: [10, 10]
+});
+
+const vetalTekdiIcon = L.divIcon({
+  className: 'vetal-tekdi-marker',
+  html: `
+    <div style="
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #15803d;
+      text-shadow: 0 0 4px #ffffff, 0 0 6px #ffffff;
+      white-space: nowrap;
+    ">
+      <span style="font-size: 13px;">▲</span>
+      <span>Vetal Tekdi</span>
+    </div>
+  `,
+  iconSize: [120, 20],
+  iconAnchor: [10, 10]
+});
 
 export const MapComponent: FC<MapComponentProps> = ({
   geojsonData,
   reportsData,
   showReports = true,
   routeGeojson,
+  showRainfall = true,
+  targetCoords,
   onSelectSegment
 }) => {
   const geojsonLayerRef = useRef<L.GeoJSON | null>(null);
-  const [selectedBasemap, setSelectedBasemap] = useState<BasemapKey>(() => {
-    return (localStorage.getItem('jaldrishti_basemap') as BasemapKey) || 'osm';
-  });
+  const [selectedBasemap, setSelectedBasemap] = useState<BasemapKey>('osm');
   const [isLayerMenuOpen, setIsLayerMenuOpen] = useState<boolean>(false);
 
   const activeBasemap = BASEMAP_OPTIONS.find((b) => b.id === selectedBasemap) || BASEMAP_OPTIONS[0];
 
   const handleBasemapChange = (id: BasemapKey) => {
     setSelectedBasemap(id);
-    localStorage.setItem('jaldrishti_basemap', id);
     setIsLayerMenuOpen(false);
   };
 
   const getSegmentColor = (riskClass: string) => {
     switch (riskClass) {
       case 'severe':
-        return '#ef4444';
+        return '#ef4444'; // Red
       case 'high':
-        return '#f97316';
+        return '#f97316'; // Orange
       case 'moderate':
-        return '#f59e0b';
+        return '#f59e0b'; // Amber/Yellow
       case 'low':
       default:
-        return '#10b981';
+        return '#10b981'; // Green
     }
   };
 
   const styleFeature = (feature: any) => {
     const risk = feature?.properties?.risk_class || 'low';
     const isUnderpass = feature?.properties?.is_underpass;
+    const isMajor = risk === 'severe' || risk === 'high';
     return {
       color: getSegmentColor(risk),
-      weight: isUnderpass ? 6 : 4,
-      opacity: 0.88,
+      weight: isUnderpass ? 6 : (isMajor ? 4.8 : 3.6),
+      opacity: 0.92,
       lineCap: 'round' as const,
       lineJoin: 'round' as const
     };
@@ -182,13 +381,11 @@ export const MapComponent: FC<MapComponentProps> = ({
     const risk = (props.risk_class || 'low').toUpperCase();
     const prob = Math.round((props.probability || 0) * 100);
 
-    // Simple, clean tooltip on hover
     layer.bindTooltip(
-      `<strong>${name}</strong><br/>Risk: <span style="font-weight:700;">${risk} (${prob}%)</span>`,
+      `<strong>${name}</strong><br/>Risk: <span style="font-weight:700; color:${getSegmentColor(props.risk_class || 'low')}">${risk} (${prob}%)</span>`,
       { sticky: true, className: 'leaflet-tooltip' }
     );
 
-    // Click handler to open segment drawer
     layer.on({
       mouseover: (e) => {
         const target = e.target;
@@ -224,17 +421,126 @@ export const MapComponent: FC<MapComponentProps> = ({
   };
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: 'calc(100vh - 95px)', overflow: 'hidden' }}>
-      {/* Floating Basemap Selector Widget */}
+    <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+      <MapContainer
+        center={[18.538, 73.845]}
+        zoom={13}
+        style={{ width: '100%', height: '100%' }}
+        zoomControl={false}
+      >
+        <MapController routeGeojson={routeGeojson} targetCoords={targetCoords} />
+        
+        <RightControls
+          onToggleLayerMenu={() => setIsLayerMenuOpen(!isLayerMenuOpen)}
+          onResetCenter={() => {
+            // Handled via reset target
+          }}
+        />
+
+        {/* Basemap Layer */}
+        <TileLayer
+          key={activeBasemap.id}
+          attribution={activeBasemap.attribution}
+          url={activeBasemap.url}
+          maxZoom={activeBasemap.maxZoom}
+        />
+
+        {/* Live Rainfall Radar Simulation Layer (soft blue rain clouds) */}
+        {showRainfall && (
+          <TileLayer
+            key="rain_layer"
+            opacity={0.18}
+            url="https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=439d4b804bc8187953eb36d2a8c26a02"
+            maxZoom={18}
+          />
+        )}
+
+        {/* Road Inundation Prediction Polylines */}
+        {geojsonData && (
+          <GeoJSON
+            key={JSON.stringify(geojsonData.name || 'geojson') + geojsonData.features?.length}
+            ref={geojsonLayerRef}
+            data={geojsonData}
+            style={styleFeature}
+            onEachFeature={onEachFeature}
+          />
+        )}
+
+        {/* Yellow Warning Triangle Markers at Critical Chokepoints */}
+        <Marker position={[18.571, 73.874]} icon={warningIcon} />
+        <Marker position={[18.538, 73.896]} icon={warningIcon} />
+        <Marker position={[18.528, 73.824]} icon={warningIcon} />
+        <Marker position={[18.503, 73.924]} icon={warningIcon} />
+
+        {/* Red Circular Flood Inundation Badges at Rivers & Underpasses */}
+        <Marker position={[18.572, 73.808]} icon={floodWaveIcon} />
+        <Marker position={[18.536, 73.882]} icon={floodWaveIcon} />
+
+        {/* Central "Pune" Label */}
+        <Marker position={[18.528, 73.858]} icon={localityLabelIcon('Pune', true)} />
+
+        {/* Landmark Pins */}
+        <Marker position={[18.579, 73.918]} icon={airportIcon} />
+        <Marker position={[18.519, 73.818]} icon={vetalTekdiIcon} />
+
+        {/* Locality Labels matching reference screenshot */}
+        <Marker position={[18.591, 73.738]} icon={localityLabelIcon('Hinjawadi')} />
+        <Marker position={[18.598, 73.766]} icon={localityLabelIcon('Wakad')} />
+        <Marker position={[18.596, 73.798]} icon={localityLabelIcon('Pimple Saudagar')} />
+        <Marker position={[18.580, 73.792]} icon={localityLabelIcon('Pimple Nilakh')} />
+        <Marker position={[18.572, 73.818]} icon={localityLabelIcon('Old Sangvi')} />
+        <Marker position={[18.559, 73.787]} icon={localityLabelIcon('Baner')} />
+        <Marker position={[18.558, 73.807]} icon={localityLabelIcon('Aundh')} />
+        <Marker position={[18.563, 73.850]} icon={localityLabelIcon('Khadki')} />
+        <Marker position={[18.572, 73.872]} icon={localityLabelIcon('Vishrantwadi')} />
+        <Marker position={[18.536, 73.895]} icon={localityLabelIcon('Koregaon Park')} />
+        <Marker position={[18.549, 73.905]} icon={localityLabelIcon('Kalyani Nagar')} />
+        <Marker position={[18.567, 73.914]} icon={localityLabelIcon('Viman Nagar')} />
+        <Marker position={[18.532, 73.935]} icon={localityLabelIcon('Keshav Nagar')} />
+        <Marker position={[18.508, 73.926]} icon={localityLabelIcon('Hadapsar')} />
+        <Marker position={[18.507, 73.808]} icon={localityLabelIcon('Kothrud')} />
+        <Marker position={[18.455, 73.858]} icon={localityLabelIcon('Katraj')} />
+
+        {/* Planned Dry Navigation Route */}
+        {routeGeojson && (
+          <GeoJSON
+            key={"nav_route_" + JSON.stringify(routeGeojson.geometry?.coordinates?.length)}
+            data={routeGeojson}
+            style={() => ({
+              color: '#8f6534',
+              weight: 7,
+              opacity: 0.95,
+              lineCap: 'round',
+              lineJoin: 'round'
+            })}
+          />
+        )}
+
+        {/* Citizen Reports */}
+        {showReports && reportsData && (
+          <GeoJSON
+            key={"citizen_reports_" + reportsData.features?.length}
+            data={reportsData}
+            pointToLayer={(_feature, latlng) => {
+              return L.circleMarker(latlng, {
+                radius: 7,
+                fillColor: '#8f6534',
+                color: "#ffffff",
+                weight: 2,
+                opacity: 1,
+                fillOpacity: 0.95
+              });
+            }}
+          />
+        )}
+      </MapContainer>
+
+      {/* Floating Basemap Selector Pill at Bottom Right */}
       <div style={{
         position: 'absolute',
-        top: '16px',
-        right: '16px',
-        zIndex: 1000,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'flex-end',
-        gap: '6px'
+        bottom: '22px',
+        right: '18px',
+        zIndex: 900
       }}>
         <button
           onClick={() => setIsLayerMenuOpen(!isLayerMenuOpen)}
@@ -242,46 +548,44 @@ export const MapComponent: FC<MapComponentProps> = ({
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
-            padding: '8px 14px',
+            padding: '7px 14px',
             borderRadius: '10px',
-            border: '1px solid var(--border-color)',
-            background: 'var(--bg-widget)',
-            backdropFilter: 'blur(12px)',
-            color: 'var(--text-main)',
-            fontSize: '13px',
-            fontWeight: 600,
+            border: '1px solid var(--border-color, #d8c6af)',
+            background: 'var(--bg-widget, #faf5ec)',
+            boxShadow: '0 3px 12px rgba(80, 60, 40, 0.1)',
             cursor: 'pointer',
-            boxShadow: 'var(--shadow-widget)',
-            transition: 'all 0.2s ease'
+            fontSize: '12px',
+            fontWeight: 700,
+            color: '#2e2214'
           }}
         >
-          <Layers size={16} color="var(--accent-cyan)" />
-          <span>Map: {activeBasemap.name}</span>
+          {/* Mini map thumbnail graphic */}
+          <div style={{
+            width: '20px',
+            height: '16px',
+            borderRadius: '3px',
+            background: 'linear-gradient(135deg, #e5d5be, #c9b499)',
+            border: '1px solid #d8c6af'
+          }} />
+          <span>Map: {activeBasemap.name} ▾</span>
         </button>
 
+        {/* Basemap Selection Popup Menu */}
         {isLayerMenuOpen && (
           <div style={{
-            background: 'var(--bg-widget)',
-            backdropFilter: 'blur(16px)',
-            border: '1px solid var(--border-color)',
+            position: 'absolute',
+            bottom: '44px',
+            right: 0,
+            background: 'var(--bg-widget, #faf5ec)',
             borderRadius: '12px',
+            border: '1px solid var(--border-color, #d8c6af)',
             padding: '8px',
-            boxShadow: 'var(--shadow-widget)',
+            boxShadow: '0 8px 24px rgba(80, 60, 40, 0.14)',
             display: 'flex',
             flexDirection: 'column',
             gap: '4px',
-            minWidth: '220px'
+            minWidth: '200px'
           }}>
-            <div style={{
-              fontSize: '11px',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px',
-              color: 'var(--text-muted)',
-              fontWeight: 700,
-              padding: '4px 8px 6px'
-            }}>
-              Select Basemap (No Key Needed)
-            </div>
             {BASEMAP_OPTIONS.map((opt) => {
               const isSelected = opt.id === selectedBasemap;
               return (
@@ -295,15 +599,14 @@ export const MapComponent: FC<MapComponentProps> = ({
                     padding: '8px 10px',
                     borderRadius: '8px',
                     border: 'none',
-                    background: isSelected ? 'var(--accent-cyan-light)' : 'transparent',
-                    color: isSelected ? 'var(--accent-cyan)' : 'var(--text-main)',
+                    background: isSelected ? '#ebd8c0' : 'transparent',
+                    color: isSelected ? '#7a542b' : '#2e2214',
                     fontSize: '12px',
                     cursor: 'pointer',
-                    textAlign: 'left',
-                    transition: 'background 0.15s ease'
+                    textAlign: 'left'
                   }}
                   onMouseEnter={(e) => {
-                    if (!isSelected) e.currentTarget.style.background = 'var(--bg-pill-hover)';
+                    if (!isSelected) e.currentTarget.style.background = 'var(--bg-pill, #e5d5be)';
                   }}
                   onMouseLeave={(e) => {
                     if (!isSelected) e.currentTarget.style.background = 'transparent';
@@ -311,95 +614,15 @@ export const MapComponent: FC<MapComponentProps> = ({
                 >
                   <div>
                     <div style={{ fontWeight: 600 }}>{opt.name}</div>
-                    <div style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{opt.tag}</div>
+                    <div style={{ fontSize: '10px', color: '#735d47' }}>{opt.tag}</div>
                   </div>
-                  {isSelected && <Check size={14} color="var(--accent-cyan)" />}
+                  {isSelected && <Check size={14} color="#8f6534" />}
                 </button>
               );
             })}
           </div>
         )}
       </div>
-
-      <MapContainer
-        center={[18.552, 73.815]}
-        zoom={13}
-        style={{ width: '100%', height: '100%' }}
-        zoomControl={false}
-      >
-        <MapController routeGeojson={routeGeojson} />
-        <CustomZoomControl />
-
-        {/* Dynamic Basemap Layer */}
-        <TileLayer
-          key={activeBasemap.id}
-          attribution={activeBasemap.attribution}
-          url={activeBasemap.url}
-          maxZoom={activeBasemap.maxZoom}
-        />
-
-        {geojsonData && (
-          <GeoJSON
-            key={JSON.stringify(geojsonData.name || 'geojson') + geojsonData.features?.length}
-            ref={geojsonLayerRef}
-            data={geojsonData}
-            style={styleFeature}
-            onEachFeature={onEachFeature}
-          />
-        )}
-
-        {/* Planned Dry Navigation Route */}
-        {routeGeojson && (
-          <GeoJSON
-            key={"nav_route_" + JSON.stringify(routeGeojson.geometry?.coordinates?.length)}
-            data={routeGeojson}
-            style={() => ({
-              color: '#0284c7',
-              weight: 7,
-              opacity: 0.95,
-              lineCap: 'round',
-              lineJoin: 'round',
-              dashArray: undefined
-            })}
-            onEachFeature={(feat, layer) => {
-              const p = feat.properties || {};
-              layer.bindTooltip(
-                `<strong>Dry Navigation Route (${p.mode?.toUpperCase() || 'MODE'})</strong><br/>` +
-                `Distance: ${(p.distance_m / 1000).toFixed(1)} km (~${p.estimated_time_min} mins)<br/>` +
-                `<span style="color:#0284c7;font-weight:600;">${p.advisory}</span>`,
-                { sticky: true, className: 'leaflet-tooltip' }
-              );
-            }}
-          />
-        )}
-
-        {showReports && reportsData && (
-          <GeoJSON
-            key={"citizen_reports_" + reportsData.features?.length}
-            data={reportsData}
-            pointToLayer={(feature, latlng) => {
-              const state = feature.properties?.state || "Unverified";
-              const fillColor = state === "Confirmed" ? "#38bdf8" : (state === "Likely" ? "#f59e0b" : "#94a3b8");
-              return L.circleMarker(latlng, {
-                radius: 7,
-                fillColor: fillColor,
-                color: "#ffffff",
-                weight: 2,
-                opacity: 1,
-                fillOpacity: 0.95
-              });
-            }}
-            onEachFeature={(feature, layer) => {
-              const p = feature.properties || {};
-              layer.bindTooltip(
-                `<strong>Citizen Report (${p.state})</strong><br/>"${p.text}"<br/><span style="color:#38bdf8;">Trust: ${p.trust_score}/100</span>`,
-                { sticky: true, className: 'leaflet-tooltip' }
-              );
-            }}
-          />
-        )}
-      </MapContainer>
     </div>
   );
 };
-
