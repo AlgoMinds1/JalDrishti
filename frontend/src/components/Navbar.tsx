@@ -1,20 +1,22 @@
-import type { FC } from 'react';
-import { CloudRain, ShieldAlert, BarChart3, Info, Zap, RefreshCw, MapPin, Eye, Navigation, Sliders, Sun, Moon } from 'lucide-react';
+import { useState, type FC } from 'react';
+import {
+  Map,
+  BarChart3,
+  Info,
+  Moon,
+  Sun,
+  AlertCircle,
+  X
+} from 'lucide-react';
 
 interface NavbarProps {
   activeTab: 'map' | 'evaluate' | 'limits';
   setActiveTab: (tab: 'map' | 'evaluate' | 'limits') => void;
-  scenario: 'live' | 'storm_july2024';
-  setScenario: (scen: 'live' | 'storm_july2024') => void;
-  rainAgeMin: number;
-  isLoading: boolean;
-  onRefresh: () => void;
-  onOpenReportModal: () => void;
-  showReportsLayer: boolean;
-  setShowReportsLayer: (val: boolean) => void;
-  isRoutePlannerOpen: boolean;
-  onToggleRoutePlanner: () => void;
-  onOpenAdminModal: () => void;
+  scenario?: 'live' | 'storm_july2024';
+  setScenario?: (scen: 'live' | 'storm_july2024') => void;
+  rainAgeMin?: number;
+  isLoading?: boolean;
+  onRefresh?: () => void;
   theme?: 'light' | 'dark';
   setTheme?: (theme: 'light' | 'dark') => void;
 }
@@ -22,336 +24,222 @@ interface NavbarProps {
 export const Navbar: FC<NavbarProps> = ({
   activeTab,
   setActiveTab,
-  scenario,
-  setScenario,
-  rainAgeMin,
-  isLoading,
-  onRefresh,
-  onOpenReportModal,
-  showReportsLayer,
-  setShowReportsLayer,
-  isRoutePlannerOpen,
-  onToggleRoutePlanner,
-  onOpenAdminModal,
   theme = 'light',
   setTheme
 }) => {
+  const [showDisclaimer, setShowDisclaimer] = useState(true);
+
   return (
     <header style={{ position: 'relative', zIndex: 1000, width: '100%' }}>
-      {/* Persistent Disclaimer Banner */}
-      <div style={{
-        background: 'linear-gradient(90deg, #b45309, #d97706)',
-        color: '#fff',
-        fontSize: '12px',
-        fontWeight: 600,
-        textAlign: 'center',
-        padding: '5px 12px',
-        letterSpacing: '0.3px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '8px'
-      }}>
-        <ShieldAlert size={15} />
-        <span>Decision-support prototype. Not an official emergency alert service. In emergencies, call PMC / 112 immediately.</span>
-      </div>
+      {/* Warm Beige Disclaimer Banner */}
+      {showDisclaimer && (
+        <div style={{
+          background: '#faecd6',
+          color: '#7a4d18',
+          fontSize: '12px',
+          fontWeight: 500,
+          padding: '5px 16px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+          borderBottom: '1px solid #ebd0a8'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <AlertCircle size={15} color="#b86e1e" />
+            <span>
+              Decision-support prototype. Not an official emergency alert service. In emergencies, call PMC / 112 immediately.
+            </span>
+          </div>
+
+          <button
+            onClick={() => setShowDisclaimer(false)}
+            title="Dismiss notice"
+            style={{
+              position: 'absolute',
+              right: '16px',
+              background: 'transparent',
+              border: 'none',
+              color: '#7a4d18',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              padding: '2px'
+            }}
+          >
+            <X size={15} />
+          </button>
+        </div>
+      )}
 
       {/* Main Navbar Bar */}
-      <nav className="glass" style={{
+      <nav style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        padding: '12px 24px',
-        borderBottom: '1px solid var(--border-color)',
-        flexWrap: 'wrap',
-        gap: '12px'
+        padding: '10px 24px',
+        background: 'var(--bg-secondary, #f6f1e8)',
+        borderBottom: '1px solid var(--border-color, #e5dcce)',
+        height: '62px',
+        boxSizing: 'border-box'
       }}>
-        {/* Brand */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }} onClick={() => setActiveTab('map')}>
+        {/* Brand / Logo Area */}
+        <div
+          style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}
+          onClick={() => setActiveTab('map')}
+        >
+          {/* Circular droplet/cloud logo in warm caramel/beige gradient */}
           <div style={{
-            background: 'linear-gradient(135deg, #0284c7, #38bdf8)',
-            color: 'white',
-            width: '36px',
-            height: '36px',
-            borderRadius: '9px',
+            background: 'linear-gradient(135deg, #c49d68, #8f6534)',
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 4px 12px rgba(56, 189, 248, 0.35)'
+            boxShadow: '0 4px 12px rgba(166, 124, 78, 0.35)',
+            flexShrink: 0
           }}>
-            <CloudRain size={22} />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6.5 14C4.567 14 3 12.433 3 10.5C3 8.736 4.305 7.279 6.012 7.039C6.527 4.725 8.583 3 11 3C13.844 3 16.2 5.093 16.592 7.808C18.528 8.169 20 9.845 20 11.875C20 14.153 18.153 16 15.875 16H6.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M4 17.5C5.5 16.5 7.5 16.5 9 17.5C10.5 18.5 12.5 18.5 14 17.5C15.5 16.5 17.5 16.5 19 17.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M5 20.5C6.5 19.5 8.5 19.5 10 20.5C11.5 21.5 13.5 21.5 15 20.5C16.5 19.5 18.5 19.5 20 20.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </div>
+
           <div>
-            <div style={{ fontSize: '18px', fontWeight: 700, letterSpacing: '-0.3px', color: 'var(--text-main)' }}>
-              JalDrishti <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--accent-cyan)', background: 'var(--accent-cyan-light)', padding: '2px 6px', borderRadius: '4px', marginLeft: '6px' }}>Pune Pilot</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '20px', fontWeight: 800, color: 'var(--text-main, #2e2214)', letterSpacing: '-0.3px' }}>
+                JalDrishti
+              </span>
             </div>
-            <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
-              Hyperlocal Road Inundation Forecasting (1–6 Hours Ahead)
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '1px' }}>
+              <span style={{ fontSize: '11.5px', color: 'var(--text-muted, #735d47)' }}>
+                Hyperlocal Road Inundation Forecasting
+              </span>
+              <span style={{
+                fontSize: '11px',
+                fontWeight: 600,
+                color: '#6e471d',
+                background: '#e5d7c3',
+                padding: '1px 8px',
+                borderRadius: '9999px',
+                border: '1px solid #cca983'
+              }}>
+                Pune Pilot
+              </span>
             </div>
           </div>
         </div>
 
-        {/* Center Navigation Tabs */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          background: 'var(--bg-pill)',
-          borderRadius: '8px',
-          padding: '3px',
-          border: '1px solid var(--border-color)'
-        }}>
+        {/* Center / Right: Tabs & Tools */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {/* Early Warning Map Tab */}
           <button
             onClick={() => setActiveTab('map')}
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
-              padding: '6px 14px',
-              borderRadius: '6px',
-              border: 'none',
-              background: activeTab === 'map' ? '#0284c7' : 'transparent',
-              color: activeTab === 'map' ? '#fff' : 'var(--text-muted)',
+              gap: '8px',
+              padding: '7px 16px',
+              borderRadius: '8px',
+              border: activeTab === 'map' ? '1.5px solid #a67c4e' : '1.5px solid transparent',
+              background: activeTab === 'map' ? '#dfcdb5' : 'transparent',
+              color: activeTab === 'map' ? '#523412' : 'var(--text-muted, #735d47)',
               fontSize: '13px',
-              fontWeight: activeTab === 'map' ? 600 : 500,
+              fontWeight: activeTab === 'map' ? 700 : 500,
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.15s ease'
             }}
           >
-            <CloudRain size={15} /> Early-Warning Map
+            <Map size={16} color={activeTab === 'map' ? '#7a542b' : '#735d47'} />
+            <span>Early-Warning Map</span>
           </button>
 
+          {/* Model Accuracy Tab */}
           <button
             onClick={() => setActiveTab('evaluate')}
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
-              padding: '6px 14px',
-              borderRadius: '6px',
-              border: 'none',
-              background: activeTab === 'evaluate' ? '#0284c7' : 'transparent',
-              color: activeTab === 'evaluate' ? '#fff' : 'var(--text-muted)',
+              gap: '8px',
+              padding: '7px 16px',
+              borderRadius: '8px',
+              border: activeTab === 'evaluate' ? '1.5px solid #a67c4e' : '1.5px solid transparent',
+              background: activeTab === 'evaluate' ? '#dfcdb5' : 'transparent',
+              color: activeTab === 'evaluate' ? '#523412' : 'var(--text-muted, #735d47)',
               fontSize: '13px',
-              fontWeight: activeTab === 'evaluate' ? 600 : 500,
+              fontWeight: activeTab === 'evaluate' ? 700 : 500,
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.15s ease'
             }}
           >
-            <BarChart3 size={15} /> Model Accuracy
+            <BarChart3 size={16} color={activeTab === 'evaluate' ? '#7a542b' : '#735d47'} />
+            <span>Model Accuracy</span>
           </button>
 
+          {/* Data & Limitations Tab */}
           <button
             onClick={() => setActiveTab('limits')}
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
-              padding: '6px 14px',
-              borderRadius: '6px',
-              border: 'none',
-              background: activeTab === 'limits' ? '#0284c7' : 'transparent',
-              color: activeTab === 'limits' ? '#fff' : 'var(--text-muted)',
+              gap: '8px',
+              padding: '7px 16px',
+              borderRadius: '8px',
+              border: activeTab === 'limits' ? '1.5px solid #a67c4e' : '1.5px solid transparent',
+              background: activeTab === 'limits' ? '#dfcdb5' : 'transparent',
+              color: activeTab === 'limits' ? '#523412' : 'var(--text-muted, #735d47)',
               fontSize: '13px',
-              fontWeight: activeTab === 'limits' ? 600 : 500,
+              fontWeight: activeTab === 'limits' ? 700 : 500,
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.15s ease'
             }}
           >
-            <Info size={15} /> Data & Limitations
+            <Info size={16} color={activeTab === 'limits' ? '#7a542b' : '#735d47'} />
+            <span>Data & Limitations</span>
           </button>
-        </div>
 
-        {/* Right Controls: Freshness & Scenario Toggle */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          {/* Theme Toggle Button */}
+          {/* Dark / Light Mode Toggle Icon */}
           {setTheme && (
             <button
               onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
               title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
               style={{
+                width: '34px',
+                height: '34px',
+                borderRadius: '50%',
+                border: '1px solid var(--border-color, #d8c6af)',
+                background: 'var(--bg-widget, #faf5ec)',
+                color: '#523412',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '5px',
-                padding: '6px 10px',
-                borderRadius: '7px',
-                border: '1px solid var(--border-color)',
-                background: 'var(--bg-pill)',
-                color: 'var(--text-main)',
-                fontSize: '12px',
-                fontWeight: 600,
+                justifyContent: 'center',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
               }}
             >
-              {theme === 'light' ? <Moon size={13} color="#0284c7" /> : <Sun size={13} color="#f59e0b" />}
-              <span>{theme === 'light' ? 'Dark' : 'Light'}</span>
+              {theme === 'light' ? <Moon size={16} /> : <Sun size={16} color="#d97706" />}
             </button>
           )}
 
-          {/* Citizen Report Toggle */}
-          <button
-            onClick={() => setShowReportsLayer(!showReportsLayer)}
-            title="Toggle Citizen Reports Layer"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 10px',
-              borderRadius: '7px',
-              border: showReportsLayer ? '1px solid var(--accent-cyan)' : '1px solid var(--border-color)',
-              background: showReportsLayer ? 'var(--accent-cyan-light)' : 'var(--bg-pill)',
-              color: showReportsLayer ? 'var(--accent-cyan)' : 'var(--text-muted)',
-              fontSize: '12px',
-              fontWeight: 500,
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <Eye size={13} />
-            <span>Reports {showReportsLayer ? 'ON' : 'OFF'}</span>
-          </button>
-
-          {/* Plan Dry Route Action Button */}
-          <button
-            onClick={onToggleRoutePlanner}
-            title="Mode-aware dry routing avoiding waterlogged roads"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 12px',
-              borderRadius: '7px',
-              border: isRoutePlannerOpen ? '1px solid var(--accent-cyan)' : '1px solid var(--border-color)',
-              background: isRoutePlannerOpen ? 'var(--accent-cyan-light)' : 'var(--bg-pill)',
-              color: isRoutePlannerOpen ? 'var(--accent-cyan)' : 'var(--text-main)',
-              fontSize: '12px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <Navigation size={13} />
-            <span>Plan Dry Route</span>
-          </button>
-
-          {/* Admin & What-If Sandbox Button */}
-          <button
-            onClick={onOpenAdminModal}
-            title="What-If Storm Sandbox & Inspection Queue"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 12px',
-              borderRadius: '7px',
-              border: '1px solid var(--border-color)',
-              background: 'var(--bg-pill)',
-              color: 'var(--accent-cyan)',
-              fontSize: '12px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <Sliders size={13} />
-            <span>Admin & Sandbox</span>
-          </button>
-
-          {/* + Report Waterlogging Action Button */}
-          <button
-            onClick={onOpenReportModal}
-            title="Report localized waterlogging or road pooling"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 12px',
-              borderRadius: '7px',
-              border: 'none',
-              background: 'linear-gradient(135deg, #0284c7, #0ea5e9)',
-              color: '#ffffff',
-              fontSize: '12px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              boxShadow: '0 2px 10px rgba(2, 132, 199, 0.35)',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <MapPin size={13} />
-            <span>+ Report Flooding</span>
-          </button>
-
-          {/* Scenario Toggle */}
-          <button
-            onClick={() => setScenario(scenario === 'live' ? 'storm_july2024' : 'live')}
-            title="Toggle between Live Forecast and Historical July 2024 Cloudburst Simulation"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 12px',
-              borderRadius: '7px',
-              border: scenario === 'storm_july2024' ? '1px solid #f97316' : '1px solid var(--border-color)',
-              background: scenario === 'storm_july2024' ? 'var(--risk-high-bg)' : 'var(--bg-pill)',
-              color: scenario === 'storm_july2024' ? 'var(--risk-high)' : 'var(--text-main)',
-              fontSize: '12px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'all 0.2s ease'
-            }}
-          >
-            {scenario === 'storm_july2024' ? (
-              <>
-                <Zap size={14} color="#f97316" /> July 2024 Storm Simulation
-              </>
-            ) : (
-              <>
-                <CloudRain size={14} color="#0284c7" /> Live Open-Meteo Mode
-              </>
-            )}
-          </button>
-
-          {/* Freshness Badge */}
+          {/* User Profile Avatar (PS = Pune Station / Support) */}
           <div style={{
+            width: '34px',
+            height: '34px',
+            borderRadius: '50%',
+            background: '#dfcdb5',
+            color: '#523412',
+            fontSize: '12.5px',
+            fontWeight: 700,
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
-            fontSize: '12px',
-            color: rainAgeMin > 45 ? '#dc2626' : (rainAgeMin > 20 ? '#d97706' : '#059669'),
-            background: 'var(--bg-pill)',
-            padding: '5px 10px',
-            borderRadius: '6px',
-            border: '1px solid var(--border-color)'
+            justifyContent: 'center',
+            border: '1px solid #c4ab89',
+            boxShadow: '0 1px 3px rgba(80, 60, 40, 0.08)'
           }}>
-            <span style={{
-              width: '7px',
-              height: '7px',
-              borderRadius: '50%',
-              backgroundColor: rainAgeMin > 45 ? '#dc2626' : (rainAgeMin > 20 ? '#d97706' : '#059669'),
-              boxShadow: `0 0 6px ${rainAgeMin > 45 ? '#dc2626' : (rainAgeMin > 20 ? '#d97706' : '#059669')}`
-            }} />
-            <span>Rain Data: {rainAgeMin}m ago</span>
+            PS
           </div>
-
-          {/* Refresh Button */}
-          <button
-            onClick={onRefresh}
-            disabled={isLoading}
-            title="Refresh forecast predictions"
-            style={{
-              background: 'var(--bg-pill)',
-              border: '1px solid var(--border-color)',
-              borderRadius: '6px',
-              padding: '6px 8px',
-              color: 'var(--text-muted)',
-              cursor: isLoading ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
-          >
-            <RefreshCw size={14} className={isLoading ? 'spin' : ''} />
-          </button>
         </div>
       </nav>
     </header>

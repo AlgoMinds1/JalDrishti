@@ -179,7 +179,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                 padding: '6px 14px',
                 borderRadius: '6px',
                 border: 'none',
-                background: activeSubTab === tab.id ? '#0284c7' : 'transparent',
+                background: activeSubTab === tab.id ? 'linear-gradient(135deg, #b8905e, #8f6738)' : 'transparent',
                 color: activeSubTab === tab.id ? '#ffffff' : 'var(--text-muted)',
                 fontSize: '12px',
                 fontWeight: 600,
@@ -267,17 +267,18 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                     onClick={runSimulation}
                     disabled={isSimulating}
                     style={{
-                      background: 'linear-gradient(135deg, #0284c7, #0ea5e9)',
+                      background: 'linear-gradient(135deg, #b8905e, #8f6738)',
                       color: '#ffffff',
                       border: 'none',
                       padding: '10px 18px',
                       borderRadius: '8px',
                       fontSize: '13px',
-                      fontWeight: 600,
+                      fontWeight: 700,
                       cursor: isSimulating ? 'not-allowed' : 'pointer',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: '8px'
+                      gap: '8px',
+                      boxShadow: '0 4px 14px rgba(143, 103, 56, 0.35)'
                     }}
                   >
                     <RefreshCw size={15} className={isSimulating ? 'spin' : ''} />
@@ -422,12 +423,13 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                     gap: '6px',
                     padding: '6px 12px',
                     borderRadius: '6px',
-                    background: '#0284c7',
+                    background: 'linear-gradient(135deg, #b8905e, #8f6738)',
                     color: '#fff',
                     border: 'none',
                     fontSize: '12px',
-                    fontWeight: 600,
-                    cursor: 'pointer'
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 8px rgba(143, 103, 56, 0.3)'
                   }}
                 >
                   <PlusCircle size={14} /> Log Civic Intervention
@@ -587,14 +589,15 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                       <button
                         type="submit"
                         style={{
-                          background: '#0284c7',
+                          background: 'linear-gradient(135deg, #b8905e, #8f6738)',
                           color: '#fff',
                           border: 'none',
                           padding: '10px',
                           borderRadius: '6px',
-                          fontWeight: 600,
+                          fontWeight: 700,
                           cursor: 'pointer',
-                          marginTop: '6px'
+                          marginTop: '6px',
+                          boxShadow: '0 2px 8px rgba(143, 103, 56, 0.3)'
                         }}
                       >
                         Submit to Effectiveness Ledger

@@ -1,7 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Navbar } from './components/Navbar';
+import { Sidebar } from './components/Sidebar';
 import { MapComponent } from './components/MapComponent';
+import { TopControls } from './components/TopControls';
+import { RiskLegend } from './components/RiskLegend';
 import { TimeSlider } from './components/TimeSlider';
 import { SegmentModal, type SegmentPredictionData } from './components/SegmentModal';
 import { ReportModal } from './components/ReportModal';
@@ -17,14 +20,19 @@ export function App() {
   const [geojsonData, setGeojsonData] = useState<any>(null);
   const [reportsData, setReportsData] = useState<any>(null);
   const [showReportsLayer, setShowReportsLayer] = useState<boolean>(true);
+  const [showRainfall, setShowRainfall] = useState<boolean>(true);
+  const [targetCoords, setTargetCoords] = useState<{ lat: number; lon: number; name: string } | null>(null);
+
+  // Modals
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
   const [isRoutePlannerOpen, setIsRoutePlannerOpen] = useState<boolean>(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState<boolean>(false);
   const [activeRouteGeojson, setActiveRouteGeojson] = useState<any>(null);
   const [selectedSegment, setSelectedSegment] = useState<SegmentPredictionData | null>(null);
+
   const [rainAgeMin, setRainAgeMin] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [stats, setStats] = useState({ low: 0, moderate: 0, high: 0, severe: 0 });
+  const [_stats, setStats] = useState({ low: 0, moderate: 0, high: 0, severe: 0 });
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     return (localStorage.getItem('jaldrishti_theme') as 'light' | 'dark') || 'light';
   });
@@ -34,7 +42,7 @@ export function App() {
     localStorage.setItem('jaldrishti_theme', theme);
   }, [theme]);
 
-  // Fetch predictions for the active horizon and scenario
+  // Load predictions for the active horizon and scenario
   const fetchPredictions = useCallback(async () => {
     setIsLoading(true);
     try {
@@ -42,7 +50,6 @@ export function App() {
       const res = await axios.get(url);
       setGeojsonData(res.data);
 
-      // Compute statistics
       const counts = { low: 0, moderate: 0, high: 0, severe: 0 };
       res.data.features?.forEach((f: any) => {
         const r = (f.properties?.risk_class || 'low') as keyof typeof counts;
@@ -54,12 +61,29 @@ export function App() {
       });
       setStats(counts);
 
-      // Check rain data age from first feature
       if (res.data.features?.[0]?.properties?.rain_data_age_min !== undefined) {
         setRainAgeMin(res.data.features[0].properties.rain_data_age_min);
       }
-    } catch (err) {
-      console.error('Failed to fetch predictions from API:', err);
+    } catch {
+      // Graceful fallback to static high-resolution pilot dataset
+      try {
+        const fallbackRes = await axios.get('/data/default_predictions.json');
+        const hourData = fallbackRes.data[currentHour] || fallbackRes.data[1];
+        setGeojsonData(hourData);
+
+        const counts = { low: 0, moderate: 0, high: 0, severe: 0 };
+        hourData.features?.forEach((f: any) => {
+          const r = (f.properties?.risk_class || 'low') as keyof typeof counts;
+          if (counts[r] !== undefined) {
+            counts[r]++;
+          } else {
+            counts.low++;
+          }
+        });
+        setStats(counts);
+      } catch (errFallback) {
+        console.error('Failed to load predictions fallback:', errFallback);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +94,7 @@ export function App() {
     try {
       const res = await axios.get('/api/reports?hours=24');
       setReportsData(res.data);
-    } catch (err) {
+    } catch {
       // Backend offline or no reports
     }
   }, []);
@@ -82,8 +106,8 @@ export function App() {
       if (res.data?.rain_data_age_min !== undefined) {
         setRainAgeMin(res.data.rain_data_age_min);
       }
-    } catch (err) {
-      // Backend starting or offline
+    } catch {
+      // Backend offline
     }
   }, []);
 
@@ -97,7 +121,14 @@ export function App() {
   }, [fetchPredictions]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', overflow: 'hidden' }}>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100vh',
+      width: '100vw',
+      overflow: 'hidden',
+      background: 'var(--bg-primary, #faf7f2)'
+    }}>
       {/* Top Header Navbar */}
       <Navbar
         activeTab={activeTab}
@@ -107,64 +138,103 @@ export function App() {
         rainAgeMin={rainAgeMin}
         isLoading={isLoading}
         onRefresh={fetchPredictions}
-        onOpenReportModal={() => setIsReportModalOpen(true)}
-        showReportsLayer={showReportsLayer}
-        setShowReportsLayer={setShowReportsLayer}
-        isRoutePlannerOpen={isRoutePlannerOpen}
-        onToggleRoutePlanner={() => setIsRoutePlannerOpen(!isRoutePlannerOpen)}
-        onOpenAdminModal={() => setIsAdminModalOpen(true)}
         theme={theme}
         setTheme={setTheme}
       />
 
-      {/* Main Content Area */}
-      <main style={{ flex: 1, position: 'relative', overflowY: activeTab === 'map' ? 'hidden' : 'auto' }}>
-        {activeTab === 'map' && (
-          <>
-            <MapComponent
-              geojsonData={geojsonData}
-              reportsData={reportsData}
-              showReports={showReportsLayer}
-              routeGeojson={activeRouteGeojson}
-              onSelectSegment={(seg) => setSelectedSegment(seg)}
-            />
-            <TimeSlider
-              currentHour={currentHour}
-              setHour={(h) => setCurrentHour(h)}
-              stats={stats}
-            />
-            <SegmentModal
-              segment={selectedSegment}
-              onClose={() => setSelectedSegment(null)}
-            />
-            <RoutePlanner
-              isOpen={isRoutePlannerOpen}
-              onClose={() => setIsRoutePlannerOpen(false)}
-              onRouteCalculated={(routeGeo) => {
-                setActiveRouteGeojson(routeGeo);
-              }}
-              onClearRoute={() => setActiveRouteGeojson(null)}
-              currentHour={currentHour}
-            />
-            <AdminSandboxModal
-              isOpen={isAdminModalOpen}
-              onClose={() => setIsAdminModalOpen(false)}
-              onApplySimulationToMap={(simGeo) => setGeojsonData(simGeo)}
-            />
-            <ReportModal
-              isOpen={isReportModalOpen}
-              onClose={() => setIsReportModalOpen(false)}
-              onReportSubmitted={() => {
-                fetchReports();
-              }}
-              defaultCoords={{ lat: 18.574, lon: 73.806 }}
-            />
-          </>
-        )}
+      {/* Main Layout Area: Left Sidebar + Center Map View */}
+      <div style={{ display: 'flex', flex: 1, height: 'calc(100vh - 86px)', overflow: 'hidden' }}>
+        {/* Left Sidebar Menu */}
+        <Sidebar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          onOpenReportModal={() => setIsReportModalOpen(true)}
+          onToggleRoutePlanner={() => setIsRoutePlannerOpen(true)}
+          onOpenAdminModal={() => setIsAdminModalOpen(true)}
+          onToggleRainfall={() => setShowRainfall(!showRainfall)}
+          showRainfall={showRainfall}
+          rainAgeMin={rainAgeMin}
+        />
 
-        {activeTab === 'evaluate' && <EvaluationPage />}
-        {activeTab === 'limits' && <LimitationsPage />}
-      </main>
+        {/* Center / Right Content Area */}
+        <main style={{
+          flex: 1,
+          position: 'relative',
+          height: '100%',
+          overflow: activeTab === 'map' ? 'hidden' : 'auto'
+        }}>
+          {activeTab === 'map' && (
+            <>
+              {/* Floating Top Controls (Search location, Quick Horizon pills, Live Rainfall toggle) */}
+              <TopControls
+                currentHour={currentHour}
+                setHour={(h) => setCurrentHour(h)}
+                showRainfall={showRainfall}
+                setShowRainfall={setShowRainfall}
+                onSelectLocation={(lat, lon, name) => setTargetCoords({ lat, lon, name })}
+              />
+
+              {/* Floating Waterlogging Risk Legend */}
+              <RiskLegend />
+
+              {/* Full Interactive Leaflet Map */}
+              <MapComponent
+                geojsonData={geojsonData}
+                reportsData={reportsData}
+                showReports={showReportsLayer}
+                routeGeojson={activeRouteGeojson}
+                showRainfall={showRainfall}
+                targetCoords={targetCoords}
+                onSelectSegment={(seg) => setSelectedSegment(seg)}
+              />
+
+              {/* Bottom Forecast Horizon Card with Animation */}
+              <TimeSlider
+                currentHour={currentHour}
+                setHour={(h) => setCurrentHour(h)}
+              />
+
+              {/* Clicked Road Segment Inspection Drawer */}
+              <SegmentModal
+                segment={selectedSegment}
+                onClose={() => setSelectedSegment(null)}
+              />
+
+              {/* Mode-Aware Dry Route Planner Modal */}
+              <RoutePlanner
+                isOpen={isRoutePlannerOpen}
+                onClose={() => setIsRoutePlannerOpen(false)}
+                onRouteCalculated={(routeGeo) => {
+                  setActiveRouteGeojson(routeGeo);
+                }}
+                onClearRoute={() => setActiveRouteGeojson(null)}
+                currentHour={currentHour}
+              />
+
+              {/* What-If Storm Sandbox Admin Modal */}
+              <AdminSandboxModal
+                isOpen={isAdminModalOpen}
+                onClose={() => setIsAdminModalOpen(false)}
+                onApplySimulationToMap={(simGeo) => setGeojsonData(simGeo)}
+              />
+
+              {/* Citizen Flood Ground Truth Report Modal */}
+              <ReportModal
+                isOpen={isReportModalOpen}
+                onClose={() => setIsReportModalOpen(false)}
+                onReportSubmitted={() => {
+                  fetchReports();
+                  setShowReportsLayer(true);
+                }}
+                defaultCoords={{ lat: 18.574, lon: 73.806 }}
+              />
+            </>
+          )}
+
+          {activeTab === 'evaluate' && <EvaluationPage />}
+          {activeTab === 'limits' && <LimitationsPage />}
+        </main>
+      </div>
     </div>
   );
 }
