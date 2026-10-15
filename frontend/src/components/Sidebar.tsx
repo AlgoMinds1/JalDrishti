@@ -9,8 +9,8 @@ import {
 } from 'lucide-react';
 
 interface SidebarProps {
-  activeTab: 'map' | 'evaluate' | 'limits';
-  setActiveTab: (tab: 'map' | 'evaluate' | 'limits') => void;
+  activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits';
+  setActiveTab: (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits') => void;
   onOpenReportModal: () => void;
   onToggleRoutePlanner: () => void;
   onOpenAdminModal: () => void;

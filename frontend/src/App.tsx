@@ -12,9 +12,11 @@ import { RoutePlanner } from './components/RoutePlanner';
 import { AdminSandboxModal } from './components/AdminSandboxModal';
 import { EvaluationPage } from './pages/EvaluationPage';
 import { LimitationsPage } from './pages/LimitationsPage';
+import { LandingPage } from './pages/LandingPage';
+import { SignInPage } from './pages/SignInPage';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState<'map' | 'evaluate' | 'limits'>('map');
+  const [activeTab, setActiveTab] = useState<'home' | 'signin' | 'map' | 'evaluate' | 'limits'>('home');
   const [currentHour, setCurrentHour] = useState<number>(1);
   const [scenario, setScenario] = useState<'live' | 'storm_july2024'>('live');
   const [geojsonData, setGeojsonData] = useState<any>(null);
@@ -119,6 +121,25 @@ export function App() {
   useEffect(() => {
     fetchPredictions();
   }, [fetchPredictions]);
+
+  if (activeTab === 'home') {
+    return (
+      <LandingPage
+        onLaunchMap={() => setActiveTab('map')}
+        onNavigate={(tab) => setActiveTab(tab)}
+        onOpenSignIn={() => setActiveTab('signin')}
+      />
+    );
+  }
+
+  if (activeTab === 'signin') {
+    return (
+      <SignInPage
+        onSignInSuccess={() => setActiveTab('map')}
+        onBackHome={() => setActiveTab('home')}
+      />
+    );
+  }
 
   return (
     <div style={{

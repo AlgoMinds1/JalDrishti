@@ -10,8 +10,8 @@ import {
 } from 'lucide-react';
 
 interface NavbarProps {
-  activeTab: 'map' | 'evaluate' | 'limits';
-  setActiveTab: (tab: 'map' | 'evaluate' | 'limits') => void;
+  activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits';
+  setActiveTab: (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits') => void;
   scenario?: 'live' | 'storm_july2024';
   setScenario?: (scen: 'live' | 'storm_july2024') => void;
   rainAgeMin?: number;
@@ -86,7 +86,8 @@ export const Navbar: FC<NavbarProps> = ({
         {/* Brand / Logo Area */}
         <div
           style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}
-          onClick={() => setActiveTab('map')}
+          onClick={() => setActiveTab('home')}
+          title="Return to Landing Page"
         >
           {/* Circular droplet/cloud logo in warm caramel/beige gradient */}
           <div style={{
