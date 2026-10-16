@@ -20,23 +20,19 @@ export const ScenarioReplayBar: FC<ScenarioReplayBarProps> = ({ onRunScenario, o
   const [hour, setHour] = useState(1);
   const [simulationActive, setSimulationActive] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
   const selected = scenarios.find((scenario) => scenario.id === selectedId)!;
 
   useEffect(() => {
     if (!playing) return undefined;
     const timer = window.setInterval(() => {
-      setHour((current) => {
-        if (current >= 6) {
-          setPlaying(false);
-          return 6;
-        }
-        const next = current + 1;
-        onRunScenario(selectedId, next);
-        return next;
-      });
+      const next = Math.min(6, hour + 1);
+      setHour(next);
+      onRunScenario(selectedId, next);
+      if (next === 6) setPlaying(false);
     }, 1700);
     return () => window.clearInterval(timer);
-  }, [playing, onRunScenario, selectedId]);
+  }, [playing, hour, onRunScenario, selectedId]);
 
   const chooseScenario = (id: ScenarioId) => {
     setSelectedId(id);
@@ -67,7 +63,7 @@ export const ScenarioReplayBar: FC<ScenarioReplayBarProps> = ({ onRunScenario, o
   };
 
   return (
-    <section aria-label="Historical event scenario simulation" className="glass" style={{
+    <section aria-label="Historical event scenario simulation" className="glass scenario-replay-bar" style={{
       position: 'absolute', zIndex: 1005, top: '64px', left: '50%', transform: 'translateX(-50%)',
       width: 'min(900px, calc(100% - 32px))', boxSizing: 'border-box', padding: '10px 12px', borderRadius: 16,
       background: 'var(--bg-card, #FFFCF6)', border: '1px solid var(--border-color, #E4DACA)',
@@ -97,12 +93,13 @@ export const ScenarioReplayBar: FC<ScenarioReplayBarProps> = ({ onRunScenario, o
           background: hour === step ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent', color: 'var(--text-main, #25251F)',
           fontSize: 11, fontWeight: hour === step ? 700 : 500, cursor: 'pointer',
         }}>+{step}h</button>)}
-        {summary && <span style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--text-main, #25251F)', whiteSpace: 'nowrap' }}>
-          Score <strong>{summary.mean_risk_score}/100</strong> · <span style={{ color: '#C2410C' }}>↑ {summary.increasing_segments}</span> · <span style={{ color: '#16866A' }}>↓ {summary.easing_segments}</span>
+        {summary && <span className="scenario-replay-score" style={{ marginLeft: 'auto', fontSize: 11, color: 'var(--text-main, #25251F)', whiteSpace: 'nowrap' }}>
+          Mean score <strong>{summary.mean_risk_score}/100</strong> · <span style={{ color: '#C2410C' }}>↑ {summary.increasing_segments}</span> · <span style={{ color: '#16866A' }}>↓ {summary.easing_segments}</span>
         </span>}
-        {summary && <button type="button" onClick={() => { onExitSimulation(); setSimulationActive(false); setPlaying(false); }} style={{ marginLeft: summary ? 5 : 'auto', border: 'none', background: 'transparent', color: 'var(--text-muted, #706D62)', fontSize: 11, textDecoration: 'underline', cursor: 'pointer' }}>Exit simulation</button>}
+        {summary && <button type="button" onClick={() => { onExitSimulation(); setSimulationActive(false); setPlaying(false); }} style={{ marginLeft: summary ? 5 : 'auto', border: 'none', background: 'transparent', color: 'var(--text-muted, #706D62)', fontSize: 11, textDecoration: 'underline', cursor: 'pointer' }}>Exit</button>}
       </div>
-      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 7, margin: '8px 2px 0 25px', color: 'var(--text-muted, #706D62)', fontSize: 11, lineHeight: 1.4 }}>
+      <button className="scenario-replay-info-toggle" type="button" onClick={() => setShowInfo(!showInfo)} aria-expanded={showInfo} style={{ display: 'none' }}>Scenario info</button>
+      <div className={`scenario-replay-info${showInfo ? ' is-open' : ''}`} style={{ display: 'flex', alignItems: 'flex-start', gap: 7, margin: '8px 2px 0 25px', color: 'var(--text-muted, #706D62)', fontSize: 11, lineHeight: 1.4 }}>
         <CircleHelp size={13} style={{ flexShrink: 0, marginTop: 1 }} />
         <span><strong style={{ color: 'var(--text-main, #25251F)' }}>{selected.title} · {selected.date}.</strong> {selected.detail} <a href={selected.source} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-cyan, #77745B)', fontWeight: 600 }}>Source</a> · The changing layer is an illustrative rule-based what-if simulation, not the observed event or a trained-model forecast.</span>
       </div>

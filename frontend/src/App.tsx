@@ -148,7 +148,7 @@ export function App() {
       try {
         let roads = baseRoadSegments;
         if (!roads) {
-          const response = await fetch('/data/pilot/road_segments.geojson');
+          const response = await fetch(`${import.meta.env.BASE_URL}data/pilot/road_segments.geojson`);
           if (!response.ok) throw new Error(`Road geometry fallback returned ${response.status}`);
           roads = await response.json();
           if (cancelled) return;
@@ -203,7 +203,7 @@ export function App() {
         display: 'flex',
         flexDirection: 'column',
         height: '100dvh',
-        width: '100vw',
+        width: '100%',
         overflow: 'hidden',
         background: 'var(--bg-primary, #F5F0E7)',
         position: 'relative'
@@ -285,13 +285,14 @@ export function App() {
               />
 
               {/* Forecast Horizon Selector & Overview Card */}
-              <TimeSlider
-                currentHour={currentHour}
-                setHour={setCurrentHour}
-                stats={stats}
-                rainAgeMin={rainAgeMin}
-                disabled={scenarioSimulationActive}
-              />
+              {!scenarioSimulationActive && (
+                <TimeSlider
+                  currentHour={currentHour}
+                  setHour={setCurrentHour}
+                  stats={stats}
+                  rainAgeMin={rainAgeMin}
+                />
+              )}
 
               {/* Road Segment Inspection (Mobile Bottom Sheet & Desktop Drawer) */}
               <SegmentModal

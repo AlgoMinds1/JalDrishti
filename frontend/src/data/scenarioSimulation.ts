@@ -18,9 +18,21 @@ const riskClass = (score: number) => {
 };
 
 function coordinates(feature: SegmentCollection['features'][number]) {
-  const points: number[][] = feature.geometry?.coordinates ?? [];
+  // GeoJSON lines may be LineStrings or MultiLineStrings. Flatten all coordinate
+  // pairs before averaging; treating a nested line as a point produced NaN scores.
+  const points: number[][] = [];
+  const visit = (value: unknown) => {
+    if (!Array.isArray(value)) return;
+    if (value.length >= 2 && typeof value[0] === 'number' && typeof value[1] === 'number') {
+      points.push(value as number[]);
+      return;
+    }
+    value.forEach(visit);
+  };
+  visit(feature.geometry?.coordinates);
   if (!points.length) return [73.85, 18.52];
-  return points.reduce((acc, point) => [acc[0] + point[0] / points.length, acc[1] + point[1] / points.length], [0, 0]);
+  const center = points.reduce((acc, point) => [acc[0] + point[0] / points.length, acc[1] + point[1] / points.length], [0, 0]);
+  return center.every(Number.isFinite) ? center : [73.85, 18.52];
 }
 
 function getScenarioScore(id: EventScenarioId, hour: number, lon: number, lat: number, props: Record<string, any>) {
@@ -32,30 +44,32 @@ function getScenarioScore(id: EventScenarioId, hour: number, lon: number, lat: n
     // A deliberately hypothetical west-to-east citywide rain pulse.
     const band = lon < 73.835 ? 0 : lon < 73.875 ? 1 : 2;
     const profile = [
-      [48, 64, 48, 30, 20, 12],
-      [28, 48, 66, 52, 34, 20],
-      [15, 26, 42, 62, 50, 30],
+      [72, 88, 68, 44, 26, 14],
+      [34, 60, 86, 72, 48, 26],
+      [18, 34, 58, 82, 68, 42],
     ][band];
     return Math.max(0, Math.min(100, profile[hour - 1] + vulnerability));
   }
 
-  const focus = id === '2023' ? [73.83, 18.49] : [73.821, 18.478];
-  const dx = (lon - focus[0]) * 111 * Math.cos((lat * Math.PI) / 180);
-  const dy = (lat - focus[1]) * 111;
+  const origin = id === '2023' ? [73.83, 18.49] : [73.821, 18.478];
+  // Move the rainfall/flood wave east each hour: roads behind it recede while
+  // the advancing edge intensifies, so playback visibly changes spatially.
+  const waveCenter = [origin[0] + (hour - 1) * 0.006, origin[1] - (hour - 1) * 0.001];
+  const dx = (lon - waveCenter[0]) * 111 * Math.cos((lat * Math.PI) / 180);
+  const dy = (lat - waveCenter[1]) * 111;
   const distanceKm = Math.sqrt(dx * dx + dy * dy);
-  const reach = id === '2023' ? 5.2 : 4.1;
+  const reach = id === '2023' ? 6.8 : 5.8;
   const spatialWeight = Math.max(0, 1 - distanceKm / reach);
   const signal = id === '2023'
-    ? [30, 50, 70, 58, 38, 20][hour - 1]
-    : [42, 60, 72, 55, 36, 18][hour - 1];
+    ? [72, 84, 92, 82, 66, 48][hour - 1]
+    : [78, 90, 96, 82, 62, 42][hour - 1];
 
   // The advancing edge can increase while the origin is already receding.
-  const downstreamWave = id === '2023' && lon > focus[0] && hour >= 3
-    ? Math.min(14, (hour - 2) * 5)
-    : id === '2024' && lon > focus[0] && hour >= 2
-      ? Math.min(18, (hour - 1) * 4)
-      : 0;
-  return Math.max(0, Math.min(100, signal * spatialWeight + downstreamWave + vulnerability * spatialWeight));
+  const downstreamWave = lon > origin[0] + 0.01 && hour >= 2
+    ? Math.min(14, (hour - 1) * 3)
+    : 0;
+  const floor = spatialWeight > 0 ? 4 : 0;
+  return Math.max(0, Math.min(100, floor + signal * spatialWeight + downstreamWave * spatialWeight + vulnerability * spatialWeight));
 }
 
 /**
