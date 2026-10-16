@@ -1,0 +1,18 @@
+{
+  "name": "JalDrishti — Pune Waterlogging Early-Warning",
+  "short_name": "JalDrishti",
+  "description": "Hyperlocal Urban Waterlogging Early-Warning & Crowd-Sourced Verification Platform for Pune",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F5F0E7",
+  "theme_color": "#77745B",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

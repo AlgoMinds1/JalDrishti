@@ -10,6 +10,7 @@ import { SegmentModal, type SegmentPredictionData } from './components/SegmentMo
 import { ReportModal } from './components/ReportModal';
 import { RoutePlanner } from './components/RoutePlanner';
 import { AdminSandboxModal } from './components/AdminSandboxModal';
+import { MobileBottomNav } from './components/MobileBottomNav';
 import { EvaluationPage } from './pages/EvaluationPage';
 import { LimitationsPage } from './pages/LimitationsPage';
 import { LandingPage } from './pages/LandingPage';
@@ -34,7 +35,7 @@ export function App() {
 
   const [rainAgeMin, setRainAgeMin] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [_stats, setStats] = useState({ low: 0, moderate: 0, high: 0, severe: 0 });
+  const [stats, setStats] = useState({ low: 0, moderate: 0, high: 0, severe: 0 });
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     return (localStorage.getItem('jaldrishti_theme') as 'light' | 'dark') || 'light';
   });
@@ -142,14 +143,17 @@ export function App() {
   }
 
   return (
-    <div style={{
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100vh',
-      width: '100vw',
-      overflow: 'hidden',
-      background: 'var(--bg-primary, #faf7f2)'
-    }}>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100dvh',
+        width: '100vw',
+        overflow: 'hidden',
+        background: 'var(--bg-primary, #F5F0E7)',
+        position: 'relative'
+      }}
+    >
       {/* Top Header Navbar */}
       <Navbar
         activeTab={activeTab}
@@ -163,9 +167,17 @@ export function App() {
         setTheme={setTheme}
       />
 
-      {/* Main Layout Area: Left Sidebar + Center Map View */}
-      <div style={{ display: 'flex', flex: 1, height: 'calc(100vh - 86px)', overflow: 'hidden' }}>
-        {/* Left Sidebar Menu */}
+      {/* Main Layout Area: Left Sidebar (Desktop only) + Center Map View (Full width on Mobile) */}
+      <div
+        style={{
+          display: 'flex',
+          flex: 1,
+          minHeight: 0,
+          position: 'relative',
+          overflow: 'hidden'
+        }}
+      >
+        {/* Left Sidebar Menu (Hidden on mobile via CSS desktop-only) */}
         <Sidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -178,22 +190,25 @@ export function App() {
         />
 
         {/* Center / Right Content Area */}
-        <main style={{
-          flex: 1,
-          position: 'relative',
-          height: '100%',
-          overflow: activeTab === 'map' ? 'hidden' : 'auto'
-        }}>
+        <main
+          style={{
+            flex: 1,
+            position: 'relative',
+            height: '100%',
+            overflow: activeTab === 'map' ? 'hidden' : 'auto',
+            paddingBottom: activeTab === 'map' ? '0' : 'calc(58px + var(--sab, 0px))'
+          }}
+        >
           {activeTab === 'map' && (
             <>
-              {/* Floating Top Controls (Search location, Live Rainfall toggle) */}
+              {/* Floating Top Controls (Location search, Live Rainfall toggle) */}
               <TopControls
                 showRainfall={showRainfall}
                 setShowRainfall={setShowRainfall}
                 onSelectLocation={(lat, lon, name) => setTargetCoords({ lat, lon, name })}
               />
 
-              {/* Floating Waterlogging Risk Legend */}
+              {/* Waterlogging Risk Legend (Desktop card & Mobile bottom sheet) */}
               <RiskLegend />
 
               {/* Full Interactive Leaflet Map */}
@@ -207,16 +222,19 @@ export function App() {
                 onSelectSegment={(seg) => setSelectedSegment(seg)}
               />
 
-              {/* Bottom Forecast Horizon Card with Animation */}
+              {/* Forecast Horizon Selector & Overview Card */}
               <TimeSlider
                 currentHour={currentHour}
                 setHour={setCurrentHour}
+                stats={stats}
+                rainAgeMin={rainAgeMin}
               />
 
-              {/* Clicked Road Segment Inspection Drawer */}
+              {/* Road Segment Inspection (Mobile Bottom Sheet & Desktop Drawer) */}
               <SegmentModal
                 segment={selectedSegment}
                 onClose={() => setSelectedSegment(null)}
+                onNavigateHere={() => setIsRoutePlannerOpen(true)}
               />
 
               {/* Mode-Aware Dry Route Planner Modal */}
@@ -254,6 +272,17 @@ export function App() {
           {activeTab === 'limits' && <LimitationsPage />}
         </main>
       </div>
+
+      {/* Fixed Mobile Bottom Navigation Bar (Visible on < 1024px) */}
+      <MobileBottomNav
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onOpenReportModal={() => setIsReportModalOpen(true)}
+        onToggleRoutePlanner={() => setIsRoutePlannerOpen(true)}
+        onOpenAdminModal={() => setIsAdminModalOpen(true)}
+        onToggleRainfall={() => setShowRainfall(!showRainfall)}
+        showRainfall={showRainfall}
+      />
     </div>
   );
 }

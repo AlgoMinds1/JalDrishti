@@ -91,7 +91,31 @@ const MapController: FC<{
   return null;
 };
 
-// Custom Right-Hand Controls (Zoom In, Zoom Out, Center, Layer menu)
+// Helper to automatically recalculate map dimensions on layout transitions and orientation changes
+const MapResizeHandler: FC = () => {
+  const map = useMap();
+  useEffect(() => {
+    const handleResize = () => {
+      map.invalidateSize();
+    };
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize);
+
+    const t1 = setTimeout(() => map.invalidateSize(), 150);
+    const t2 = setTimeout(() => map.invalidateSize(), 500);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
+      clearTimeout(t1);
+      clearTimeout(t2);
+    };
+  }, [map]);
+
+  return null;
+};
+
+// Custom Right-Hand Controls (Zoom In, Zoom Out, Center, Layer menu) with 44px touch targets
 const RightControls: FC<{
   onToggleLayerMenu: () => void;
   onResetCenter: () => void;
@@ -99,114 +123,117 @@ const RightControls: FC<{
   const map = useMap();
 
   return (
-    <div style={{
-      position: 'absolute',
-      right: '18px',
-      top: '50%',
-      transform: 'translateY(-50%)',
-      zIndex: 900,
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '6px'
-    }}>
-      <div style={{
-        background: 'var(--bg-widget, #faf5ec)',
-        borderRadius: '12px',
-        border: '1px solid var(--border-color, #d8c6af)',
-        boxShadow: '0 4px 16px rgba(80, 60, 40, 0.1)',
+    <div
+      style={{
+        position: 'absolute',
+        right: '12px',
+        top: '64px',
+        zIndex: 900,
         display: 'flex',
         flexDirection: 'column',
-        overflow: 'hidden'
-      }}>
+        gap: '6px',
+        pointerEvents: 'auto'
+      }}
+    >
+      <div
+        style={{
+          background: 'var(--bg-card, #FFFCF6)',
+          borderRadius: '12px',
+          border: '1px solid var(--border-color, #E4DACA)',
+          boxShadow: '0 4px 16px rgba(37, 37, 31, 0.1)',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden'
+        }}
+      >
         {/* Zoom In */}
         <button
           onClick={() => map.zoomIn()}
+          aria-label="Zoom in"
           title="Zoom In"
           style={{
-            width: '38px',
-            height: '38px',
+            width: '44px',
+            height: '44px',
             border: 'none',
             background: 'transparent',
-            color: '#4a3823',
+            color: 'var(--text-main, #25251F)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            borderBottom: '1px solid var(--border-color, #d8c6af)',
+            borderBottom: '1px solid var(--border-color, #E4DACA)',
             transition: 'background 0.15s ease'
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-pill, #e5d5be)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
         >
-          <Plus size={18} />
+          <Plus size={20} />
         </button>
 
         {/* Zoom Out */}
         <button
           onClick={() => map.zoomOut()}
+          aria-label="Zoom out"
           title="Zoom Out"
           style={{
-            width: '38px',
-            height: '38px',
+            width: '44px',
+            height: '44px',
             border: 'none',
             background: 'transparent',
-            color: '#4a3823',
+            color: 'var(--text-main, #25251F)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            borderBottom: '1px solid var(--border-color, #d8c6af)',
+            borderBottom: '1px solid var(--border-color, #E4DACA)',
             transition: 'background 0.15s ease'
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-pill, #e5d5be)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
         >
-          <Minus size={18} />
+          <Minus size={20} />
         </button>
 
         {/* Center to Pune */}
         <button
-          onClick={onResetCenter}
+          onClick={() => {
+            map.flyTo([18.538, 73.845], 13, { duration: 1.0 });
+            onResetCenter();
+          }}
+          aria-label="Reset view to Pune Pilot"
           title="Reset View to Pune Pilot"
           style={{
-            width: '38px',
-            height: '38px',
+            width: '44px',
+            height: '44px',
             border: 'none',
             background: 'transparent',
-            color: '#4a3823',
+            color: 'var(--text-main, #25251F)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
-            borderBottom: '1px solid var(--border-color, #d8c6af)',
+            borderBottom: '1px solid var(--border-color, #E4DACA)',
             transition: 'background 0.15s ease'
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-pill, #e5d5be)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
         >
-          <Crosshair size={18} />
+          <Crosshair size={20} />
         </button>
 
         {/* Layers */}
         <button
           onClick={onToggleLayerMenu}
+          aria-label="Change map layers"
           title="Change Basemap Layers"
           style={{
-            width: '38px',
-            height: '38px',
+            width: '44px',
+            height: '44px',
             border: 'none',
             background: 'transparent',
-            color: '#4a3823',
+            color: 'var(--text-main, #25251F)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             cursor: 'pointer',
             transition: 'background 0.15s ease'
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-pill, #e5d5be)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
         >
-          <Layers size={18} />
+          <Layers size={20} />
         </button>
       </div>
     </div>
@@ -428,6 +455,7 @@ export const MapComponent: FC<MapComponentProps> = ({
         style={{ width: '100%', height: '100%' }}
         zoomControl={false}
       >
+        <MapResizeHandler />
         <MapController routeGeojson={routeGeojson} targetCoords={targetCoords} />
         
         <RightControls
@@ -483,7 +511,7 @@ export const MapComponent: FC<MapComponentProps> = ({
         <Marker position={[18.579, 73.918]} icon={airportIcon} />
         <Marker position={[18.519, 73.818]} icon={vetalTekdiIcon} />
 
-        {/* Locality Labels matching reference screenshot */}
+        {/* Locality Labels */}
         <Marker position={[18.591, 73.738]} icon={localityLabelIcon('Hinjawadi')} />
         <Marker position={[18.598, 73.766]} icon={localityLabelIcon('Wakad')} />
         <Marker position={[18.596, 73.798]} icon={localityLabelIcon('Pimple Saudagar')} />
@@ -507,7 +535,7 @@ export const MapComponent: FC<MapComponentProps> = ({
             key={"nav_route_" + JSON.stringify(routeGeojson.geometry?.coordinates?.length)}
             data={routeGeojson}
             style={() => ({
-              color: '#8f6534',
+              color: 'var(--accent-beige-dark, #4b4836)',
               weight: 7,
               opacity: 0.95,
               lineCap: 'round',
@@ -524,7 +552,7 @@ export const MapComponent: FC<MapComponentProps> = ({
             pointToLayer={(_feature, latlng) => {
               return L.circleMarker(latlng, {
                 radius: 7,
-                fillColor: '#8f6534',
+                fillColor: 'var(--accent-cyan, #77745B)',
                 color: "#ffffff",
                 weight: 2,
                 opacity: 1,
@@ -535,57 +563,39 @@ export const MapComponent: FC<MapComponentProps> = ({
         )}
       </MapContainer>
 
-      {/* Floating Basemap Selector Pill at Bottom Right */}
-      <div style={{
-        position: 'absolute',
-        bottom: '22px',
-        right: '18px',
-        zIndex: 900
-      }}>
-        <button
-          onClick={() => setIsLayerMenuOpen(!isLayerMenuOpen)}
+      {/* Basemap Selection Popup Overlay (Dismissible on tap outside) */}
+      {isLayerMenuOpen && (
+        <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '7px 14px',
-            borderRadius: '10px',
-            border: '1px solid var(--border-color, #d8c6af)',
-            background: 'var(--bg-widget, #faf5ec)',
-            boxShadow: '0 3px 12px rgba(80, 60, 40, 0.1)',
-            cursor: 'pointer',
-            fontSize: '12px',
-            fontWeight: 700,
-            color: '#2e2214'
-          }}
-        >
-          {/* Mini map thumbnail graphic */}
-          <div style={{
-            width: '20px',
-            height: '16px',
-            borderRadius: '3px',
-            background: 'linear-gradient(135deg, #e5d5be, #c9b499)',
-            border: '1px solid #d8c6af'
-          }} />
-          <span>Map: {activeBasemap.name} ▾</span>
-        </button>
-
-        {/* Basemap Selection Popup Menu */}
-        {isLayerMenuOpen && (
-          <div style={{
             position: 'absolute',
-            bottom: '44px',
-            right: 0,
-            background: 'var(--bg-widget, #faf5ec)',
-            borderRadius: '12px',
-            border: '1px solid var(--border-color, #d8c6af)',
-            padding: '8px',
-            boxShadow: '0 8px 24px rgba(80, 60, 40, 0.14)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '4px',
-            minWidth: '200px'
-          }}>
+            inset: 0,
+            zIndex: 950,
+            background: 'transparent'
+          }}
+          onClick={() => setIsLayerMenuOpen(false)}
+        >
+          <div
+            className="animate-slide-up"
+            style={{
+              position: 'absolute',
+              top: '116px',
+              right: '64px',
+              background: 'var(--bg-card, #FFFCF6)',
+              borderRadius: '14px',
+              border: '1px solid var(--border-color, #E4DACA)',
+              padding: '8px',
+              boxShadow: '0 8px 24px rgba(37, 37, 31, 0.15)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '4px',
+              minWidth: '200px',
+              maxWidth: 'calc(100vw - 80px)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-muted, #706D62)', padding: '4px 8px' }}>
+              Select Basemap
+            </div>
             {BASEMAP_OPTIONS.map((opt) => {
               const isSelected = opt.id === selectedBasemap;
               return (
@@ -599,14 +609,14 @@ export const MapComponent: FC<MapComponentProps> = ({
                     padding: '8px 10px',
                     borderRadius: '8px',
                     border: 'none',
-                    background: isSelected ? '#ebd8c0' : 'transparent',
-                    color: isSelected ? '#7a542b' : '#2e2214',
+                    background: isSelected ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
+                    color: isSelected ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-main, #25251F)',
                     fontSize: '12px',
                     cursor: 'pointer',
                     textAlign: 'left'
                   }}
                   onMouseEnter={(e) => {
-                    if (!isSelected) e.currentTarget.style.background = 'var(--bg-pill, #e5d5be)';
+                    if (!isSelected) e.currentTarget.style.background = 'var(--bg-pill, #E7DDCC)';
                   }}
                   onMouseLeave={(e) => {
                     if (!isSelected) e.currentTarget.style.background = 'transparent';
@@ -614,15 +624,15 @@ export const MapComponent: FC<MapComponentProps> = ({
                 >
                   <div>
                     <div style={{ fontWeight: 600 }}>{opt.name}</div>
-                    <div style={{ fontSize: '10px', color: '#735d47' }}>{opt.tag}</div>
+                    <div style={{ fontSize: '10px', color: 'var(--text-muted, #706D62)' }}>{opt.tag}</div>
                   </div>
-                  {isSelected && <Check size={14} color="#8f6534" />}
+                  {isSelected && <Check size={14} color="var(--accent-cyan, #77745B)" />}
                 </button>
               );
             })}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

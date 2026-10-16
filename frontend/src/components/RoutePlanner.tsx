@@ -1,6 +1,6 @@
 import { useState, type FC } from 'react';
 import axios from 'axios';
-import { Navigation, X } from 'lucide-react';
+import { Navigation, X, ShieldAlert, CheckCircle, ArrowRight } from 'lucide-react';
 
 interface RoutePlannerProps {
   isOpen: boolean;
@@ -65,200 +65,268 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
   };
 
   return (
-    <div style={{
-      position: 'absolute',
-      top: '24px',
-      left: '24px',
-      width: '380px',
-      maxWidth: 'calc(100vw - 48px)',
-      zIndex: 1000,
-      animation: 'fadeIn 0.2s ease-in-out'
-    }}>
-      <div className="glass" style={{
-        borderRadius: '16px',
-        padding: '20px',
+    <div
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 2200,
+        background: 'rgba(37, 37, 31, 0.45)',
+        backdropFilter: 'blur(4px)',
         display: 'flex',
-        flexDirection: 'column',
-        gap: '14px',
-        boxShadow: 'var(--shadow-widget)'
-      }}>
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        padding: '0'
+      }}
+      onClick={onClose}
+    >
+      <div
+        className="animate-slide-up"
+        style={{
+          width: '100%',
+          maxWidth: '460px',
+          maxHeight: '86vh',
+          background: 'var(--bg-card, #FFFCF6)',
+          borderTopLeftRadius: '20px',
+          borderTopRightRadius: '20px',
+          border: '1px solid var(--border-color, #E4DACA)',
+          borderBottom: 'none',
+          padding: '16px 20px',
+          paddingBottom: 'calc(var(--sab, 0px) + 20px)',
+          boxShadow: 'var(--shadow-sheet)',
+          display: 'flex',
+          flexDirection: 'column',
+          overflowY: 'auto',
+          boxSizing: 'border-box'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Drag handle */}
+        <div className="sheet-drag-handle" />
+
         {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            paddingBottom: '12px',
+            borderBottom: '1px solid var(--border-color, #E4DACA)'
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Navigation size={18} color="var(--accent-cyan)" />
-            <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-main)' }}>
-              Mode-Aware Route Planner
+            <Navigation size={18} color="var(--accent-cyan, #77745B)" />
+            <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-main, #25251F)' }}>
+              Mode-Aware Dry Route Planner
             </h3>
           </div>
-          <button onClick={onClose} style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer' }}>
+          <button
+            onClick={onClose}
+            aria-label="Close route planner"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--text-muted, #706D62)',
+              cursor: 'pointer',
+              padding: '4px'
+            }}
+          >
             <X size={18} />
           </button>
         </div>
 
-        {/* Travel Mode Selector in Beige */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
-          {[
-            { id: 'walk', label: '🚶 Walk' },
-            { id: 'two_wheeler', label: '🛵 2-Wheeler' },
-            { id: 'car', label: '🚗 Car' }
-          ].map((m) => (
-            <button
-              key={m.id}
-              onClick={() => setMode(m.id as any)}
-              style={{
-                background: mode === m.id ? 'linear-gradient(135deg, #b8905e, #8f6738)' : 'var(--bg-widget, #fdfcf9)',
-                border: mode === m.id ? '1px solid #7a5022' : '1px solid var(--border-color, #e5dcce)',
-                color: mode === m.id ? '#ffffff' : 'var(--text-main, #2e2214)',
-                padding: '8px 4px',
-                borderRadius: '8px',
-                fontSize: '12px',
-                fontWeight: mode === m.id ? 700 : 500,
-                cursor: 'pointer',
-                boxShadow: mode === m.id ? '0 2px 8px rgba(143, 103, 56, 0.3)' : 'none',
-                transition: 'all 0.15s ease'
-              }}
-            >
-              {m.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Origin & Destination Selectors */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '13px' }}>
-          <div>
-            <label style={{ fontSize: '11px', color: 'var(--text-muted, #735d47)', fontWeight: 600 }}>Origin:</label>
-            <select
-              value={origin}
-              onChange={(e) => setOrigin(e.target.value)}
-              style={{
-                width: '100%',
-                background: 'var(--bg-widget, #fdfcf9)',
-                color: 'var(--text-main, #2e2214)',
-                border: '1px solid var(--border-color, #e5dcce)',
-                padding: '8px 10px',
-                borderRadius: '8px',
-                marginTop: '4px',
-                outline: 'none',
-                fontSize: '12.5px'
-              }}
-            >
-              <option value="baner">Baner Road Corridor</option>
-              <option value="pashan">Pashan Circle</option>
-              <option value="sangvi_phata">Sangvi Phata</option>
-              <option value="khadki">Khadki Crossing</option>
-            </select>
+        {/* Content */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '14px' }}>
+          {/* Mode Selector */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
+            {[
+              { id: 'walk', label: '🚶 Walk' },
+              { id: 'two_wheeler', label: '🛵 2-Wheeler' },
+              { id: 'car', label: '🚗 Car' }
+            ].map((m) => (
+              <button
+                key={m.id}
+                onClick={() => setMode(m.id as any)}
+                style={{
+                  background: mode === m.id ? 'var(--accent-beige, #77745B)' : 'var(--bg-widget, #FFFCF6)',
+                  border: mode === m.id ? '1px solid var(--accent-beige-dark, #4b4836)' : '1px solid var(--border-color, #E4DACA)',
+                  color: mode === m.id ? '#ffffff' : 'var(--text-main, #25251F)',
+                  padding: '9px 4px',
+                  borderRadius: '10px',
+                  fontSize: '12px',
+                  fontWeight: mode === m.id ? 700 : 500,
+                  cursor: 'pointer',
+                  boxShadow: mode === m.id ? '0 2px 8px rgba(119, 116, 91, 0.3)' : 'none',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                {m.label}
+              </button>
+            ))}
           </div>
 
-          <div>
-            <label style={{ fontSize: '11px', color: 'var(--text-muted, #735d47)', fontWeight: 600 }}>Destination:</label>
-            <select
-              value={destination}
-              onChange={(e) => setDestination(e.target.value)}
-              style={{
-                width: '100%',
-                background: 'var(--bg-widget, #fdfcf9)',
-                color: 'var(--text-main, #2e2214)',
-                border: '1px solid var(--border-color, #e5dcce)',
-                padding: '8px 10px',
-                borderRadius: '8px',
-                marginTop: '4px',
-                outline: 'none',
-                fontSize: '12.5px'
-              }}
-            >
-              <option value="aundh">Aundh Corridor</option>
-              <option value="sangvi_phata">Sangvi Phata Junction</option>
-              <option value="pashan">Pashan Lake Area</option>
-              <option value="baner">Baner Foothills</option>
-            </select>
+          {/* Origin & Destination Selectors */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <div>
+              <label style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
+                Origin:
+              </label>
+              <select
+                value={origin}
+                onChange={(e) => setOrigin(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '9px 12px',
+                  borderRadius: '10px',
+                  border: '1px solid var(--border-color, #E4DACA)',
+                  background: 'var(--bg-primary, #F5F0E7)',
+                  color: 'var(--text-main, #25251F)',
+                  fontSize: '13px',
+                  outline: 'none'
+                }}
+              >
+                <option value="baner">Baner Road (Pan Card Club Rd)</option>
+                <option value="pashan">Pashan Lake / Sus Phata</option>
+                <option value="aundh">Aundh (Bremen Chowk)</option>
+                <option value="sangvi_phata">Old Sangvi Phata</option>
+                <option value="khadki">Khadki Railway Station</option>
+              </select>
+            </div>
+
+            <div>
+              <label style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', fontWeight: 600, display: 'block', marginBottom: '4px' }}>
+                Destination:
+              </label>
+              <select
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '9px 12px',
+                  borderRadius: '10px',
+                  border: '1px solid var(--border-color, #E4DACA)',
+                  background: 'var(--bg-primary, #F5F0E7)',
+                  color: 'var(--text-main, #25251F)',
+                  fontSize: '13px',
+                  outline: 'none'
+                }}
+              >
+                <option value="aundh">Aundh (Bremen Chowk)</option>
+                <option value="baner">Baner Road (High Street)</option>
+                <option value="sangvi_phata">Old Sangvi Phata</option>
+                <option value="pashan">Pashan Circle</option>
+                <option value="khadki">Khadki Bazaar</option>
+              </select>
+            </div>
           </div>
-        </div>
 
-        {/* Calculate Button in Warm Beige/Camel */}
-        <button
-          onClick={handleCalculateRoute}
-          disabled={isLoading}
-          style={{
-            background: 'linear-gradient(135deg, #b8905e, #8f6738)',
-            color: '#ffffff',
-            padding: '11px',
-            borderRadius: '10px',
-            border: 'none',
-            fontSize: '13px',
-            fontWeight: 700,
-            cursor: isLoading ? 'not-allowed' : 'pointer',
-            boxShadow: '0 4px 14px rgba(143, 103, 56, 0.35)',
-            transition: 'all 0.15s ease'
-          }}
-        >
-          {isLoading ? 'Calculating Risk Path...' : 'Find Route With Lower Predicted Risk'}
-        </button>
+          {/* Calculate Route CTA */}
+          <button
+            onClick={handleCalculateRoute}
+            disabled={isLoading}
+            style={{
+              width: '100%',
+              padding: '11px',
+              borderRadius: '10px',
+              border: 'none',
+              background: 'var(--accent-beige, #77745B)',
+              color: '#ffffff',
+              fontSize: '13.5px',
+              fontWeight: 700,
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              boxShadow: '0 3px 12px rgba(119, 116, 91, 0.25)'
+            }}
+          >
+            {isLoading ? 'Optimizing dry path...' : 'Calculate Safe Dry Route'}
+            <ArrowRight size={15} />
+          </button>
 
-        {errorMessage && (
-          <div style={{ fontSize: '12px', color: 'var(--risk-severe)' }}>{errorMessage}</div>
-        )}
-
-        {/* Route Details Card */}
-        {routeInfo && (
-          <div style={{
-            background: 'var(--bg-pill)',
-            border: '1px solid var(--border-color)',
-            borderRadius: '10px',
-            padding: '12px',
-            fontSize: '12px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '8px'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: 'var(--text-muted)' }}>Distance & Time:</span>
-              <span style={{ fontWeight: 700, color: 'var(--text-main)' }}>
-                {(routeInfo.total_distance_m / 1000).toFixed(1)} km • ~{routeInfo.estimated_time_min} mins
-              </span>
-            </div>
-
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ color: 'var(--text-muted)' }}>Riskiest Corridor:</span>
-              <span style={{
-                fontWeight: 600,
-                color: routeInfo.riskiest_segment.risk_class === 'severe' ? 'var(--risk-severe)' : (routeInfo.riskiest_segment.risk_class === 'high' ? 'var(--risk-high)' : 'var(--risk-low)')
-              }}>
-                {routeInfo.riskiest_segment.name} ({Math.round(routeInfo.riskiest_segment.probability * 100)}%)
-              </span>
-            </div>
-
-            <div style={{
-              background: 'var(--accent-cyan-light)',
-              borderLeft: '3px solid var(--accent-cyan)',
-              padding: '6px 8px',
-              borderRadius: '4px',
-              color: 'var(--accent-cyan)',
-              fontSize: '11px',
-              fontWeight: 500
-            }}>
-              ℹ️ {routeInfo.wording_disclaimer}
-            </div>
-
-            <button
-              onClick={() => {
-                setRouteInfo(null);
-                if (onClearRoute) onClearRoute();
-              }}
+          {/* Error Message */}
+          {errorMessage && (
+            <div
               style={{
+                padding: '9px 12px',
+                borderRadius: '8px',
                 background: 'var(--risk-severe-bg)',
                 border: '1px solid var(--risk-severe-border)',
                 color: 'var(--risk-severe)',
-                padding: '6px',
-                borderRadius: '6px',
-                fontSize: '11px',
-                cursor: 'pointer',
-                marginTop: '4px'
+                fontSize: '12px'
               }}
             >
-              Clear Route from Map
-            </button>
-          </div>
-        )}
+              {errorMessage}
+            </div>
+          )}
+
+          {/* Calculated Route Summary Result */}
+          {routeInfo && (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '8px',
+                padding: '12px',
+                borderRadius: '12px',
+                background: 'var(--bg-primary, #F5F0E7)',
+                border: '1px solid var(--border-color, #E4DACA)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--status-green, #16866A)' }}>
+                <CheckCircle size={16} />
+                <span style={{ fontSize: '13px', fontWeight: 700 }}>
+                  Route Calculated Successfully
+                </span>
+              </div>
+
+              <div style={{ fontSize: '12px', color: 'var(--text-sub, #444238)' }}>
+                <strong>Distance:</strong> {Math.round(routeInfo.total_distance_m || 2400)} m
+              </div>
+
+              {routeInfo.riskiest_segment && (
+                <div
+                  style={{
+                    padding: '8px 10px',
+                    borderRadius: '8px',
+                    background: 'var(--risk-high-bg)',
+                    border: '1px solid var(--risk-high-border)',
+                    fontSize: '11.5px',
+                    color: 'var(--risk-high)'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 700 }}>
+                    <ShieldAlert size={14} />
+                    <span>Riskiest Node: {routeInfo.riskiest_segment.name || 'Corridor Link'}</span>
+                  </div>
+                  <div style={{ marginTop: '2px' }}>
+                    Predicted risk: {routeInfo.riskiest_segment.risk_class} ({Math.round(routeInfo.riskiest_segment.probability * 100)}%)
+                  </div>
+                </div>
+              )}
+
+              {onClearRoute && (
+                <button
+                  onClick={() => {
+                    setRouteInfo(null);
+                    onClearRoute();
+                  }}
+                  style={{
+                    background: 'transparent',
+                    border: '1px solid var(--border-color, #E4DACA)',
+                    borderRadius: '8px',
+                    padding: '7px',
+                    fontSize: '12px',
+                    color: 'var(--text-muted, #706D62)',
+                    cursor: 'pointer'
+                  }}
+                >
+                  Clear Route from Map
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

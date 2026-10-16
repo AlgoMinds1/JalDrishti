@@ -157,13 +157,18 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
         </div>
 
         {/* Sub-Tabs Navigation */}
-        <div style={{
-          display: 'flex',
-          gap: '8px',
-          padding: '12px 24px',
-          background: 'var(--bg-pill)',
-          borderBottom: '1px solid var(--border-color)'
-        }}>
+        <div
+          className="horizontal-scroll-pill"
+          style={{
+            display: 'flex',
+            gap: '8px',
+            padding: '10px 16px',
+            background: 'var(--bg-pill, #E7DDCC)',
+            borderBottom: '1px solid var(--border-color, #E4DACA)',
+            overflowX: 'auto',
+            whiteSpace: 'nowrap'
+          }}
+        >
           {[
             { id: 'sandbox', label: 'What-If Storm Sandbox', icon: <Sliders size={14} /> },
             { id: 'queue', label: 'Top 10 Inspection Queue', icon: <AlertTriangle size={14} /> },
@@ -177,13 +182,14 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                 alignItems: 'center',
                 gap: '6px',
                 padding: '6px 14px',
-                borderRadius: '6px',
+                borderRadius: '8px',
                 border: 'none',
-                background: activeSubTab === tab.id ? 'linear-gradient(135deg, #b8905e, #8f6738)' : 'transparent',
-                color: activeSubTab === tab.id ? '#ffffff' : 'var(--text-muted)',
+                background: activeSubTab === tab.id ? 'var(--accent-beige, #77745B)' : 'transparent',
+                color: activeSubTab === tab.id ? '#ffffff' : 'var(--text-main, #25251F)',
                 fontSize: '12px',
                 fontWeight: 600,
-                cursor: 'pointer'
+                cursor: 'pointer',
+                flexShrink: 0
               }}
             >
               {tab.icon} {tab.label}
@@ -192,12 +198,12 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
         </div>
 
         {/* Modal Body */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '20px 24px' }}>
+        <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>
           {statusMessage && (
             <div style={{
-              background: 'rgba(56, 189, 248, 0.15)',
-              border: '1px solid #38bdf8',
-              color: '#38bdf8',
+              background: 'var(--accent-cyan-light, rgba(119, 116, 91, 0.15))',
+              border: '1px solid var(--accent-cyan, #77745B)',
+              color: 'var(--text-main, #25251F)',
               padding: '8px 12px',
               borderRadius: '6px',
               fontSize: '12px',
@@ -209,15 +215,15 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
 
           {/* TAB 1: What-If Storm Sandbox */}
           {activeSubTab === 'sandbox' && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               {/* Sliders Control Card */}
               <div style={{
-                background: 'rgba(15, 23, 42, 0.6)',
+                background: 'var(--bg-primary, #F5F0E7)',
                 borderRadius: '12px',
                 padding: '16px',
-                border: '1px solid rgba(255, 255, 255, 0.08)'
+                border: '1px solid var(--border-color, #E4DACA)'
               }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '20px', alignItems: 'center' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', alignItems: 'center' }}>
                   {/* Rain Slider */}
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>

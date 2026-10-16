@@ -1,5 +1,5 @@
 import { useState, useEffect, type FC, type Dispatch, type SetStateAction } from 'react';
-import { CloudRain, Play, Pause } from 'lucide-react';
+import { CloudRain, Play, Pause, ChevronUp, ChevronDown, Activity } from 'lucide-react';
 
 interface TimeSliderProps {
   currentHour: number;
@@ -10,17 +10,25 @@ interface TimeSliderProps {
     high: number;
     severe: number;
   };
+  rainAgeMin?: number;
 }
 
-export const TimeSlider: FC<TimeSliderProps> = ({ currentHour, setHour }) => {
+export const TimeSlider: FC<TimeSliderProps> = ({
+  currentHour,
+  setHour,
+  stats = { low: 0, moderate: 0, high: 0, severe: 0 },
+  rainAgeMin = 0
+}) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isOverviewExpanded, setIsOverviewExpanded] = useState(false);
+
   const horizons = [
-    { hour: 1, label: '1 Hour' },
-    { hour: 2, label: '2 Hours' },
-    { hour: 3, label: '3 Hours' },
-    { hour: 4, label: '4 Hours' },
-    { hour: 5, label: '5 Hours' },
-    { hour: 6, label: '6 Hours' }
+    { hour: 1, label: '+1h' },
+    { hour: 2, label: '+2h' },
+    { hour: 3, label: '+3h' },
+    { hour: 4, label: '+4h' },
+    { hour: 5, label: '+5h' },
+    { hour: 6, label: '+6h' }
   ];
 
   // Auto-play animation through horizons
@@ -29,105 +37,190 @@ export const TimeSlider: FC<TimeSliderProps> = ({ currentHour, setHour }) => {
     if (isPlaying) {
       interval = setInterval(() => {
         setHour((prev: number) => (prev >= 6 ? 1 : prev + 1));
-      }, 1500);
+      }, 1600);
     }
     return () => {
       if (interval) clearInterval(interval);
     };
   }, [isPlaying, setHour]);
 
+  const totalAtRisk = stats.high + stats.severe;
+  const overallRiskLabel = totalAtRisk > 25
+    ? 'High Risk Corridor'
+    : totalAtRisk > 5
+    ? 'Localized Waterlogging'
+    : 'Minimal Inundation';
+  const overallRiskColor = totalAtRisk > 25
+    ? 'var(--risk-severe, #dc2626)'
+    : totalAtRisk > 5
+    ? 'var(--risk-high, #ea580c)'
+    : 'var(--status-green, #16866A)';
+
   return (
-    <div style={{
-      position: 'absolute',
-      bottom: '20px',
-      left: '50%',
-      transform: 'translateX(-50%)',
-      zIndex: 900,
-      width: '84%',
-      maxWidth: '740px',
-      pointerEvents: 'auto'
-    }}>
-      <div style={{
-        background: 'var(--bg-card, rgba(250, 246, 238, 0.98))',
-        backdropFilter: 'blur(16px)',
-        WebkitBackdropFilter: 'blur(16px)',
-        border: '1px solid var(--border-color, #d8c6af)',
-        borderRadius: '18px',
-        padding: '14px 20px',
+    <div
+      style={{
+        position: 'absolute',
+        bottom: 'calc(var(--sab, 0px) + 68px)',
+        left: '12px',
+        right: '12px',
+        maxWidth: '560px',
+        margin: '0 auto',
+        zIndex: 950,
+        pointerEvents: 'auto',
         display: 'flex',
         flexDirection: 'column',
-        gap: '12px',
-        boxShadow: '0 12px 32px rgba(80, 60, 40, 0.12)'
-      }}>
-        {/* Top Header Row */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-          {/* Left: Forecast Horizon Title & Subtext */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{
-              background: '#ebd8c0',
-              width: '32px',
-              height: '32px',
-              borderRadius: '8px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <CloudRain size={20} color="#8f6738" />
-            </div>
-
-            <div>
-              <div style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main, #2e2214)' }}>
-                Forecast Horizon
-              </div>
-              <div style={{ fontSize: '11.5px', color: 'var(--text-muted, #735d47)' }}>
-                Showing predicted waterlogging risk for next 6 hours
-              </div>
-            </div>
+        gap: '6px'
+      }}
+    >
+      {/* ── Forecast Overview Summary Card (Collapsible) ── */}
+      <div
+        style={{
+          background: 'var(--bg-card, #FFFCF6)',
+          borderRadius: '14px',
+          border: '1px solid var(--border-color, #E4DACA)',
+          boxShadow: '0 4px 18px rgba(37, 37, 31, 0.08)',
+          overflow: 'hidden',
+          transition: 'all 0.2s ease'
+        }}
+      >
+        {/* Summary Card Header Bar */}
+        <div
+          onClick={() => setIsOverviewExpanded(!isOverviewExpanded)}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '7px 12px',
+            cursor: 'pointer',
+            background: 'var(--bg-card, #FFFCF6)'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+            <span
+              style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: overallRiskColor,
+                flexShrink: 0
+              }}
+            />
+            <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-main, #25251F)' }}>
+              Forecast Overview (+{currentHour}h)
+            </span>
+            <span
+              style={{
+                fontSize: '11px',
+                color: overallRiskColor,
+                fontWeight: 600,
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              • {overallRiskLabel}
+            </span>
           </div>
 
-          {/* Right: Beige Animation Play Button */}
-          <button
-            onClick={() => setIsPlaying(!isPlaying)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 14px',
-              borderRadius: '9999px',
-              border: isPlaying ? '1px solid #7a5022' : '1px solid #b8905e',
-              background: isPlaying ? 'linear-gradient(135deg, #b8905e, #8f6738)' : '#ebdcc6',
-              color: isPlaying ? '#ffffff' : '#613d17',
-              fontSize: '12px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              transition: 'all 0.15s ease',
-              boxShadow: '0 2px 6px rgba(143, 103, 56, 0.2)'
-            }}
-          >
-            {isPlaying ? (
-              <>
-                <Pause size={13} fill="#ffffff" />
-                <span>Pause</span>
-              </>
-            ) : (
-              <>
-                <Play size={13} fill="#7a5022" />
-                <span>Animation</span>
-              </>
-            )}
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted, #706D62)' }}>
+            <span style={{ fontSize: '11px' }}>{isOverviewExpanded ? 'Hide' : 'Details'}</span>
+            {isOverviewExpanded ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
+          </div>
         </div>
 
-        {/* 6 Horizon Selector Cards in Beige */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(6, 1fr)',
-          gap: '8px'
-        }}>
+        {/* Collapsible Details Body */}
+        {isOverviewExpanded && (
+          <div
+            style={{
+              padding: '10px 14px',
+              borderTop: '1px solid var(--border-subtle, #eee7db)',
+              background: 'var(--bg-primary, #F5F0E7)',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '8px'
+            }}
+          >
+            {/* Metric 1: Risk Segments */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <span style={{ fontSize: '10.5px', color: 'var(--text-muted, #706D62)' }}>
+                Severe / High
+              </span>
+              <span style={{ fontSize: '13px', fontWeight: 700, color: totalAtRisk > 0 ? 'var(--risk-severe, #dc2626)' : 'var(--text-main, #25251F)' }}>
+                {totalAtRisk} segments
+              </span>
+            </div>
+
+            {/* Metric 2: Moderate */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <span style={{ fontSize: '10.5px', color: 'var(--text-muted, #706D62)' }}>
+                Moderate Risk
+              </span>
+              <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--risk-moderate, #d97706)' }}>
+                {stats.moderate} segments
+              </span>
+            </div>
+
+            {/* Metric 3: Rain Data Age */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+              <span style={{ fontSize: '10.5px', color: 'var(--text-muted, #706D62)' }}>
+                IMD Radar Age
+              </span>
+              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--status-green, #16866A)' }}>
+                {rainAgeMin}m ago
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* ── Forecast Horizon Selector (Single Horizontally Scrollable Line) ── */}
+      <div
+        style={{
+          background: 'var(--bg-card, #FFFCF6)',
+          borderRadius: '16px',
+          border: '1px solid var(--border-color, #E4DACA)',
+          padding: '6px 10px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          boxShadow: '0 4px 18px rgba(37, 37, 31, 0.08)'
+        }}
+      >
+        {/* Play/Pause Button */}
+        <button
+          onClick={() => setIsPlaying(!isPlaying)}
+          title={isPlaying ? 'Pause auto-play' : 'Play forecast animation'}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '32px',
+            height: '32px',
+            borderRadius: '50%',
+            border: '1px solid var(--border-color, #E4DACA)',
+            background: isPlaying ? 'var(--accent-beige, #77745B)' : 'var(--bg-pill, #E7DDCC)',
+            color: isPlaying ? '#FFFFFF' : 'var(--accent-beige-dark, #4b4836)',
+            cursor: 'pointer',
+            flexShrink: 0,
+            transition: 'all 0.15s ease'
+          }}
+        >
+          {isPlaying ? <Pause size={13} fill="#FFFFFF" /> : <Play size={13} fill="currentColor" />}
+        </button>
+
+        {/* Scrollable Pill Container */}
+        <div
+          className="horizontal-scroll-pill"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            flex: 1,
+            overflowX: 'auto',
+            whiteSpace: 'nowrap',
+            padding: '2px 0'
+          }}
+        >
           {horizons.map(({ hour, label }) => {
             const isSelected = currentHour === hour;
             return (
@@ -138,39 +231,24 @@ export const TimeSlider: FC<TimeSliderProps> = ({ currentHour, setHour }) => {
                   setHour(hour);
                 }}
                 style={{
-                  background: isSelected
-                    ? 'linear-gradient(135deg, #b8905e, #8f6738)'
-                    : 'var(--bg-widget, #faf5ec)',
-                  border: isSelected ? '1px solid #7a5022' : '1px solid var(--border-color, #d8c6af)',
-                  color: isSelected ? '#ffffff' : 'var(--text-main, #2e2214)',
-                  padding: '9px 4px',
-                  borderRadius: '12px',
+                  flex: '0 0 auto',
+                  padding: '6px 14px',
+                  borderRadius: '9999px',
+                  border: isSelected ? '1px solid var(--accent-beige-dark, #4b4836)' : '1px solid var(--border-color, #E4DACA)',
+                  background: isSelected ? 'var(--accent-beige, #77745B)' : 'var(--bg-card, #FFFCF6)',
+                  color: isSelected ? '#FFFFFF' : 'var(--text-main, #25251F)',
+                  fontSize: '12px',
+                  fontWeight: isSelected ? 700 : 500,
                   cursor: 'pointer',
-                  fontWeight: isSelected ? 700 : 600,
-                  fontSize: '12.5px',
-                  transition: 'all 0.15s ease',
-                  boxShadow: isSelected ? '0 4px 14px rgba(143, 103, 56, 0.38)' : 'none',
                   display: 'flex',
-                  flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '3px'
+                  gap: '4px',
+                  boxShadow: isSelected ? '0 2px 8px rgba(119, 116, 91, 0.3)' : 'none',
+                  transition: 'all 0.15s ease'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                  <CloudRain
-                    size={14}
-                    color={isSelected ? '#ffffff' : '#8f6738'}
-                  />
-                  <span>+{hour}h</span>
-                </div>
-                <span style={{
-                  fontSize: '10.5px',
-                  fontWeight: 500,
-                  opacity: isSelected ? 0.95 : 0.75,
-                  color: isSelected ? '#ffffff' : 'var(--text-muted, #735d47)'
-                }}>
-                  {label}
-                </span>
+                <CloudRain size={12} color={isSelected ? '#FFFFFF' : 'var(--accent-cyan, #77745B)'} />
+                <span>{label}</span>
               </button>
             );
           })}
