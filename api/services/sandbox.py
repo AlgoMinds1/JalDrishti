@@ -53,29 +53,45 @@ class SandboxRunner:
         mm = max(1.0, min(200.0, float(mm)))
         rate_mm_h = mm / duration_h
 
-        # Synthesize multi-horizon storm dynamics
-        rain_1h = rate_mm_h
-        rain_3h = min(mm, rate_mm_h * min(3, duration_h))
-        rain_6h = mm
-        soil_moisture = min(0.68, 0.35 + (mm / 220.0))
+        # Assume a uniform storm rate. Each rolling window contains only the
+        # rain that can physically fall within that window; the scenario does
+        # not invent antecedent rain outside the selected storm.
+        rain_1h = min(mm, rate_mm_h)
+        rain_3h = min(mm, rate_mm_h * 3)
+        rain_6h = min(mm, rate_mm_h * 6)
+        # Antecedent moisture is unknown in a hypothetical event. Keep it at
+        # the neutral dry-season baseline rather than deriving fake 24/72h rain.
+        soil_moisture = 0.35
 
         # Build feature samples for vectorized batch inference
         samples = []
         for feat in self._cached_features:
             s = dict(feat)
+            hand = float(s.get("hand_mean", 3.5))
+            drainage = float(s.get("drainage_coverage_pct", 50.0))
+            underpass = int(bool(s.get("is_underpass", 0)))
+            distance_to_water = float(s.get("dist_to_waterway_m", 450.0))
             s.update({
                 "rainfall_1h": rain_1h,
                 "rainfall_3h": rain_3h,
                 "rainfall_6h": rain_6h,
-                "rainfall_24h": rain_6h * 1.2,
-                "rainfall_72h": rain_6h * 1.4,
-                "forecast_precip_h": rate_mm_h,
+                # Antecedent windows are explicitly assumed dry; the scenario
+                # rainfall is forecast input and must not be counted twice as
+                # rain that already fell before the storm.
+                "rainfall_24h": 0.0,
+                "rainfall_72h": 0.0,
+                "forecast_precip_h": min(mm, rate_mm_h * min(duration_h, 1)),
                 "horizon_h": duration_h,
                 "soil_moisture": soil_moisture,
                 "ensemble_spread_mm": 0.5,
                 "rain_data_age_min": 0,
                 "live_report_density": 0.0,
-                "past_incident_count": 1 if feat.get("is_underpass") else 0
+                "past_incident_count": 0,
+                "rain_per_hand": round(rain_3h / (hand + 0.8), 3),
+                "drainage_deficit": round(max(0.0, rain_3h - drainage * 0.25), 3),
+                "saturated_runoff": round(rain_3h * soil_moisture, 3),
+                "underpass_exposure": round(underpass * rain_1h, 3),
+                "waterway_risk": round(float(np.exp(-distance_to_water / 250.0) * rain_6h), 3)
             })
             samples.append(s)
 
@@ -124,8 +140,17 @@ class SandboxRunner:
                 "geometry": bf["geometry"]
             })
 
-        # Sort failing corridors by probability descending
+        # Sort failing corridors by probability descending, then de-duplicate
+        # display names so repeated OSM fragments do not look like repeated
+        # corridor predictions in the admin view.
         failing_corridors.sort(key=lambda x: x["probability"], reverse=True)
+        unique_corridors = []
+        seen_corridors = set()
+        for corridor in failing_corridors:
+            key = corridor["name"].strip().casefold()
+            if key not in seen_corridors:
+                seen_corridors.add(key)
+                unique_corridors.append(corridor)
 
         exec_time_ms = round((time.time() - start_time) * 1000, 1)
 
@@ -137,7 +162,11 @@ class SandboxRunner:
             "simulation_params": {
                 "rainfall_total_mm": mm,
                 "duration_h": duration_h,
-                "intensity_rate_mm_h": round(rate_mm_h, 2)
+                "intensity_rate_mm_h": round(rate_mm_h, 2),
+                "rainfall_distribution": "uniform",
+                "antecedent_rainfall_mm_24h": 0.0,
+                "antecedent_rainfall_mm_72h": 0.0,
+                "soil_moisture_assumption": "baseline dry (0.35); no observed antecedent data"
             },
             "execution_time_ms": exec_time_ms,
             "summary": {
@@ -145,7 +174,7 @@ class SandboxRunner:
                 "counts": counts,
                 "total_failing_corridors": len(failing_corridors)
             },
-            "top_failing_corridors": failing_corridors[:15],
+            "top_failing_corridors": unique_corridors[:15],
             "features": features_out
         }
 
