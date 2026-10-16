@@ -26,7 +26,7 @@ export const Sidebar: FC<SidebarProps> = ({
   onToggleRoutePlanner,
   onOpenAdminModal,
   onToggleRainfall,
-  showRainfall: _showRainfall,
+  showRainfall,
   rainAgeMin = 0
 }) => {
   return (
@@ -159,17 +159,17 @@ export const Sidebar: FC<SidebarProps> = ({
             gap: '12px',
             padding: '10px 14px',
             borderRadius: '12px',
-            border: 'none',
-            background: 'transparent',
-            color: 'var(--text-main, #25251F)',
+            border: showRainfall ? '1px solid var(--accent-cyan, #77745B)' : 'none',
+            background: showRainfall ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
+            color: showRainfall ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-main, #25251F)',
             cursor: 'pointer',
             textAlign: 'left',
             transition: 'all 0.15s ease'
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-pill, #E7DDCC)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
+          onMouseEnter={(e) => { if (!showRainfall) e.currentTarget.style.background = 'var(--bg-pill, #E7DDCC)'; }}
+          onMouseLeave={(e) => { if (!showRainfall) e.currentTarget.style.background = 'transparent'; }}
         >
-          <div style={{ color: 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ color: showRainfall ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <CloudRain size={19} />
           </div>
           <div>

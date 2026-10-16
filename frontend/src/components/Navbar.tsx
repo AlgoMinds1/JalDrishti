@@ -169,7 +169,7 @@ export const Navbar: FC<NavbarProps> = ({
         </div>
 
         {/* Desktop Navigation Links (Visible only on desktop screens >= 1024px) */}
-        <div className="desktop-only" style={{ alignItems: 'center', gap: '10px' }}>
+        <div className="desktop-only" style={{ alignItems: 'center', gap: '10px', marginLeft: 'auto' }}>
           <button
             onClick={() => handleNavigate('map')}
             style={{
@@ -276,7 +276,7 @@ export const Navbar: FC<NavbarProps> = ({
         </div>
 
         {/* Mobile Right Action: Compact Menu Button */}
-        <div className="mobile-only" style={{ alignItems: 'center', gap: '8px' }}>
+        <div className="mobile-only" style={{ alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
           {setTheme && (
             <button
               onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}

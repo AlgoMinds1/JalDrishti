@@ -5,7 +5,6 @@ import {
   Users,
   Sprout,
   ArrowRight,
-  ChevronRight,
   MapPin,
   Menu,
   X,
@@ -27,16 +26,19 @@ export const LandingPage: FC<LandingPageProps> = ({ onLaunchMap, onNavigate, onO
     <div
       className="landing-page-container"
       style={{
+        width: '100%',
+        minHeight: '100vh',
         background: 'var(--bg-primary, #faf7f0)',
         color: 'var(--text-main, #1d2821)',
-        position: 'relative'
+        position: 'relative',
+        boxSizing: 'border-box'
       }}
     >
       {/* 1. TOP NAVBAR */}
       <nav className="landing-nav">
-        {/* Brand Logo */}
+        {/* Left: Brand Logo */}
         <div
-          style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
+          className="landing-nav-brand"
           onClick={onLaunchMap}
         >
           <div
@@ -70,10 +72,10 @@ export const LandingPage: FC<LandingPageProps> = ({ onLaunchMap, onNavigate, onO
           </div>
         </div>
 
-        {/* Center Nav Links (Desktop Only: hidden on mobile) */}
-        <div className="desktop-only" style={{ alignItems: 'center', gap: '32px' }}>
+        {/* Center: Navigation Links (Desktop only - Dead-centered in the viewport) */}
+        <div className="landing-nav-center desktop-only">
           <div style={{ position: 'relative', paddingBottom: '4px' }}>
-            <span style={{ fontSize: '14px', fontWeight: 700, color: '#1f2820', cursor: 'pointer' }}>
+            <span style={{ fontSize: '14.5px', fontWeight: 700, color: '#1f2820', cursor: 'pointer' }}>
               Home
             </span>
             <div
@@ -91,7 +93,7 @@ export const LandingPage: FC<LandingPageProps> = ({ onLaunchMap, onNavigate, onO
 
           <span
             onClick={() => onNavigate && onNavigate('evaluate')}
-            style={{ fontSize: '14px', fontWeight: 500, color: '#526055', cursor: 'pointer', transition: 'color 0.15s ease' }}
+            style={{ fontSize: '14.5px', fontWeight: 500, color: '#526055', cursor: 'pointer', transition: 'color 0.15s ease' }}
             onMouseEnter={(e) => { e.currentTarget.style.color = '#1f2820'; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = '#526055'; }}
           >
@@ -100,7 +102,7 @@ export const LandingPage: FC<LandingPageProps> = ({ onLaunchMap, onNavigate, onO
 
           <span
             onClick={() => onNavigate && onNavigate('limits')}
-            style={{ fontSize: '14px', fontWeight: 500, color: '#526055', cursor: 'pointer', transition: 'color 0.15s ease' }}
+            style={{ fontSize: '14.5px', fontWeight: 500, color: '#526055', cursor: 'pointer', transition: 'color 0.15s ease' }}
             onMouseEnter={(e) => { e.currentTarget.style.color = '#1f2820'; }}
             onMouseLeave={(e) => { e.currentTarget.style.color = '#526055'; }}
           >
@@ -108,8 +110,8 @@ export const LandingPage: FC<LandingPageProps> = ({ onLaunchMap, onNavigate, onO
           </span>
         </div>
 
-        {/* Desktop Right Action Buttons */}
-        <div className="desktop-only" style={{ alignItems: 'center', gap: '12px' }}>
+        {/* Right: Action Buttons (Desktop only - Pinned to far right) */}
+        <div className="landing-nav-actions desktop-only">
           <button
             onClick={onOpenSignIn || onLaunchMap}
             style={{
@@ -151,7 +153,7 @@ export const LandingPage: FC<LandingPageProps> = ({ onLaunchMap, onNavigate, onO
         </div>
 
         {/* Mobile Right Action: Launch Map Pill & Hamburger Menu */}
-        <div className="mobile-only" style={{ alignItems: 'center', gap: '8px' }}>
+        <div className="landing-nav-mobile mobile-only">
           <button
             onClick={onLaunchMap}
             style={{
@@ -351,28 +353,24 @@ export const LandingPage: FC<LandingPageProps> = ({ onLaunchMap, onNavigate, onO
         </div>
       )}
 
-      {/* 2. HERO SECTION */}
+      {/* 2. HERO SECTION — Clean background with scenic Pune artwork on the right */}
       <section
         className="landing-hero"
         style={{
+          width: '100%',
           backgroundImage: 'url(/pune-hero-bg.jpg)',
           backgroundSize: 'cover',
-          backgroundPosition: 'center 42%',
-          backgroundRepeat: 'no-repeat'
+          backgroundPosition: 'right center',
+          backgroundRepeat: 'no-repeat',
+          position: 'relative',
+          minHeight: '560px',
+          display: 'flex',
+          alignItems: 'center',
+          boxSizing: 'border-box'
         }}
       >
-        {/* Soft atmospheric gradient wash ensuring high legibility */}
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'linear-gradient(90deg, rgba(250, 247, 240, 0.95) 0%, rgba(250, 247, 240, 0.92) 55%, rgba(250, 247, 240, 0.55) 85%, rgba(250, 247, 240, 0.2) 100%)',
-            pointerEvents: 'none'
-          }}
-        />
+        {/* Soft atmospheric gradient wash ensuring high legibility for text while preserving right-side artwork */}
+        <div className="landing-hero-overlay" />
 
         {/* Hero Left Content Column */}
         <div
@@ -457,137 +455,9 @@ export const LandingPage: FC<LandingPageProps> = ({ onLaunchMap, onNavigate, onO
             </button>
           </div>
         </div>
-
-        {/* Hero Right Column: Floating Interactive Map Mockup Card */}
-        <div className="landing-hero-preview">
-          {/* Main Map Card */}
-          <div
-            style={{
-              position: 'relative',
-              width: '420px',
-              maxWidth: '100%',
-              height: '300px',
-              borderRadius: '20px',
-              background: '#faf6ee',
-              border: '2px solid rgba(255, 255, 255, 0.85)',
-              boxShadow: '0 20px 48px rgba(50, 40, 30, 0.15), 0 2px 6px rgba(0,0,0,0.06)',
-              overflow: 'hidden'
-            }}
-          >
-            {/* SVG Illustration of Pune Map */}
-            <svg width="100%" height="100%" viewBox="0 0 430 320" preserveAspectRatio="none" style={{ display: 'block' }}>
-              <defs>
-                <linearGradient id="riverGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#9cc9c1" />
-                  <stop offset="100%" stopColor="#b6ded8" />
-                </linearGradient>
-              </defs>
-
-              <rect width="430" height="320" fill="#f8f4eb" />
-              <path d="M 0 0 L 140 0 C 130 50 110 80 80 100 L 0 120 Z" fill="#ebf0e3" opacity="0.8" />
-              <path d="M 330 0 L 430 0 L 430 110 C 390 100 360 80 340 40 Z" fill="#ebf0e3" opacity="0.8" />
-              <path d="M 280 200 C 320 220 380 230 430 210 L 430 320 L 260 320 Z" fill="#ebf0e3" opacity="0.7" />
-
-              <path d="M 20 0 L 20 320 M 60 0 L 60 320 M 120 0 L 120 320 M 200 0 L 200 320 M 280 0 L 280 320 M 360 0 L 360 320" stroke="#eee6d8" strokeWidth="2" />
-              <path d="M 0 40 L 430 40 M 0 90 L 430 90 M 0 160 L 430 160 M 0 220 L 430 220 M 0 270 L 430 270" stroke="#eee6d8" strokeWidth="2" />
-
-              <path d="M 0 80 C 120 90 200 120 270 190 C 310 230 360 280 430 310" stroke="#ffffff" strokeWidth="7" fill="none" strokeLinecap="round" />
-              <path d="M 140 0 C 160 80 180 140 240 210 L 300 320" stroke="#ffffff" strokeWidth="6" fill="none" strokeLinecap="round" />
-              <path d="M 40 320 C 80 260 160 200 240 180 C 330 160 380 120 430 80" stroke="#ffffff" strokeWidth="5.5" fill="none" strokeLinecap="round" />
-
-              <path
-                d="M 240 -10 C 230 50 200 100 230 150 C 260 200 310 220 350 240 C 390 260 410 250 440 270"
-                stroke="url(#riverGradient)"
-                strokeWidth="28"
-                fill="none"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-
-              {/* Road Hazard Lines */}
-              <path d="M 170 150 C 200 170 230 190 260 210" stroke="#ef4444" strokeWidth="4.5" strokeLinecap="round" />
-              <path d="M 240 100 C 270 120 300 150 330 180" stroke="#f59e0b" strokeWidth="4" strokeLinecap="round" />
-              <path d="M 90 120 C 120 140 150 160 180 180" stroke="#10b981" strokeWidth="4" strokeLinecap="round" />
-            </svg>
-
-            {/* Floating Risk Card */}
-            <div
-              style={{
-                position: 'absolute',
-                top: '14px',
-                right: '14px',
-                background: 'rgba(255, 255, 255, 0.95)',
-                borderRadius: '12px',
-                padding: '8px 12px',
-                boxShadow: '0 4px 14px rgba(40, 30, 20, 0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                border: '1px solid rgba(220, 210, 195, 0.7)'
-              }}
-            >
-              <div
-                style={{
-                  width: '26px',
-                  height: '26px',
-                  borderRadius: '50%',
-                  background: '#fef2f2',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#dc2626'
-                }}
-              >
-                <AlertTriangle size={14} />
-              </div>
-              <div>
-                <div style={{ fontSize: '11.5px', fontWeight: 800, color: '#dc2626', lineHeight: 1.1 }}>
-                  High Risk Segment
-                </div>
-                <div style={{ fontSize: '10px', color: '#6b7280', marginTop: '1px' }}>
-                  Aundh–Baner Corridor
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Floating Tag */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '14px',
-                left: '14px',
-                background: '#ffffff',
-                borderRadius: '9999px',
-                padding: '5px 12px 5px 8px',
-                boxShadow: '0 4px 14px rgba(40, 30, 20, 0.1)',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              <div
-                style={{
-                  width: '22px',
-                  height: '22px',
-                  borderRadius: '50%',
-                  background: '#28392c',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#ffffff'
-                }}
-              >
-                <Users size={12} />
-              </div>
-              <span style={{ fontSize: '10.5px', fontWeight: 700, color: '#1f2820' }}>
-                Keep Pune Moving Safely
-              </span>
-            </div>
-          </div>
-        </div>
       </section>
 
-      {/* 3. TRANSITION WAVE */}
+      {/* 3. SOFT ORGANIC TRANSITION WAVE */}
       <div style={{ position: 'relative', marginTop: '-36px', zIndex: 15 }}>
         <svg viewBox="0 0 1440 70" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '100%', height: '50px', display: 'block' }}>
           <path d="M0 35C280 12 560 52 840 28C1120 5 1320 40 1440 32V70H0V35Z" fill="var(--bg-primary, #faf7f0)" />

@@ -1,5 +1,5 @@
 import { useState, useEffect, type FC, type Dispatch, type SetStateAction } from 'react';
-import { CloudRain, Play, Pause, ChevronUp, ChevronDown, Activity } from 'lucide-react';
+import { CloudRain, Play, Pause, ChevronUp, ChevronDown } from 'lucide-react';
 
 interface TimeSliderProps {
   currentHour: number;

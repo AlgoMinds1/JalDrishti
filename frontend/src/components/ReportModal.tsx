@@ -1,6 +1,6 @@
 import { useState, type FC } from 'react';
 import axios from 'axios';
-import { X, MapPin, Mic, Send, AlertCircle, CheckCircle2, ShieldCheck } from 'lucide-react';
+import { X, MapPin, Mic, Send, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 interface ReportModalProps {
   isOpen: boolean;

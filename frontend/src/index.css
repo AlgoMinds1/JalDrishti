@@ -171,23 +171,70 @@ html, body {
   display: flex;
   align-items: center;
   justifyContent: space-between;
-  padding: 16px 48px;
-  background: rgba(250, 247, 240, 0.94);
-  backdrop-filter: blur(10px);
+  width: 100%;
+  padding: 14px 48px;
+  background: rgba(250, 247, 240, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
   z-index: 100;
-  border-bottom: 1px solid rgba(229, 220, 206, 0.6);
+  border-bottom: 1px solid rgba(229, 220, 206, 0.7);
+  box-sizing: border-box;
+}
+
+.landing-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.landing-nav-center {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.landing-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.landing-nav-mobile {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .landing-hero {
   position: relative;
-  min-height: 540px;
+  min-height: 560px;
   padding: 48px 48px 64px;
   display: flex;
   align-items: center;
   justifyContent: space-between;
   gap: 32px;
+  box-sizing: border-box;
+}
+
+.landing-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, rgba(250, 247, 240, 0.96) 0%, rgba(250, 247, 240, 0.90) 48%, rgba(250, 247, 240, 0.25) 75%, rgba(250, 247, 240, 0.05) 100%);
+  pointer-events: none;
 }
 
 .landing-title {
@@ -239,12 +286,25 @@ html, body {
 @media (max-width: 1023px) {
   .landing-nav {
     padding: 10px 16px;
+    height: 56px;
+  }
+  .landing-nav-center {
+    display: none !important;
+  }
+  .landing-nav-actions {
+    display: none !important;
+  }
+  .landing-nav-mobile {
+    display: flex !important;
   }
   .landing-hero {
     flex-direction: column;
     align-items: flex-start;
     padding: 24px 16px 36px;
     min-height: auto;
+  }
+  .landing-hero-overlay {
+    background: linear-gradient(180deg, rgba(250, 247, 240, 0.94) 0%, rgba(250, 247, 240, 0.90) 70%, rgba(250, 247, 240, 0.45) 100%);
   }
   .landing-title {
     font-size: clamp(26px, 7vw, 36px);
