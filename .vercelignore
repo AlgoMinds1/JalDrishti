@@ -22,3 +22,5 @@ cache/
 *.graphml
 *.tif
 *.geojson
+# Keep the static pilot assets required by the deployed frontend simulation.
+!/frontend/public/data/pilot/*.geojson
