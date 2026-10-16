@@ -1,9 +1,9 @@
-import { useState, useEffect, type FC } from 'react';
+import { useState, useEffect, type FC, type Dispatch, type SetStateAction } from 'react';
 import { CloudRain, Play, Pause } from 'lucide-react';
 
 interface TimeSliderProps {
   currentHour: number;
-  setHour: (h: number) => void;
+  setHour: Dispatch<SetStateAction<number>>;
   stats?: {
     low: number;
     moderate: number;

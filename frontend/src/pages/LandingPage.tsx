@@ -6,8 +6,7 @@ import {
   Sprout,
   ArrowRight,
   ChevronRight,
-  MapPin,
-  Check
+  MapPin
 } from 'lucide-react';
 
 interface LandingPageProps {

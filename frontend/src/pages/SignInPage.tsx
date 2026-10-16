@@ -8,7 +8,6 @@ import {
   CloudRain,
   AlertTriangle,
   Check,
-  Plane,
   ChevronRight,
   X
 } from 'lucide-react';

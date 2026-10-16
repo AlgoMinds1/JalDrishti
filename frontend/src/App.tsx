@@ -210,7 +210,7 @@ export function App() {
               {/* Bottom Forecast Horizon Card with Animation */}
               <TimeSlider
                 currentHour={currentHour}
-                setHour={(h) => setCurrentHour(h)}
+                setHour={setCurrentHour}
               />
 
               {/* Clicked Road Segment Inspection Drawer */}
