@@ -25,3 +25,16 @@ The requested replay dates were corrected to **24–25 July 2024**. A Hindustan 
 Known limitations: sparse and reporting-biased labels; coarse ERA5 rainfall; 30 m terrain misses underpass dips; location/GPS uncertainty; no historical forecast archive or replay-time information set; and no verified segment-level source labels. There is no meaningful test split or baseline comparison while the target labels cannot be spatially assigned.
 
 See [results.md](results.md) and [data/SOURCES.md](data/SOURCES.md) for the audit trail.
+
+## Browser push notifications
+
+Users must opt in on each browser/device using the Notifications button. The
+API stores subscriptions in the configured database; scheduled broadcasts are
+sent by the API worker, so the admin laptop can be closed after scheduling.
+The deployed site must use HTTPS and the API must have `VAPID_PUBLIC_KEY`,
+`VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` (a `mailto:` contact), and a private
+`ADMIN_API_TOKEN` configured. Install the added `pywebpush` requirement. The
+admin modal's Push Notifications tab accepts the admin token and schedules a
+message; users without a subscription will not receive it. The current app's
+sign-in screen is a prototype rather than account authentication, so these
+notifications target opted-in browser installations, not verified user accounts.

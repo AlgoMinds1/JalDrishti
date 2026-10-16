@@ -12,8 +12,10 @@ import {
   Home,
   ShieldCheck,
   CalendarClock,
-  Settings
+  Settings,
+  Bell
 } from 'lucide-react';
+import axios from 'axios';
 
 interface NavbarProps {
   activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay';
@@ -39,6 +41,37 @@ export const Navbar: FC<NavbarProps> = ({
 }) => {
   const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [pushStatus, setPushStatus] = useState('');
+
+  const enablePush = async () => {
+    try {
+      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+        setPushStatus('Push notifications are not supported in this browser.');
+        return;
+      }
+      const permission = await Notification.requestPermission();
+      if (permission !== 'granted') {
+        setPushStatus('Allow notifications in your browser to receive updates.');
+        return;
+      }
+      const { data } = await axios.get('/api/notifications/public-key');
+      await navigator.serviceWorker.register('/sw.js');
+      const ready = await navigator.serviceWorker.ready;
+      const decodeKey = (value: string) => {
+        const padding = '='.repeat((4 - value.length % 4) % 4);
+        const raw = atob((value + padding).replace(/-/g, '+').replace(/_/g, '/'));
+        return Uint8Array.from(raw, (char) => char.charCodeAt(0));
+      };
+      const subscription = await ready.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: decodeKey(data.public_key)
+      });
+      await axios.post('/api/notifications/subscribe', subscription.toJSON());
+      setPushStatus('This device is subscribed to JalDrishti updates.');
+    } catch (error: any) {
+      setPushStatus(error?.response?.data?.detail || 'Could not enable notifications.');
+    }
+  };
 
   const handleNavigate = (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay') => {
     setActiveTab(tab);
@@ -261,6 +294,13 @@ export const Navbar: FC<NavbarProps> = ({
             </button>
           )}
 
+          <button onClick={enablePush} title="Enable browser notifications" style={{
+            height: '32px', padding: '0 9px', borderRadius: '8px',
+            border: '1px solid var(--border-color, #E4DACA)',
+            background: 'var(--bg-widget, #FFFCF6)', color: 'var(--text-main, #25251F)',
+            display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '12px'
+          }}><Bell size={14} /> Notifications</button>
+
           {/* User Profile Avatar */}
           <div
             style={{
@@ -283,6 +323,17 @@ export const Navbar: FC<NavbarProps> = ({
 
         {/* Mobile Right Action: Compact Menu Button */}
         <div className="mobile-only" style={{ alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
+          <button
+            onClick={enablePush}
+            aria-label="Enable browser notifications"
+            title="Enable notifications"
+            style={{
+              width: '34px', height: '34px', borderRadius: '8px',
+              border: '1px solid var(--border-color, #E4DACA)',
+              background: 'var(--bg-card, #FFFCF6)', color: 'var(--text-main, #25251F)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
+            }}
+          ><Bell size={16} /></button>
           {setTheme && (
             <button
               onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
@@ -324,6 +375,7 @@ export const Navbar: FC<NavbarProps> = ({
           </button>
         </div>
       </nav>
+      {pushStatus && <div role="status" style={{ padding: '5px 16px', fontSize: '12px', color: 'var(--text-muted)' }}>{pushStatus}</div>}
 
       {/* Slide-out Mobile Navigation Drawer */}
       {isMobileMenuOpen && (

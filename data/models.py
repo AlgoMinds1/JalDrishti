@@ -173,3 +173,24 @@ class Intervention(Base):
     after_period = Column(String(64), nullable=True)
     effectiveness_score = Column(Float, default=0.0)
 
+
+class PushSubscription(Base):
+    __tablename__ = "push_subscriptions"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    endpoint = Column(Text, nullable=False, unique=True, index=True)
+    subscription_json = Column(JSON, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+
+class ScheduledBroadcast(Base):
+    __tablename__ = "scheduled_broadcasts"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    title = Column(String(120), nullable=False)
+    body = Column(Text, nullable=False)
+    due_at = Column(DateTime, nullable=False, index=True)
+    status = Column(String(20), nullable=False, default="scheduled", index=True)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    sent_at = Column(DateTime, nullable=True)
+

@@ -1,6 +1,6 @@
 import { useState, useEffect, type FC } from 'react';
 import axios from 'axios';
-import { Sliders, AlertTriangle, Wrench, X, RefreshCw, PlusCircle } from 'lucide-react';
+import { Sliders, AlertTriangle, Wrench, X, RefreshCw, PlusCircle, Bell } from 'lucide-react';
 
 interface AdminSandboxModalProps {
   isOpen: boolean;
@@ -13,7 +13,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
   onClose,
   onApplySimulationToMap
 }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'sandbox' | 'queue' | 'ledger'>('sandbox');
+  const [activeSubTab, setActiveSubTab] = useState<'sandbox' | 'queue' | 'ledger' | 'notifications'>('sandbox');
   const [rainfallMm, setRainfallMm] = useState<number>(60);
   const [durationH, setDurationH] = useState<number>(2);
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
@@ -31,6 +31,33 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
     agency: 'PMC Stormwater Drainage Department'
   });
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [adminToken, setAdminToken] = useState(() => sessionStorage.getItem('jaldrishti_admin_token') || '');
+  const [broadcastTitle, setBroadcastTitle] = useState('JalDrishti update');
+  const [broadcastBody, setBroadcastBody] = useState('');
+  const [broadcastDelayHours, setBroadcastDelayHours] = useState(2);
+  const [broadcastStatus, setBroadcastStatus] = useState('');
+  const [isSchedulingBroadcast, setIsSchedulingBroadcast] = useState(false);
+
+  const scheduleBroadcast = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSchedulingBroadcast(true);
+    setBroadcastStatus('');
+    try {
+      sessionStorage.setItem('jaldrishti_admin_token', adminToken);
+      const dueAt = new Date(Date.now() + broadcastDelayHours * 60 * 60 * 1000).toISOString();
+      const response = await axios.post('/api/notifications/broadcasts', {
+        title: broadcastTitle,
+        body: broadcastBody,
+        due_at: dueAt
+      }, { headers: { Authorization: `Bearer ${adminToken}` } });
+      setBroadcastStatus(`Broadcast scheduled for ${new Date(response.data.due_at).toLocaleString()}.`);
+      setBroadcastBody('');
+    } catch (error: any) {
+      setBroadcastStatus(error?.response?.data?.detail || 'Could not schedule the broadcast.');
+    } finally {
+      setIsSchedulingBroadcast(false);
+    }
+  };
 
   // Run simulation & fetch ranked queue
   const runSimulation = async () => {
@@ -172,7 +199,8 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
           {[
             { id: 'sandbox', label: 'What-If Storm Sandbox', icon: <Sliders size={14} /> },
             { id: 'queue', label: 'Top 10 Inspection Queue', icon: <AlertTriangle size={14} /> },
-            { id: 'ledger', label: 'Intervention Effectiveness Ledger', icon: <Wrench size={14} /> }
+            { id: 'ledger', label: 'Intervention Effectiveness Ledger', icon: <Wrench size={14} /> },
+            { id: 'notifications', label: 'Push Notifications', icon: <Bell size={14} /> }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -352,6 +380,33 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                 </div>
               )}
             </div>
+          )}
+
+          {activeSubTab === 'notifications' && (
+            <form onSubmit={scheduleBroadcast} style={{ maxWidth: 640, display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <h3 style={{ margin: 0, color: 'var(--text-main)' }}>Schedule a push notification</h3>
+              <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: 12 }}>
+                Sends to browsers that opted in to notifications. Delivery requires push to be configured on the server.
+              </p>
+              <label style={{ fontSize: 12, color: 'var(--text-muted)' }}>Admin token
+                <input type="password" autoComplete="current-password" required value={adminToken} onChange={e => setAdminToken(e.target.value)} placeholder="ADMIN_API_TOKEN" style={{ display: 'block', width: '100%', boxSizing: 'border-box', padding: 9, marginTop: 4, borderRadius: 6, border: '1px solid var(--border-color)', background: 'var(--bg-pill)', color: 'var(--text-main)' }} />
+              </label>
+              <label style={{ fontSize: 12, color: 'var(--text-muted)' }}>Notification title
+                <input maxLength={120} required value={broadcastTitle} onChange={e => setBroadcastTitle(e.target.value)} style={{ display: 'block', width: '100%', boxSizing: 'border-box', padding: 9, marginTop: 4, borderRadius: 6, border: '1px solid var(--border-color)', background: 'var(--bg-pill)', color: 'var(--text-main)' }} />
+              </label>
+              <label style={{ fontSize: 12, color: 'var(--text-muted)' }}>Message
+                <textarea maxLength={500} required rows={3} value={broadcastBody} onChange={e => setBroadcastBody(e.target.value)} placeholder="Write the update for subscribed users" style={{ display: 'block', width: '100%', boxSizing: 'border-box', padding: 9, marginTop: 4, borderRadius: 6, border: '1px solid var(--border-color)', background: 'var(--bg-pill)', color: 'var(--text-main)' }} />
+              </label>
+              <label style={{ fontSize: 12, color: 'var(--text-muted)' }}>Send after
+                <select value={broadcastDelayHours} onChange={e => setBroadcastDelayHours(Number(e.target.value))} style={{ display: 'block', padding: 9, marginTop: 4, borderRadius: 6, border: '1px solid var(--border-color)', background: 'var(--bg-pill)', color: 'var(--text-main)' }}>
+                  {[1, 2, 3, 6, 12, 24].map(hours => <option key={hours} value={hours}>{`${hours} hour${hours === 1 ? '' : 's'}`}</option>)}
+                </select>
+              </label>
+              <button disabled={isSchedulingBroadcast || !broadcastBody.trim()} style={{ padding: 10, border: 0, borderRadius: 7, background: 'var(--accent-beige-gradient)', color: 'white', fontWeight: 700, cursor: 'pointer' }}>
+                {isSchedulingBroadcast ? 'Scheduling…' : 'Schedule notification'}
+              </button>
+              {broadcastStatus && <div role="status" style={{ fontSize: 12, color: 'var(--text-main)' }}>{broadcastStatus}</div>}
+            </form>
           )}
 
           {/* TAB 2: Ranked Inspection Queue */}

@@ -13,7 +13,8 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from api.routers import predictions, reports, routes, admin
+from api.routers import predictions, reports, routes, admin, notifications
+from api.services.push_notifications import start_delivery_worker
 from pipeline.refresh import refresh_predictions
 
 limiter = Limiter(key_func=get_remote_address, default_limits=["120/minute"])
@@ -62,6 +63,9 @@ app.include_router(admin.admin_router, prefix="/api")
 app.include_router(admin.sandbox_router)
 app.include_router(admin.sandbox_router, prefix="/api")
 
+app.include_router(notifications.router)
+app.include_router(notifications.router, prefix="/api")
+
 DATA_DIR = ROOT_DIR / "data" / "processed"
 FIXTURES_DIR = ROOT_DIR / "fixtures"
 ML_DIR = ROOT_DIR / "ml"
@@ -75,6 +79,7 @@ def startup_event():
     try:
         from data.db import init_db
         init_db()
+        start_delivery_worker()
     except Exception as e:
         print(f"Database startup check note: {e}")
 
