@@ -157,46 +157,6 @@ html, body {
   }
 }
 
-/* Keep the map sidebar as an icon rail until it is hovered or keyboard-focused. */
-@media (min-width: 1024px) {
-  .app-sidebar:hover,
-  .app-sidebar:focus-within {
-    width: 240px !important;
-    min-width: 240px !important;
-    padding-left: 8px !important;
-    padding-right: 8px !important;
-  }
-
-  .app-sidebar .sidebar-label,
-  .app-sidebar .sidebar-footer {
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.14s ease, visibility 0s linear 0.14s;
-  }
-
-  .app-sidebar:hover .sidebar-label,
-  .app-sidebar:hover .sidebar-footer,
-  .app-sidebar:focus-within .sidebar-label,
-  .app-sidebar:focus-within .sidebar-footer {
-    opacity: 1;
-    visibility: visible;
-    transition-delay: 0s;
-  }
-
-  .app-sidebar > div:first-child > button {
-    width: 224px;
-    min-width: 224px;
-    padding-left: 14px !important;
-    padding-right: 14px !important;
-  }
-
-  .app-sidebar > div:first-child > button > div:first-child {
-    width: 19px;
-    min-width: 19px;
-    flex: 0 0 19px;
-  }
-}
-
 /* Landing Page Responsive Classes */
 .landing-page-container {
   width: 100%;
