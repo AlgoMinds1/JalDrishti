@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import { Navbar } from './components/Navbar';
 import { Sidebar } from './components/Sidebar';
@@ -15,12 +15,19 @@ import { EvaluationPage } from './pages/EvaluationPage';
 import { LimitationsPage } from './pages/LimitationsPage';
 import { LandingPage } from './pages/LandingPage';
 import { SignInPage } from './pages/SignInPage';
+import { ScenarioReplayBar, type ScenarioId } from './components/ScenarioReplayBar';
+import { simulateEventScenario, type SegmentCollection } from './data/scenarioSimulation';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<'home' | 'signin' | 'map' | 'evaluate' | 'limits'>('home');
   const [currentHour, setCurrentHour] = useState<number>(1);
   const [scenario, setScenario] = useState<'live' | 'storm_july2024'>('live');
   const [geojsonData, setGeojsonData] = useState<any>(null);
+  const [scenarioSimulationActive, setScenarioSimulationActive] = useState(false);
+  const [selectedEventScenario, setSelectedEventScenario] = useState<ScenarioId>('2024');
+  const [baseRoadSegments, setBaseRoadSegments] = useState<SegmentCollection | null>(null);
+  const [simulationSummary, setSimulationSummary] = useState<{ mean_risk_score: number; increasing_segments: number; easing_segments: number } | null>(null);
+  const apiUnavailable = useRef(false);
   const [reportsData, setReportsData] = useState<any>(null);
   const [showReportsLayer, setShowReportsLayer] = useState<boolean>(true);
   const [showRainfall, setShowRainfall] = useState<boolean>(true);
@@ -49,6 +56,7 @@ export function App() {
   const fetchPredictions = useCallback(async () => {
     setIsLoading(true);
     try {
+      if (apiUnavailable.current) throw new Error('API unavailable; use local baseline');
       const url = `/api/predictions?hour=${currentHour}${scenario === 'storm_july2024' ? '&scenario=storm_july2024' : ''}`;
       const res = await axios.get(url);
       setGeojsonData(res.data);
@@ -68,10 +76,13 @@ export function App() {
         setRainAgeMin(res.data.features[0].properties.rain_data_age_min);
       }
     } catch {
-      // Graceful fallback to static high-resolution pilot dataset
+      apiUnavailable.current = true;
+      // Load the current low-confidence baseline from this origin. Using
+      // native fetch avoids accidentally applying the remote API base URL.
       try {
-        const fallbackRes = await axios.get('/data/default_predictions.json');
-        const hourData = fallbackRes.data[currentHour] || fallbackRes.data[1];
+        const fallbackRes = await fetch(`/data/pilot/predictions_h${currentHour}.geojson`, { cache: 'no-store' });
+        if (!fallbackRes.ok) throw new Error(`Static fallback returned ${fallbackRes.status}`);
+        const hourData = await fallbackRes.json();
         setGeojsonData(hourData);
 
         const counts = { low: 0, moderate: 0, high: 0, severe: 0 };
@@ -84,6 +95,11 @@ export function App() {
           }
         });
         setStats(counts);
+        const rainTimestamp = hourData.features?.[0]?.properties?.rain_data_timestamp;
+        if (rainTimestamp) {
+          const ageMin = Math.max(0, (Date.now() - new Date(rainTimestamp).getTime()) / 60000);
+          setRainAgeMin(Math.round(ageMin));
+        }
       } catch (errFallback) {
         console.error('Failed to load predictions fallback:', errFallback);
       }
@@ -98,6 +114,7 @@ export function App() {
       const res = await axios.get('/api/reports?hours=24');
       setReportsData(res.data);
     } catch {
+      apiUnavailable.current = true;
       // Backend offline or no reports
     }
   }, []);
@@ -110,6 +127,7 @@ export function App() {
         setRainAgeMin(res.data.rain_data_age_min);
       }
     } catch {
+      apiUnavailable.current = true;
       // Backend offline
     }
   }, []);
@@ -120,8 +138,45 @@ export function App() {
   }, [fetchHealth, fetchReports]);
 
   useEffect(() => {
-    fetchPredictions();
-  }, [fetchPredictions]);
+    if (!scenarioSimulationActive) fetchPredictions();
+  }, [fetchPredictions, scenarioSimulationActive]);
+
+  useEffect(() => {
+    if (!scenarioSimulationActive) return;
+    let cancelled = false;
+    const renderSimulation = async () => {
+      try {
+        let roads = baseRoadSegments;
+        if (!roads) {
+          const response = await fetch('/data/pilot/road_segments.geojson');
+          if (!response.ok) throw new Error(`Road geometry fallback returned ${response.status}`);
+          roads = await response.json();
+          if (cancelled) return;
+          setBaseRoadSegments(roads);
+        }
+        if (cancelled || !roads) return;
+        const output = simulateEventScenario(roads, selectedEventScenario, currentHour);
+        setGeojsonData(output);
+        setSimulationSummary(output.summary);
+        setStats(output.summary.counts);
+      } catch (error) {
+        if (!cancelled) console.error('Failed to run local scenario simulation:', error);
+      }
+    };
+    renderSimulation();
+    return () => { cancelled = true; };
+  }, [scenarioSimulationActive, baseRoadSegments, selectedEventScenario, currentHour]);
+
+  const runSelectedScenario = useCallback((id: ScenarioId, hour: number) => {
+    setSelectedEventScenario(id);
+    setCurrentHour(hour);
+    setScenarioSimulationActive(true);
+  }, []);
+
+  const exitScenarioSimulation = useCallback(() => {
+    setScenarioSimulationActive(false);
+    setSimulationSummary(null);
+  }, []);
 
   if (activeTab === 'home') {
     return (
@@ -208,6 +263,13 @@ export function App() {
                 onSelectLocation={(lat, lon, name) => setTargetCoords({ lat, lon, name })}
               />
 
+              <ScenarioReplayBar
+                onRunScenario={runSelectedScenario}
+                onSimulationChange={setScenarioSimulationActive}
+                onExitSimulation={exitScenarioSimulation}
+                summary={simulationSummary}
+              />
+
               {/* Waterlogging Risk Legend (Desktop card & Mobile bottom sheet) */}
               <RiskLegend />
 
@@ -228,6 +290,7 @@ export function App() {
                 setHour={setCurrentHour}
                 stats={stats}
                 rainAgeMin={rainAgeMin}
+                disabled={scenarioSimulationActive}
               />
 
               {/* Road Segment Inspection (Mobile Bottom Sheet & Desktop Drawer) */}

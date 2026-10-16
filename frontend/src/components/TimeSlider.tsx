@@ -11,13 +11,15 @@ interface TimeSliderProps {
     severe: number;
   };
   rainAgeMin?: number;
+  disabled?: boolean;
 }
 
 export const TimeSlider: FC<TimeSliderProps> = ({
   currentHour,
   setHour,
   stats = { low: 0, moderate: 0, high: 0, severe: 0 },
-  rainAgeMin = 0
+  rainAgeMin = 0,
+  disabled = false
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isOverviewExpanded, setIsOverviewExpanded] = useState(false);
@@ -32,6 +34,10 @@ export const TimeSlider: FC<TimeSliderProps> = ({
   ];
 
   // Auto-play animation through horizons
+  useEffect(() => {
+    if (disabled) setIsPlaying(false);
+  }, [disabled]);
+
   useEffect(() => {
     let interval: any = null;
     if (isPlaying) {
@@ -66,7 +72,8 @@ export const TimeSlider: FC<TimeSliderProps> = ({
         maxWidth: '560px',
         margin: '0 auto',
         zIndex: 950,
-        pointerEvents: 'auto',
+        opacity: disabled ? 0.48 : 1,
+        pointerEvents: disabled ? 'none' : 'auto',
         display: 'flex',
         flexDirection: 'column',
         gap: '6px'
