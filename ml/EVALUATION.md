@@ -1,42 +1,9 @@
-# 📊 JalDrishti Model Evaluation Benchmark
+# JalDrishti evaluation status
 
-> **Evaluated On:** Temporal Test Set (Unseen August & September 2024 Monsoon Storms)
+**Current status: baseline only; not quantitatively evaluable.** See `evaluation_results.json` for the machine-readable record used by the API.
 
----
+Three distinct source-backed flood events were found: Pune (2019-09-24), Sinhagad Road (2023-09-28), and the Pune replay event (2024-07-24 to 2024-07-25). The reports do not geolocate the affected road segments sufficiently to create segment-level labels. There are zero eligible segment-level positives and no valid event/spatial test split. The training rule also requires at least five distinct labelled events, so no trained model or skill claim is made.
 
-## 1. Baselines Comparison (Evaluation Page Table)
+PR-AUC, precision, recall, F1, Brier score, false-alarm rate, recall at 5% false-alarm rate, per-horizon metrics, ablations, and calibrated probabilities are **not measured**. Always-no, hotspot-only, and rain-threshold comparison metrics are also not measured because there is no labelled test set. The current rain-threshold baseline output uses a cached zero-rain forecast snapshot that was about 66 hours old at export, so it is not a current weather evaluation.
 
-| Model / Approach | PR-AUC | ROC-AUC | Precision | Recall | F1 Score | False Alarm Rate | Brier Score |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Always-No Baseline** | 0.0952 | 0.5000 | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0.0952 |
-| **Hotspot-Only Baseline** | 0.6429 | 0.8684 | 0.2857 | 1.0000 | 0.4444 | 0.2632 | 0.1319 |
-| **Rainfall-Threshold Rule** | 0.4113 | 0.8871 | 0.3226 | 0.9677 | 0.4839 | 0.2139 | 0.1348 |
-| **JalDrishti LightGBM (Ours)** | **1.0000** | **1.0000** | **1.0000** | **1.0000** | **1.0000** | **0.0000** | **0.0000** |
-
----
-
-## 2. Skill Degradation by Forecasting Horizon
-
-| Horizon | PR-AUC | F1 Score | Precision | Recall |
-|---|:---:|:---:|:---:|:---:|
-| **+1 Hour Ahead** | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
-| **+2 Hours Ahead** | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
-| **+3 Hours Ahead** | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
-| **+6 Hours Ahead** | 1.0000 | 1.0000 | 1.0000 | 1.0000 |
-
----
-
-## 3. Feature Ablation Study
-
-* **Full JalDrishti Model PR-AUC:** `1.0000`
-* **Without Topography (HAND/Elevation/Slope):** `1.0000` (Drops significantly without floodplains)
-* **Without Forecast Rain (Historical Rain Only):** `0.8869`
-
----
-
-## 4. Generalization & Uncertainty
-
-* **Spatial Holdout PR-AUC (100% Unseen Roads):** `1.0000`
-* **MAPIE Empirical Conformal Coverage:** `100.0%` (Target: 90%)
-* **Expected Calibration Error (ECE):** `0.0000`
-* **Effective Lead Time:** `~180 minutes (3 hours prior to citizen reporting)`
+The earlier perfect metrics and benchmark numbers in this file were not supported by the audited label set and have been withdrawn. Do not use them as model results.

@@ -1,99 +1,38 @@
 {
+  "model_type": "baseline",
+  "status": "not_evaluable",
+  "generated_at": "2026-10-16T08:01:23Z",
   "summary": {
-    "model_name": "JalDrishti LightGBM Conformal Classifier v1",
-    "optimal_threshold": 0.65,
-    "pr_auc": 1.0,
-    "roc_auc": 1.0,
-    "f1_score": 1.0,
-    "precision": 1.0,
-    "recall": 1.0,
-    "false_alarm_rate": 0.0,
-    "brier_score": 0.0,
-    "expected_calibration_error": 0.0,
-    "conformal_target_coverage": 0.9,
-    "conformal_empirical_coverage": 1.0,
-    "avg_conformal_set_size": 1.0,
-    "lead_time_minutes": 180
+    "model_name": "Rain-threshold + hotspot baseline",
+    "distinct_source_backed_events": 3,
+    "minimum_events_for_training": 5,
+    "eligible_segment_level_positives": 0,
+    "pr_auc": null,
+    "precision": null,
+    "recall": null,
+    "f1_score": null,
+    "false_alarm_rate": null,
+    "recall_at_5_percent_false_alarm_rate": null,
+    "brier_score": null,
+    "lead_time_minutes": null,
+    "reason": "No segment-level test labels: source reports do not locate affected road points precisely. Training stopped below the five-event minimum."
   },
-  "confusion_matrix": {
-    "true_negatives": 9424,
-    "false_positives": 0,
-    "false_negatives": 0,
-    "true_positives": 992
-  },
+  "events": [
+    {"event_id":"pune-2019-09","dates":["2019-09-24"],"eligible_segment_positives":0},
+    {"event_id":"pune-2023-09","dates":["2023-09-28"],"eligible_segment_positives":0},
+    {"event_id":"pune-2024-07","dates":["2024-07-24","2024-07-25"],"eligible_segment_positives":0}
+  ],
   "baselines_comparison": {
-    "always_no": {
-      "pr_auc": 0.0952,
-      "roc_auc": 0.5,
-      "precision": 0.0,
-      "recall": 0.0,
-      "f1": 0.0,
-      "brier_score": 0.0952,
-      "false_alarm_rate": 0.0
-    },
-    "hotspot_only": {
-      "pr_auc": 0.6429,
-      "roc_auc": 0.8684,
-      "precision": 0.2857,
-      "recall": 1.0,
-      "f1": 0.4444,
-      "brier_score": 0.1319,
-      "false_alarm_rate": 0.2632
-    },
-    "rainfall_threshold": {
-      "pr_auc": 0.4113,
-      "roc_auc": 0.8871,
-      "precision": 0.3226,
-      "recall": 0.9677,
-      "f1": 0.4839,
-      "brier_score": 0.1348,
-      "false_alarm_rate": 0.2139
-    },
-    "jaldrishti_lgbm": {
-      "pr_auc": 1.0,
-      "roc_auc": 1.0,
-      "f1": 1.0,
-      "precision": 1.0,
-      "recall": 1.0,
-      "brier_score": 0.0,
-      "false_alarm_rate": 0.0
-    }
+    "always_no": {"pr_auc":null,"precision":null,"recall":null,"status":"not evaluated: no test labels"},
+    "hotspot_only": {"pr_auc":null,"precision":null,"recall":null,"status":"not evaluated: no geocoded segment labels"},
+    "rainfall_threshold": {"pr_auc":null,"precision":null,"recall":null,"status":"baseline output only; no test labels"},
+    "jal_drishti_model": {"pr_auc":null,"precision":null,"recall":null,"status":"not trained"}
   },
-  "by_horizon": {
-    "+1h": {
-      "pr_auc": 1.0,
-      "f1": 1.0,
-      "precision": 1.0,
-      "recall": 1.0
-    },
-    "+2h": {
-      "pr_auc": 1.0,
-      "f1": 1.0,
-      "precision": 1.0,
-      "recall": 1.0
-    },
-    "+3h": {
-      "pr_auc": 1.0,
-      "f1": 1.0,
-      "precision": 1.0,
-      "recall": 1.0
-    },
-    "+6h": {
-      "pr_auc": 1.0,
-      "f1": 1.0,
-      "precision": 1.0,
-      "recall": 1.0
-    }
-  },
-  "ablations": {
-    "full_model": 1.0,
-    "without_terrain": 1.0,
-    "without_forecast_rain": 0.8869
-  },
-  "spatial_holdout": {
-    "pr_auc": 1.0,
-    "f1": 1.0,
-    "recall": 1.0,
-    "precision": 1.0
+  "data_snapshot": {
+    "segments_in_zone": 121,
+    "horizons": [1,2,3,4,5,6],
+    "cached_hourly_rain_mm": [0,0,0,0,0,0],
+    "rain_cache_age_hours_at_export": 65.6,
+    "confidence": "Low"
   }
 }
