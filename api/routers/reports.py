@@ -5,14 +5,16 @@ Exposes citizen report submission, privacy-preserving GeoJSON feed, and verifica
 import uuid
 from datetime import datetime, timezone, timedelta
 from typing import Optional, List
-from fastapi import APIRouter, HTTPException, Depends, Query, Body
+from fastapi import APIRouter, HTTPException, Depends, Query, Body, File, Form, UploadFile, Response
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from geoalchemy2.shape import from_shape
 from shapely.geometry import Point
+from io import BytesIO
+from PIL import ExifTags, Image, UnidentifiedImageError
 
 from data.db import get_db
-from data.models import Report as ReportModel, Reporter as ReporterModel
+from data.models import Report as ReportModel, Reporter as ReporterModel, ReportMedia as ReportMediaModel
 from trust.plausibility import snap_to_segment
 from trust.anomaly import BehavioralAnomalyDetector
 from trust.score_report import score_report
@@ -20,6 +22,45 @@ from trust.score_report import score_report
 router = APIRouter(prefix="/reports", tags=["Citizen Reports"])
 
 anomaly_detector = BehavioralAnomalyDetector()
+MAX_PHOTO_BYTES = 8 * 1024 * 1024
+
+
+def inspect_photo(data: bytes) -> tuple[str, dict]:
+    """Validate an uploaded image and assess its embedded camera metadata."""
+    try:
+        image = Image.open(BytesIO(data))
+        if image.width * image.height > 20_000_000:
+            raise HTTPException(status_code=413, detail="Photo dimensions must be 20 megapixels or smaller.")
+        image.verify()
+    except (UnidentifiedImageError, OSError, ValueError, Image.DecompressionBombError):
+        raise HTTPException(status_code=400, detail="Upload a valid JPEG, PNG, or WebP image.")
+
+    formats = {"JPEG": "image/jpeg", "PNG": "image/png", "WEBP": "image/webp"}
+    content_type = formats.get(image.format or "")
+    if not content_type:
+        raise HTTPException(status_code=400, detail="Only JPEG, PNG, and WebP images are supported.")
+
+    exif = {}
+    try:
+        image = Image.open(BytesIO(data))
+        exif = image.getexif()
+    except (UnidentifiedImageError, OSError, ValueError):
+        pass
+    tags = {ExifTags.TAGS.get(key, str(key)): str(value)[:200] for key, value in exif.items()}
+    camera_fields = ["Make", "Model", "DateTimeOriginal"]
+    has_camera_metadata = any(tags.get(key) for key in camera_fields)
+    software = tags.get("Software", "")
+    generated_markers = ("stable diffusion", "midjourney", "dall-e", "generative", "ai generated")
+    possible_generated = any(marker in software.lower() for marker in generated_markers)
+    status = "possible_generated_metadata" if possible_generated else (
+        "camera_metadata_present" if has_camera_metadata else "metadata_unavailable"
+    )
+    return content_type, {
+        "status": status,
+        "camera_metadata_present": has_camera_metadata,
+        "software": software or None,
+        "note": "Metadata is only a provenance clue; it can be removed or forged and does not prove whether an image is real or AI-generated.",
+    }
 
 
 class ReportCreatePayload(BaseModel):
@@ -154,6 +195,56 @@ def create_report(payload: ReportCreatePayload, db: Session = Depends(get_db)):
     }
 
 
+@router.post("/with-photo", summary="Submit a report with image evidence")
+async def create_report_with_photo(
+    lat: float = Form(...),
+    lon: float = Form(...),
+    text: str = Form(...),
+    language: str = Form("mr"),
+    reporter_id: str = Form("anonymous_device"),
+    photo: UploadFile = File(...),
+    db: Session = Depends(get_db),
+):
+    data = await photo.read(MAX_PHOTO_BYTES + 1)
+    if len(data) > MAX_PHOTO_BYTES:
+        raise HTTPException(status_code=413, detail="Photo must be 8 MB or smaller.")
+    content_type, provenance = inspect_photo(data)
+
+    # Submit through the same road snapping, abuse checks, and trust scoring path.
+    payload = ReportCreatePayload(
+        lat=lat, lon=lon, text=text, language=language,
+        reporter_id=reporter_id, photo_path="pending-photo"
+    )
+    result = create_report(payload, db)
+    report_id = result["id"]
+    db.add(ReportMediaModel(
+        report_id=report_id,
+        content_type=content_type,
+        image_data=data,
+        provenance=provenance,
+    ))
+    photo_path = f"/api/reports/{report_id}/photo"
+    report = db.query(ReportModel).filter(ReportModel.id == report_id).first()
+    if report:
+        report.photo_path = photo_path
+    db.commit()
+    result["photo_path"] = photo_path
+    result["photo_verification"] = provenance
+    return result
+
+
+@router.get("/{report_id}/photo", summary="Retrieve report image evidence")
+def get_report_photo(report_id: str, db: Session = Depends(get_db)):
+    media = db.query(ReportMediaModel).filter(ReportMediaModel.report_id == report_id).first()
+    if not media:
+        raise HTTPException(status_code=404, detail="Photo not found.")
+    return Response(
+        content=media.image_data,
+        media_type=media.content_type,
+        headers={"Cache-Control": "public, max-age=86400", "X-Content-Type-Options": "nosniff"},
+    )
+
+
 @router.get("", summary="Get recent citizen reports as privacy-preserving GeoJSON")
 def list_reports(
     hours: int = Query(6, ge=1, le=48, description="Lookback window in hours"),
@@ -165,6 +256,14 @@ def list_reports(
     """
     since_time = datetime.now(timezone.utc) - timedelta(hours=hours)
     reports = db.query(ReportModel).filter(ReportModel.time_server >= since_time).all()
+    media_by_report = {}
+    if reports:
+        media_by_report = {
+            media.report_id: media.provenance
+            for media in db.query(ReportMediaModel).filter(
+                ReportMediaModel.report_id.in_([report.id for report in reports])
+            ).all()
+        }
 
     features = []
     for r in reports:
@@ -183,7 +282,8 @@ def list_reports(
                 "trust_score": r.trust_score,
                 "trust_reasons": r.trust_reasons,
                 "state": r.state,
-                "photo_path": r.photo_path
+                "photo_path": r.photo_path,
+                "photo_verification": media_by_report.get(r.id)
             },
             "geometry": {
                 "type": "Point",

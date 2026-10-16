@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlalchemy import (
-    Column, String, Float, Integer, Boolean, DateTime, Date, Text, JSON, ForeignKey
+    Column, String, Float, Integer, Boolean, DateTime, Date, Text, JSON, ForeignKey, LargeBinary
 )
 from sqlalchemy.orm import declarative_base, relationship
 from geoalchemy2 import Geometry
@@ -109,6 +109,15 @@ class Report(Base):
     trust_score = Column(Float, default=0.0)
     trust_reasons = Column(JSON, nullable=False)
     state = Column(String(32), default="Unverified")  # Unverified / Likely / Confirmed / Flagged
+
+
+class ReportMedia(Base):
+    __tablename__ = "report_media"
+
+    report_id = Column(String(64), ForeignKey("reports.id", ondelete="CASCADE"), primary_key=True)
+    content_type = Column(String(32), nullable=False)
+    image_data = Column(LargeBinary, nullable=False)
+    provenance = Column(JSON, nullable=False, default=dict)
 
 
 class RainfallCache(Base):

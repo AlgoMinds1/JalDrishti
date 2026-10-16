@@ -2,6 +2,7 @@
 fastapi>=0.110.0
 uvicorn[standard]>=0.30.0
 python-multipart>=0.0.9        # file uploads
+Pillow>=10.4.0                  # uploaded image validation and EXIF inspection
 python-dotenv>=1.0.1
 slowapi>=0.1.9                 # in-memory rate limiting
 httpx>=0.27.0                  # async HTTP client

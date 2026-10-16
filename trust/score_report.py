@@ -5,7 +5,7 @@ Calculates 0–100 trust score from 6 independent signals:
 2. Rain plausibility (max 20 pts)
 3. Terrain plausibility (max 15 pts)
 4. Reporter reputation (max 15 pts)
-5. Photo evidence (max 15 pts)
+5. Validated photo evidence (max 15 pts)
 6. Text consistency (max 5 pts)
 
 Enforces strict anti-abuse rules:
@@ -97,7 +97,8 @@ def score_report(
     else:
         reputation_pts = 5  # New default reporter
 
-    # 5. Photo Evidence (Max 15)
+    # 5. Photo Evidence (Max 15). Upload validation checks file integrity;
+    # EXIF presence is recorded separately and is not treated as proof of authenticity.
     photo_pts = 0
     if has_photo:
         photo_pts = 15  # EXIF validated, non-duplicate

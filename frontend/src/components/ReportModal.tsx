@@ -1,6 +1,6 @@
-import { useState, type FC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import axios from 'axios';
-import { X, MapPin, Mic, Send, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { X, MapPin, Mic, Send, AlertCircle, CheckCircle2, Camera, ImagePlus, Trash2 } from 'lucide-react';
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -8,6 +8,22 @@ interface ReportModalProps {
   onReportSubmitted: () => void;
   defaultCoords: { lat: number; lon: number };
 }
+
+const photoActionStyle: React.CSSProperties = {
+  flex: 1,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  gap: '7px',
+  padding: '10px 8px',
+  border: '1px solid var(--border-color, #E4DACA)',
+  borderRadius: '10px',
+  background: 'var(--bg-primary, #F5F0E7)',
+  color: 'var(--text-main, #25251F)',
+  fontSize: '12px',
+  fontWeight: 600,
+  cursor: 'pointer'
+};
 
 export const ReportModal: FC<ReportModalProps> = ({
   isOpen,
@@ -23,6 +39,28 @@ export const ReportModal: FC<ReportModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submissionResult, setSubmissionResult] = useState<any>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+
+  const selectPhoto = (file?: File) => {
+    setErrorMessage(null);
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) {
+      setErrorMessage('Photo must be 8 MB or smaller.');
+      return;
+    }
+    setPhoto(file);
+  };
+
+  useEffect(() => {
+    if (!photo) {
+      setPhotoPreview(null);
+      return;
+    }
+    const url = URL.createObjectURL(photo);
+    setPhotoPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [photo]);
 
   if (!isOpen) return null;
 
@@ -59,15 +97,22 @@ export const ReportModal: FC<ReportModalProps> = ({
     setErrorMessage(null);
 
     try {
-      const payload = {
-        lat,
-        lon,
-        text,
-        language,
-        reporter_id: 'citizen_' + Math.random().toString(36).substring(2, 9)
-      };
-
-      const res = await axios.post('/api/reports', payload);
+      const reporterId = 'citizen_' + Math.random().toString(36).substring(2, 9);
+      let res;
+      if (photo) {
+        const payload = new FormData();
+        payload.append('lat', String(lat));
+        payload.append('lon', String(lon));
+        payload.append('text', text);
+        payload.append('language', language);
+        payload.append('reporter_id', reporterId);
+        payload.append('photo', photo);
+        res = await axios.post('/api/reports/with-photo', payload);
+      } else {
+        res = await axios.post('/api/reports', {
+          lat, lon, text, language, reporter_id: reporterId
+        });
+      }
       setSubmissionResult(res.data);
       onReportSubmitted();
     } catch (err: any) {
@@ -80,6 +125,7 @@ export const ReportModal: FC<ReportModalProps> = ({
   const handleReset = () => {
     setSubmissionResult(null);
     setText('');
+    setPhoto(null);
     onClose();
   };
 
@@ -210,6 +256,15 @@ export const ReportModal: FC<ReportModalProps> = ({
               <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '8px', lineHeight: 1.4 }}>
                 ℹ️ Strict Safety Rule: No single report triggers an alert alone. Independent corroboration from a second nearby citizen is required to elevate to Confirmed.
               </div>
+              {submissionResult.photo_verification && (
+                <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '8px', lineHeight: 1.4 }}>
+                  Photo metadata: {submissionResult.photo_verification.status === 'camera_metadata_present'
+                    ? 'Camera metadata found.'
+                    : submissionResult.photo_verification.status === 'possible_generated_metadata'
+                    ? 'Metadata contains a possible AI-generation marker.'
+                    : 'No camera metadata found.'} This is a clue only; metadata can be missing or changed and does not verify image authenticity.
+                </div>
+              )}
             </div>
 
             <button
@@ -333,6 +388,39 @@ export const ReportModal: FC<ReportModalProps> = ({
               />
             </div>
 
+            {/* Optional image evidence */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <label style={photoActionStyle}>
+                  <Camera size={16} /> Take photo
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    capture="environment"
+                    onChange={(event) => selectPhoto(event.target.files?.[0])}
+                    style={{ display: 'none' }}
+                  />
+                </label>
+                <label style={photoActionStyle}>
+                  <ImagePlus size={16} /> Upload photo
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={(event) => selectPhoto(event.target.files?.[0])}
+                    style={{ display: 'none' }}
+                  />
+                </label>
+              </div>
+              {photo && photoPreview && (
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', background: 'var(--bg-primary, #F5F0E7)', border: '1px solid var(--border-color, #E4DACA)', borderRadius: '10px', padding: '8px' }}>
+                  <img src={photoPreview} alt="Selected report evidence" style={{ width: '64px', height: '52px', objectFit: 'cover', borderRadius: '6px' }} />
+                  <span style={{ flex: 1, minWidth: 0, fontSize: '11px', color: 'var(--text-muted, #706D62)', overflow: 'hidden', textOverflow: 'ellipsis' }}>{photo.name}</span>
+                  <button type="button" aria-label="Remove photo" onClick={() => setPhoto(null)} style={{ border: 0, background: 'transparent', color: 'var(--text-muted, #706D62)', cursor: 'pointer' }}><Trash2 size={16} /></button>
+                </div>
+              )}
+              <span style={{ fontSize: '10.5px', color: 'var(--text-muted, #706D62)', lineHeight: 1.4 }}>Optional. JPEG, PNG, or WebP, up to 8 MB. Image metadata is only a provenance clue, not proof of authenticity.</span>
+            </div>
+
             {/* Voice Input Button */}
             <button
               type="button"
@@ -379,7 +467,7 @@ export const ReportModal: FC<ReportModalProps> = ({
               }}
             >
               <Send size={15} />
-              <span>{isSubmitting ? 'Evaluating Trust Score...' : 'Submit Ground Truth'}</span>
+                <span>{isSubmitting ? 'Evaluating Trust Score...' : 'Submit Ground Truth'}</span>
             </button>
           </form>
         )}
