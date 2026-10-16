@@ -1,0 +1,122 @@
+segment_id,road_name,road_class,elevation_mean,slope_mean,hand_mean,builtup_share,dist_to_waterway_m,is_underpass,is_bridge,is_tunnel
+way/1302475592_0,Sinhagad Road Flyover,primary,563.99,1.66,21.62,0.67,118.1,False,True,False
+way/61717168_0,Chhatrapati Rajaram Maharaj Bridge / Rajaram Bridge,secondary,560.52,4.41,18.02,1.0,0.0,False,True,False
+way/330762152_0,Karvenagar Flyover,primary,573.92,2.44,2.45,1.0,742.1,False,True,False
+way/23016235_0_84,S. M. Joshi Bridge,secondary,553.79,9.07,13.98,0.0,0.0,False,True,False
+way/23016235_0_5891,S. M. Joshi Bridge,secondary,555.1,6.63,15.29,0.0,0.0,False,True,False
+way/227095256_0,Chhatrapati Rajaram Maharaj Bridge,secondary,560.08,6.24,17.58,0.67,0.0,False,True,False
+way/206492416_0_5320,Karve Road,primary,561.11,5.16,0.0,1.0,0.0,False,True,False
+way/857053154_0,Katraj - Dehu Road Bypass / Mumbai Pune Bypass Road * Katraj-Dehu Rd Bypass / Bypass,trunk,595.68,3.35,5.96,1.0,71.7,False,True,False
+way/175280633_0,Appasaheb Kulkarni Path,tertiary,564.13,4.43,3.08,0.67,0.0,False,True,False
+way/53088328_0,Sambhaji Bridge,primary,551.94,3.95,8.1,1.0,0.0,False,True,False
+way/227926124_0_4753,Narayandas Nagindas Gandhi Path,tertiary,573.13,5.38,3.98,0.0,0.0,False,True,False
+way/211087049_0,Shrikant Thackeray Path,tertiary,592.4,4.77,3.98,0.33,0.0,False,True,False
+way/208958217_0,Appasaheb Kulkarni Path,tertiary,562.11,3.48,1.63,0.67,0.0,False,True,False
+way/1447120048_0,Late Narayanrao Kondiba Jagtap Path,tertiary,578.56,7.79,16.16,1.0,0.0,False,True,False
+way/1043506208_0,Bharatratna Atal Bihari Vajpayee Flyover,primary,567.19,5.69,3.69,1.0,455.3,False,True,False
+way/211087050_0_3767,G. A. Kulkarni Path,tertiary,572.0,3.1,8.32,0.33,0.0,False,True,False
+way/211087075_0,Paud Road,primary,580.07,5.53,0.02,1.0,0.0,False,True,False
+way/198580673_0_3452,Karve Road,primary,572.93,9.0,3.3,0.67,0.0,False,True,False
+way/211087056_0_3522,Gulwani Maharaj Path,tertiary,565.03,4.0,2.98,0.33,0.0,False,True,False
+way/158252408_0_8383,Paud Road,primary,582.83,4.6,1.78,1.0,0.0,False,True,False
+way/858535312_0_3748,Late Narayanrao Kondiba Jagtap Path,tertiary,580.81,6.89,18.4,0.67,0.0,False,True,False
+way/51874385_0_3138,Anant Kanhere Path / Raveendra Mhatre Bridge,secondary,555.78,2.45,14.02,1.0,0.0,False,True,False
+way/1528680000_0,Anant Kanhere Path / Raveendra Mhatre Bridge / Amrutrao Khilare Path,secondary,559.26,7.23,9.07,1.0,0.0,False,True,False
+way/211087048_0,Sangeetkar Shrikant Thakare Road / Shrikant Thackeray Path,tertiary,589.46,2.29,2.18,0.67,0.0,False,True,False
+way/211087050_0,G. A. Kulkarni Path,tertiary,572.0,3.1,8.32,0.33,0.0,False,True,False
+way/207872432_0,Anant Kanhere Path,secondary,556.55,8.8,1.47,0.67,0.0,False,True,False
+way/22841840_0_2863,Gandhibhavan Marg,tertiary,589.56,5.59,5.16,0.67,0.0,False,True,False
+way/1043506209_0,Bharatratna Atal Bihari Vajpayee Flyover,primary,564.32,5.54,1.56,1.0,465.7,False,True,False
+way/207872405_0,Sambhaji Bridge,primary,552.98,3.29,13.17,1.0,0.0,False,True,False
+way/198580672_0_2936,Karve Road,primary,570.75,3.23,0.21,1.0,0.0,False,True,False
+way/580410606_0,Karvenagar Flyover,primary,573.48,5.38,2.41,1.0,742.1,False,True,False
+way/199637794_0,Lalbahadur Shashtri Marg / Dandekar Bridge,primary,566.85,3.11,6.61,1.0,0.0,False,True,False
+way/211087145_0,Canal Road,tertiary,575.0,5.12,5.11,0.0,0.0,False,True,False
+way/211087129_0_8902,V G alias Abasaheb Patwardhan Road,tertiary,556.91,6.42,0.6,0.67,0.0,False,True,False
+way/211087051_0,G. A. Kulkarni Path,tertiary,566.18,8.77,3.97,0.67,0.0,False,True,False
+way/22841840_0_2689,Gandhibhavan Marg,tertiary,589.56,5.59,5.16,0.67,0.0,False,True,False
+way/211087051_0_2677,G. A. Kulkarni Path,tertiary,566.18,8.77,3.97,0.67,0.0,False,True,False
+way/211087056_0,Gulwani Maharaj Path,tertiary,565.03,4.0,2.98,0.33,0.0,False,True,False
+way/250140476_0,Karve Road,primary,560.98,5.76,0.0,1.0,0.0,False,True,False
+way/817794776_0_2377,Riverside Road,tertiary,545.89,7.92,4.06,0.0,22.8,False,True,False
+way/51874385_0,Raveendra Mhatre Bridge / Amrutrao Khilare Path,secondary,558.96,7.4,4.21,1.0,0.0,False,True,False
+way/206412009_0,Anant Kanhere Path,secondary,554.52,6.34,0.74,1.0,0.0,False,True,False
+way/211087129_0,V G alias Abasaheb Patwardhan Road,tertiary,557.62,7.43,0.6,0.67,0.0,False,True,False
+way/198570659_0,Paud Road / Svatantryaveer Savarkar Flyover,primary,573.87,2.12,2.64,1.0,233.0,False,True,False
+way/227926124_0,Narayandas Nagindas Gandhi Path,tertiary,573.13,5.38,3.98,0.0,0.0,False,True,False
+way/817794776_0,Riverside Road,tertiary,545.89,7.92,4.06,0.0,22.8,False,True,False
+way/211087153_0_10277,Canal Road,tertiary,575.0,5.12,5.11,0.0,0.0,False,True,False
+way/199637801_0_6378,Lalbahadur Shashtri Marg / Dandekar Bridge,primary,562.97,4.88,3.8,0.67,0.0,False,True,False
+way/158325409_0_6816,Corridor Connector,tertiary,568.72,3.31,1.22,1.0,0.0,False,True,False
+way/68338440_0_6375,Corridor Connector,tertiary,561.98,6.37,3.4,0.67,0.0,False,True,False
+way/211087106_0,Corridor Connector,tertiary,576.99,4.22,1.93,0.67,0.0,False,True,False
+way/218697360_0,Corridor Connector,tertiary,577.97,4.82,3.57,0.67,0.0,False,True,False
+way/211087097_0_2683,Corridor Connector,tertiary,569.94,3.53,0.58,0.33,0.0,False,True,False
+way/158325425_0_3514,Corridor Connector,tertiary,569.26,4.33,0.58,0.33,0.0,False,True,False
+way/218697360_0_3443,Corridor Connector,tertiary,577.97,4.82,3.57,0.67,0.0,False,True,False
+way/211087106_0_8540,Corridor Connector,tertiary,576.99,4.22,1.93,0.67,0.0,False,True,False
+way/1530306273_0_10228,Corridor Connector,primary,582.39,6.04,0.77,0.67,0.0,False,True,False
+way/158325409_0_7118,Corridor Connector,tertiary,569.04,3.42,1.54,1.0,0.0,False,True,False
+way/68338440_0,Corridor Connector,tertiary,561.36,7.34,3.52,0.67,0.0,False,True,False
+way/857035791_0,Pu. Bha. Bhave Path,tertiary,576.05,4.23,1.21,0.0,286.0,False,False,False
+way/22841819_0_31,Chhatrapati Rajaram Maharaj Path,tertiary,575.91,2.4,2.77,0.67,287.2,False,False,False
+way/857035791_0_32,Pu. Bha. Bhave Path,tertiary,577.64,4.3,4.5,0.67,352.9,False,False,False
+way/198580673_0,Karve Road,primary,572.62,2.97,1.35,1.0,112.9,False,False,False
+way/22841354_0,Tanaji Malusare Path,primary,566.84,4.13,5.45,1.0,90.7,False,False,False
+way/1232402279_0,Sinhagad Road,primary,567.96,7.5,12.07,1.0,156.0,False,False,False
+way/211087055_0,Gandhibhavan Marg,tertiary,586.99,1.3,3.3,0.67,66.1,False,False,False
+way/211087055_0_8,Gandhibhavan Marg,tertiary,586.27,1.19,2.57,0.67,37.6,False,False,False
+way/198724057_0,Balbhim Mokate Path,secondary,573.54,4.23,0.18,1.0,167.1,False,False,False
+way/198730385_0,Balbhim Mokate Path,secondary,574.66,5.92,1.08,1.0,140.8,False,False,False
+way/261258202_0,Balbhim Mokate Path,secondary,572.52,2.89,0.2,1.0,106.0,False,False,False
+way/199261930_0,Balbhim Mokate Path,secondary,571.07,7.36,0.0,1.0,66.7,False,False,False
+way/22841819_0_15,Chhatrapati Rajaram Maharaj Path,tertiary,573.33,5.58,1.23,0.67,147.0,False,False,False
+way/206492416_0_10060,Karve Road,primary,567.52,1.52,5.21,1.0,138.1,False,False,False
+way/198733123_0_10065,Gandhibhavan Marg,tertiary,584.67,3.02,6.26,1.0,372.1,False,False,False
+way/22840820_0_412,Prabhat Path,tertiary,575.19,3.52,7.04,0.0,872.2,False,False,False
+way/22840820_0_413,Prabhat Path,tertiary,572.81,3.11,7.55,0.0,787.3,False,False,False
+way/22840820_0_415,Prabhat Path,tertiary,566.55,3.09,1.11,0.0,569.6,False,False,False
+way/22840820_0_416,Prabhat Path,tertiary,567.64,2.95,2.2,0.0,538.8,False,False,False
+way/215732199_0,Lane 7,tertiary,565.57,1.71,0.66,0.0,569.6,False,False,False
+way/1147910710_0,8th Lane,tertiary,563.57,2.4,0.0,0.0,506.3,False,False,False
+way/1147910707_0,Karve Road,primary,556.48,5.15,1.68,1.0,136.4,False,False,False
+way/1545694408_0,8th Lane,tertiary,563.12,4.81,4.15,1.0,329.6,False,False,False
+way/1147910710_0_425,8th Lane,tertiary,562.62,7.57,0.0,0.67,468.9,False,False,False
+way/1147910710_0_426,8th Lane,tertiary,563.57,2.4,0.0,0.0,506.3,False,False,False
+way/199637816_0_10003,Sinhagad Road,primary,562.01,5.05,12.95,1.0,109.1,False,False,False
+way/23016234_0,Shivram Mhatre Path,tertiary,557.45,10.71,11.43,0.33,105.8,False,False,False
+way/1147910710_0_423,8th Lane,tertiary,564.68,6.35,4.26,0.67,403.9,False,False,False
+way/651748864_0_9938,DP Road,secondary,591.48,7.45,4.39,1.0,130.9,False,False,False
+way/1545691381_0,DP Road,secondary,579.7,5.86,1.7,0.33,113.5,False,False,False
+way/198733117_0_9919,DP Road,secondary,581.02,6.04,0.44,0.33,220.1,False,False,False
+way/198580672_0,Karve Road,primary,575.26,4.5,3.89,1.0,247.4,False,False,False
+way/283124050_0,Paud Road,primary,600.48,3.16,12.88,1.0,222.4,False,False,False
+way/30876504_0_586,R. B. Kumthekar Marg,tertiary,562.29,3.45,3.12,0.33,242.4,False,False,False
+way/53744511_0,Chhatrapati Sambhaji Path,tertiary,561.41,5.15,4.55,1.0,242.4,False,False,False
+way/53744511_0_588,Chhatrapati Sambhaji Path,tertiary,557.44,3.53,0.37,1.0,191.1,False,False,False
+way/1391507670_0,Cummins College Road,tertiary,560.18,5.02,17.68,1.0,131.7,False,False,False
+way/1219444716_0,Canal Road,tertiary,573.22,5.39,6.48,1.0,792.5,False,False,False
+way/651748864_0_9884,DP Road,secondary,587.09,8.27,0.59,1.0,130.7,False,False,False
+way/246580203_0_9869,Karve Road,primary,563.37,4.7,1.04,1.0,355.4,False,False,False
+way/1426555673_0_10078,Late Narayanrao Kondiba Jagtap Path,tertiary,573.06,3.54,14.65,0.33,58.8,False,False,False
+way/1232402279_0_9857,Sinhagad Road,primary,569.01,8.36,27.25,0.67,143.3,False,False,False
+way/1313154261_0,Sinhagad Road,primary,561.39,3.41,18.77,1.0,126.0,False,False,False
+way/209172189_0,Appasaheb Kulkarni Path,tertiary,559.86,2.43,18.89,0.33,157.6,False,False,False
+way/218697385_0,Raja Mantri Path,secondary,559.1,5.83,17.34,0.67,119.0,False,False,False
+way/858493454_0,Raja Mantri Path,secondary,559.07,8.11,10.84,1.0,135.8,False,False,False
+way/246580195_0_9847,Karve Road,primary,555.12,5.75,5.85,1.0,128.5,False,False,False
+way/51874380_0_767,Kashibai Amrutrao Khilare Path,tertiary,564.52,9.62,24.71,0.0,206.6,False,False,False
+way/51874380_0_768,Kashibai Amrutrao Khilare Path,tertiary,556.65,7.31,16.93,0.33,190.8,False,False,False
+way/51874380_0_769,Kashibai Amrutrao Khilare Path,tertiary,560.89,5.68,21.08,0.33,188.2,False,False,False
+way/1147910708_0,Karve Road,primary,560.49,5.65,0.0,1.0,381.6,False,False,False
+way/250116179_0,Karve Road,primary,563.96,3.37,0.0,1.0,541.2,False,False,False
+way/1464087873_0,Amrutrao Khilare Path,secondary,562.71,1.48,0.0,0.67,354.1,False,False,False
+way/857163308_0_9797,Ramchandra More Path,tertiary,590.18,3.04,1.17,1.0,170.1,False,False,False
+way/1299174036_0_9799,Ramchandra More Path,tertiary,591.86,2.84,1.85,1.0,158.7,False,False,False
+way/106365405_0_9767,Cummins College Road,tertiary,568.64,3.71,4.74,1.0,552.3,False,False,False
+way/218697385_0_9743,Raja Mantri Path,secondary,553.7,1.36,1.8,0.67,25.0,False,False,False
+way/858511878_0_9745,Raja Mantri Path,secondary,553.85,2.1,9.88,1.0,43.9,False,False,False
+way/858511878_0_9746,Raja Mantri Path,secondary,558.72,3.94,16.96,1.0,107.8,False,False,False
+way/858493454_0_9747,Raja Mantri Path,secondary,559.65,7.99,14.66,0.67,135.8,False,False,False
+way/858511879_0,Raja Mantri Path,secondary,558.79,4.73,10.56,1.0,147.9,False,False,False
+way/1464087872_0,Karve Road,primary,565.27,3.9,0.59,1.0,551.3,False,False,False

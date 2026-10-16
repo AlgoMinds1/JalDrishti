@@ -1,0 +1,6753 @@
+{
+  "type": "FeatureCollection",
+  "name": "jaldrishti_h4",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8280858,
+            18.4855276
+          ],
+          [
+            73.8281665,
+            18.4859187
+          ],
+          [
+            73.8281907,
+            18.4860336
+          ],
+          [
+            73.8282288,
+            18.486192
+          ],
+          [
+            73.8282739,
+            18.486365
+          ],
+          [
+            73.8283674,
+            18.4866175
+          ],
+          [
+            73.8284721,
+            18.4868392
+          ],
+          [
+            73.8286241,
+            18.4871144
+          ],
+          [
+            73.8287881,
+            18.4873965
+          ],
+          [
+            73.8288707,
+            18.4875328
+          ],
+          [
+            73.8290037,
+            18.4877158
+          ],
+          [
+            73.8292169,
+            18.4879798
+          ],
+          [
+            73.8294601,
+            18.4882677
+          ],
+          [
+            73.8296205,
+            18.4884433
+          ],
+          [
+            73.8297546,
+            18.4885583
+          ],
+          [
+            73.8299374,
+            18.4887015
+          ],
+          [
+            73.8300987,
+            18.4888064
+          ],
+          [
+            73.8302564,
+            18.4888999
+          ],
+          [
+            73.8306854,
+            18.4891717
+          ],
+          [
+            73.8311919,
+            18.489482
+          ],
+          [
+            73.8313557,
+            18.4895867
+          ],
+          [
+            73.8314069,
+            18.489618
+          ],
+          [
+            73.8314873,
+            18.4896717
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1302475592_0",
+        "road_name": "Sinhagad Road Flyover",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8289514,
+            18.4877881
+          ],
+          [
+            73.8284705,
+            18.4880308
+          ],
+          [
+            73.8268115,
+            18.4888683
+          ],
+          [
+            73.8266223,
+            18.4889875
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/61717168_0",
+        "road_name": "Chhatrapati Rajaram Maharaj Bridge / Rajaram Bridge",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8122616,
+            18.4867703
+          ],
+          [
+            73.8123335,
+            18.4868527
+          ],
+          [
+            73.8129266,
+            18.4875624
+          ],
+          [
+            73.813165,
+            18.4878511
+          ],
+          [
+            73.8134748,
+            18.4881856
+          ],
+          [
+            73.8138556,
+            18.4885888
+          ],
+          [
+            73.8140702,
+            18.4887669
+          ],
+          [
+            73.8146362,
+            18.4893825
+          ],
+          [
+            73.8147998,
+            18.4896356
+          ],
+          [
+            73.8148829,
+            18.4898098
+          ],
+          [
+            73.8149527,
+            18.4899624
+          ],
+          [
+            73.8150318,
+            18.4902753
+          ],
+          [
+            73.8150989,
+            18.4909227
+          ],
+          [
+            73.8151001,
+            18.4910662
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/330762152_0",
+        "road_name": "Karvenagar Flyover",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8382277,
+            18.511035
+          ],
+          [
+            73.838933,
+            18.5108765
+          ],
+          [
+            73.8390249,
+            18.5108559
+          ],
+          [
+            73.8392669,
+            18.5108015
+          ],
+          [
+            73.8393898,
+            18.5107362
+          ],
+          [
+            73.8394879,
+            18.5106364
+          ],
+          [
+            73.840642,
+            18.5094627
+          ],
+          [
+            73.8406685,
+            18.5094357
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/23016235_0_84",
+        "road_name": "S. M. Joshi Bridge",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8406685,
+            18.5094357
+          ],
+          [
+            73.840642,
+            18.5094627
+          ],
+          [
+            73.8394879,
+            18.5106364
+          ],
+          [
+            73.8393898,
+            18.5107362
+          ],
+          [
+            73.8392669,
+            18.5108015
+          ],
+          [
+            73.8390249,
+            18.5108559
+          ],
+          [
+            73.838933,
+            18.5108765
+          ],
+          [
+            73.8382277,
+            18.511035
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/23016235_0_5891",
+        "road_name": "S. M. Joshi Bridge",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8268426,
+            18.4889476
+          ],
+          [
+            73.8268533,
+            18.4889411
+          ],
+          [
+            73.8285197,
+            18.4881007
+          ],
+          [
+            73.8290195,
+            18.4878703
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/227095256_0",
+        "road_name": "Chhatrapati Rajaram Maharaj Bridge",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8055981,
+            18.4802683
+          ],
+          [
+            73.80556,
+            18.4802536
+          ],
+          [
+            73.8054291,
+            18.480231
+          ],
+          [
+            73.8052642,
+            18.4802149
+          ],
+          [
+            73.804779,
+            18.4801929
+          ],
+          [
+            73.804671,
+            18.4801938
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/206492416_0_5320",
+        "road_name": "Karve Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8023213,
+            18.482372
+          ],
+          [
+            73.8020967,
+            18.4825956
+          ],
+          [
+            73.8011794,
+            18.4833842
+          ],
+          [
+            73.8005464,
+            18.4838624
+          ],
+          [
+            73.7999427,
+            18.484306
+          ],
+          [
+            73.7991895,
+            18.484835
+          ],
+          [
+            73.7989532,
+            18.4849865
+          ],
+          [
+            73.7975426,
+            18.4859583
+          ],
+          [
+            73.796105,
+            18.4869605
+          ],
+          [
+            73.7957231,
+            18.4872118
+          ],
+          [
+            73.7952906,
+            18.4874963
+          ],
+          [
+            73.793589,
+            18.4887005
+          ],
+          [
+            73.7931223,
+            18.4890159
+          ],
+          [
+            73.7923808,
+            18.4895364
+          ],
+          [
+            73.7918735,
+            18.4898925
+          ],
+          [
+            73.7911965,
+            18.4903641
+          ],
+          [
+            73.7908208,
+            18.490606
+          ],
+          [
+            73.7901422,
+            18.4910944
+          ],
+          [
+            73.789834,
+            18.4913714
+          ],
+          [
+            73.7895991,
+            18.4916528
+          ],
+          [
+            73.7894641,
+            18.4918443
+          ],
+          [
+            73.7892784,
+            18.4920854
+          ],
+          [
+            73.7887412,
+            18.4927699
+          ],
+          [
+            73.7884739,
+            18.4931523
+          ],
+          [
+            73.7882085,
+            18.4935438
+          ],
+          [
+            73.7880072,
+            18.4939968
+          ],
+          [
+            73.7878677,
+            18.4944038
+          ],
+          [
+            73.7877697,
+            18.4949392
+          ],
+          [
+            73.7877551,
+            18.4952152
+          ],
+          [
+            73.7877687,
+            18.495477
+          ],
+          [
+            73.7878423,
+            18.4960194
+          ],
+          [
+            73.7878822,
+            18.4962159
+          ],
+          [
+            73.7879857,
+            18.4965226
+          ],
+          [
+            73.7882701,
+            18.497128
+          ],
+          [
+            73.7884793,
+            18.497446
+          ],
+          [
+            73.7887904,
+            18.4978428
+          ],
+          [
+            73.7891398,
+            18.4982529
+          ],
+          [
+            73.789996,
+            18.4992607
+          ],
+          [
+            73.790215,
+            18.4995263
+          ],
+          [
+            73.7904474,
+            18.4998161
+          ],
+          [
+            73.7910006,
+            18.5004613
+          ],
+          [
+            73.791494,
+            18.5010353
+          ],
+          [
+            73.7917783,
+            18.5014103
+          ],
+          [
+            73.7919701,
+            18.5017067
+          ],
+          [
+            73.7920342,
+            18.5018227
+          ],
+          [
+            73.7921444,
+            18.502022
+          ],
+          [
+            73.7922613,
+            18.5022888
+          ],
+          [
+            73.7923263,
+            18.5025171
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/857053154_0",
+        "road_name": "Katraj - Dehu Road Bypass / Mumbai Pune Bypass Road * Katraj-Dehu Rd Bypass / Bypass",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8269041,
+            18.4989529
+          ],
+          [
+            73.8269236,
+            18.4988037
+          ],
+          [
+            73.8269382,
+            18.4986407
+          ],
+          [
+            73.8269585,
+            18.4984121
+          ],
+          [
+            73.8269774,
+            18.4981642
+          ],
+          [
+            73.8269405,
+            18.4980993
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/175280633_0",
+        "road_name": "Appasaheb Kulkarni Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.842441,
+            18.5145156
+          ],
+          [
+            73.8424547,
+            18.514486
+          ],
+          [
+            73.8424888,
+            18.5144063
+          ],
+          [
+            73.842509,
+            18.5143781
+          ],
+          [
+            73.8426566,
+            18.5141723
+          ],
+          [
+            73.8433907,
+            18.5132494
+          ],
+          [
+            73.8435407,
+            18.5130608
+          ],
+          [
+            73.8436545,
+            18.5129713
+          ],
+          [
+            73.8437732,
+            18.5128789
+          ],
+          [
+            73.8437766,
+            18.5128754
+          ],
+          [
+            73.8438536,
+            18.5128013
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/53088328_0",
+        "road_name": "Sambhaji Bridge",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8213793,
+            18.5037576
+          ],
+          [
+            73.8214352,
+            18.5037614
+          ],
+          [
+            73.8217863,
+            18.5037855
+          ],
+          [
+            73.8222129,
+            18.5038258
+          ],
+          [
+            73.8224327,
+            18.503865
+          ],
+          [
+            73.8226022,
+            18.5038953
+          ],
+          [
+            73.8228893,
+            18.5039649
+          ],
+          [
+            73.8230302,
+            18.503999
+          ],
+          [
+            73.8231667,
+            18.5041569
+          ],
+          [
+            73.8233632,
+            18.5043336
+          ],
+          [
+            73.8234697,
+            18.5044278
+          ],
+          [
+            73.8235355,
+            18.5044784
+          ],
+          [
+            73.8236108,
+            18.5045282
+          ],
+          [
+            73.8237356,
+            18.5045796
+          ],
+          [
+            73.8238193,
+            18.5046063
+          ],
+          [
+            73.8239264,
+            18.5046235
+          ],
+          [
+            73.8240076,
+            18.504625
+          ],
+          [
+            73.8241023,
+            18.5046191
+          ],
+          [
+            73.8244669,
+            18.5045924
+          ],
+          [
+            73.8247509,
+            18.504565
+          ],
+          [
+            73.8250309,
+            18.5045368
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/227926124_0_4753",
+        "road_name": "Narayandas Nagindas Gandhi Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8019501,
+            18.4961762
+          ],
+          [
+            73.8019622,
+            18.4962712
+          ],
+          [
+            73.8019682,
+            18.4963634
+          ],
+          [
+            73.8019801,
+            18.4967539
+          ],
+          [
+            73.8019986,
+            18.4973598
+          ],
+          [
+            73.8020498,
+            18.4990319
+          ],
+          [
+            73.8020455,
+            18.4991099
+          ],
+          [
+            73.8020378,
+            18.4992496
+          ],
+          [
+            73.8020427,
+            18.4993107
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087049_0",
+        "road_name": "Shrikant Thackeray Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8269405,
+            18.4980993
+          ],
+          [
+            73.8269113,
+            18.4981597
+          ],
+          [
+            73.8268924,
+            18.4984071
+          ],
+          [
+            73.8268721,
+            18.4986354
+          ],
+          [
+            73.8268577,
+            18.4987972
+          ],
+          [
+            73.8268382,
+            18.4989458
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/208958217_0",
+        "road_name": "Appasaheb Kulkarni Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8313973,
+            18.4822862
+          ],
+          [
+            73.831331,
+            18.4823024
+          ],
+          [
+            73.8309364,
+            18.4825916
+          ],
+          [
+            73.83083,
+            18.482643
+          ],
+          [
+            73.8307081,
+            18.4826875
+          ],
+          [
+            73.8306092,
+            18.4827124
+          ],
+          [
+            73.8303508,
+            18.4827373
+          ],
+          [
+            73.8302805,
+            18.4827634
+          ],
+          [
+            73.8298045,
+            18.4829402
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1447120048_0",
+        "road_name": "Late Narayanrao Kondiba Jagtap Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8336343,
+            18.5098055
+          ],
+          [
+            73.8334452,
+            18.509717
+          ],
+          [
+            73.8293914,
+            18.5076294
+          ],
+          [
+            73.8292539,
+            18.5075347
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1043506208_0",
+        "road_name": "Bharatratna Atal Bihari Vajpayee Flyover",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8220319,
+            18.501229
+          ],
+          [
+            73.8220663,
+            18.5011061
+          ],
+          [
+            73.8221311,
+            18.5008747
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087050_0_3767",
+        "road_name": "G. A. Kulkarni Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.82001,
+            18.5104364
+          ],
+          [
+            73.8199426,
+            18.5104436
+          ],
+          [
+            73.8197657,
+            18.5104527
+          ],
+          [
+            73.8197074,
+            18.5104556
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087075_0",
+        "road_name": "Paud Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8215228,
+            18.5045113
+          ],
+          [
+            73.8218035,
+            18.5046567
+          ],
+          [
+            73.8223205,
+            18.5048883
+          ],
+          [
+            73.8224464,
+            18.5049439
+          ],
+          [
+            73.8228555,
+            18.5051196
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/198580673_0_3452",
+        "road_name": "Karve Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8239233,
+            18.5004137
+          ],
+          [
+            73.8241599,
+            18.5005067
+          ],
+          [
+            73.8246842,
+            18.5006715
+          ],
+          [
+            73.8248184,
+            18.5007137
+          ],
+          [
+            73.8249993,
+            18.5007809
+          ],
+          [
+            73.8251103,
+            18.5008209
+          ],
+          [
+            73.825677,
+            18.5010254
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087056_0_3522",
+        "road_name": "Gulwani Maharaj Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8193818,
+            18.5110238
+          ],
+          [
+            73.8194321,
+            18.5110281
+          ],
+          [
+            73.8194983,
+            18.5110272
+          ],
+          [
+            73.8195328,
+            18.5110203
+          ],
+          [
+            73.8195687,
+            18.5110037
+          ],
+          [
+            73.8196501,
+            18.5109531
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/158252408_0_8383",
+        "road_name": "Paud Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8301931,
+            18.4828583
+          ],
+          [
+            73.830354,
+            18.4827984
+          ],
+          [
+            73.8306246,
+            18.482771
+          ],
+          [
+            73.8307699,
+            18.4827156
+          ],
+          [
+            73.8309227,
+            18.4826508
+          ],
+          [
+            73.8310353,
+            18.4825832
+          ],
+          [
+            73.8313118,
+            18.4823893
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/858535312_0_3748",
+        "road_name": "Late Narayanrao Kondiba Jagtap Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8381232,
+            18.5046028
+          ],
+          [
+            73.8380431,
+            18.5046017
+          ],
+          [
+            73.837357,
+            18.5045923
+          ],
+          [
+            73.8355704,
+            18.5045112
+          ],
+          [
+            73.8352927,
+            18.5044986
+          ],
+          [
+            73.8351756,
+            18.5044958
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/51874385_0_3138",
+        "road_name": "Anant Kanhere Path / Raveendra Mhatre Bridge",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8339757,
+            18.5047363
+          ],
+          [
+            73.8340532,
+            18.5046628
+          ],
+          [
+            73.8341133,
+            18.5046176
+          ],
+          [
+            73.8342511,
+            18.5045858
+          ],
+          [
+            73.8344318,
+            18.5045726
+          ],
+          [
+            73.8346643,
+            18.5045684
+          ],
+          [
+            73.8349263,
+            18.5045636
+          ],
+          [
+            73.83504,
+            18.5045645
+          ],
+          [
+            73.8352879,
+            18.5045704
+          ],
+          [
+            73.8355667,
+            18.5045829
+          ],
+          [
+            73.8373534,
+            18.5046641
+          ],
+          [
+            73.8380363,
+            18.5046639
+          ],
+          [
+            73.8381251,
+            18.5046639
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1528680000_0",
+        "road_name": "Anant Kanhere Path / Raveendra Mhatre Bridge / Amrutrao Khilare Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.80242,
+            18.5022216
+          ],
+          [
+            73.8023333,
+            18.5012765
+          ],
+          [
+            73.8022977,
+            18.5008887
+          ],
+          [
+            73.8022574,
+            18.5004499
+          ],
+          [
+            73.8022036,
+            18.4998645
+          ],
+          [
+            73.8021537,
+            18.4993325
+          ],
+          [
+            73.8021469,
+            18.4992503
+          ],
+          [
+            73.8021547,
+            18.4991081
+          ],
+          [
+            73.8021572,
+            18.4990633
+          ],
+          [
+            73.8021588,
+            18.4990338
+          ],
+          [
+            73.8021429,
+            18.4985137
+          ],
+          [
+            73.8021225,
+            18.4978475
+          ],
+          [
+            73.8020771,
+            18.4963603
+          ],
+          [
+            73.8020803,
+            18.4962731
+          ],
+          [
+            73.8020738,
+            18.4961678
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087048_0",
+        "road_name": "Sangeetkar Shrikant Thakare Road / Shrikant Thackeray Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8221311,
+            18.5008747
+          ],
+          [
+            73.8220663,
+            18.5011061
+          ],
+          [
+            73.8220319,
+            18.501229
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087050_0",
+        "road_name": "G. A. Kulkarni Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8388301,
+            18.5046947
+          ],
+          [
+            73.8389873,
+            18.5047566
+          ],
+          [
+            73.8393657,
+            18.504868
+          ],
+          [
+            73.8394628,
+            18.5048966
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/207872432_0",
+        "road_name": "Anant Kanhere Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8046611,
+            18.4995405
+          ],
+          [
+            73.8044922,
+            18.4992592
+          ],
+          [
+            73.8044788,
+            18.4992221
+          ],
+          [
+            73.804475,
+            18.4991712
+          ],
+          [
+            73.8044633,
+            18.4989912
+          ],
+          [
+            73.80444,
+            18.4985846
+          ],
+          [
+            73.804388,
+            18.4980583
+          ],
+          [
+            73.8043745,
+            18.4978224
+          ],
+          [
+            73.8043661,
+            18.4976769
+          ],
+          [
+            73.8042695,
+            18.4971526
+          ],
+          [
+            73.8042547,
+            18.4970722
+          ],
+          [
+            73.8042334,
+            18.4969563
+          ],
+          [
+            73.8041953,
+            18.4968457
+          ],
+          [
+            73.804128,
+            18.4967713
+          ],
+          [
+            73.8040047,
+            18.4966841
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/22841840_0_2863",
+        "road_name": "Gandhibhavan Marg",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8292017,
+            18.5076427
+          ],
+          [
+            73.8293552,
+            18.5076926
+          ],
+          [
+            73.833409,
+            18.5097801
+          ],
+          [
+            73.8335799,
+            18.5098963
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1043506209_0",
+        "road_name": "Bharatratna Atal Bihari Vajpayee Flyover",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8437398,
+            18.5127202
+          ],
+          [
+            73.8436903,
+            18.512779
+          ],
+          [
+            73.8436559,
+            18.5128146
+          ],
+          [
+            73.8435797,
+            18.512879
+          ],
+          [
+            73.8434984,
+            18.5129534
+          ],
+          [
+            73.8433187,
+            18.5131784
+          ],
+          [
+            73.8425702,
+            18.5141157
+          ],
+          [
+            73.8424559,
+            18.5142662
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/207872405_0",
+        "road_name": "Sambhaji Bridge",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8229127,
+            18.5050188
+          ],
+          [
+            73.8224968,
+            18.5048352
+          ],
+          [
+            73.8223874,
+            18.5047862
+          ],
+          [
+            73.8218502,
+            18.5045456
+          ],
+          [
+            73.8218149,
+            18.5045273
+          ],
+          [
+            73.8214983,
+            18.5043633
+          ],
+          [
+            73.8212938,
+            18.5042432
+          ],
+          [
+            73.8211972,
+            18.5041865
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/198580672_0_2936",
+        "road_name": "Karve Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8152491,
+            18.491056
+          ],
+          [
+            73.8152397,
+            18.4909233
+          ],
+          [
+            73.8151867,
+            18.4902626
+          ],
+          [
+            73.8151029,
+            18.489895
+          ],
+          [
+            73.8149902,
+            18.4897284
+          ],
+          [
+            73.8148695,
+            18.4895872
+          ],
+          [
+            73.8146885,
+            18.4893405
+          ],
+          [
+            73.8141245,
+            18.4887141
+          ],
+          [
+            73.8139649,
+            18.4884966
+          ],
+          [
+            73.813578,
+            18.488089
+          ],
+          [
+            73.8132749,
+            18.4877455
+          ],
+          [
+            73.8130416,
+            18.4874594
+          ],
+          [
+            73.8124555,
+            18.48677
+          ],
+          [
+            73.8123526,
+            18.4866501
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/580410606_0",
+        "road_name": "Karvenagar Flyover",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.845434,
+            18.5029138
+          ],
+          [
+            73.8454179,
+            18.502832
+          ],
+          [
+            73.8454151,
+            18.5027805
+          ],
+          [
+            73.8454138,
+            18.5027565
+          ],
+          [
+            73.8454219,
+            18.5026953
+          ],
+          [
+            73.8455176,
+            18.5020843
+          ],
+          [
+            73.8456212,
+            18.5013729
+          ],
+          [
+            73.8456423,
+            18.5012279
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/199637794_0",
+        "road_name": "Lalbahadur Shashtri Marg / Dandekar Bridge",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8162266,
+            18.5008737
+          ],
+          [
+            73.8164231,
+            18.5010188
+          ],
+          [
+            73.8167298,
+            18.501145
+          ],
+          [
+            73.8170005,
+            18.5011921
+          ],
+          [
+            73.8172508,
+            18.5013011
+          ],
+          [
+            73.817341,
+            18.5013885
+          ],
+          [
+            73.8174087,
+            18.5014872
+          ],
+          [
+            73.8174378,
+            18.5015545
+          ],
+          [
+            73.8174948,
+            18.5016866
+          ],
+          [
+            73.8175666,
+            18.501853
+          ],
+          [
+            73.8176343,
+            18.5019407
+          ],
+          [
+            73.8177312,
+            18.5019899
+          ],
+          [
+            73.8178756,
+            18.5020091
+          ],
+          [
+            73.8180899,
+            18.5020776
+          ],
+          [
+            73.8182906,
+            18.5021567
+          ],
+          [
+            73.8185477,
+            18.5023214
+          ],
+          [
+            73.8185946,
+            18.5023418
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087145_0",
+        "road_name": "Canal Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8321804,
+            18.4978934
+          ],
+          [
+            73.8321142,
+            18.4979627
+          ],
+          [
+            73.8320927,
+            18.4979858
+          ],
+          [
+            73.8320764,
+            18.4980033
+          ],
+          [
+            73.8318753,
+            18.4982193
+          ],
+          [
+            73.8316587,
+            18.4984495
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087129_0_8902",
+        "road_name": "V G alias Abasaheb Patwardhan Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8228859,
+            18.4988569
+          ],
+          [
+            73.823198,
+            18.4983661
+          ],
+          [
+            73.8232638,
+            18.4982626
+          ],
+          [
+            73.8233851,
+            18.4980718
+          ],
+          [
+            73.8234284,
+            18.4980037
+          ],
+          [
+            73.8234978,
+            18.4978945
+          ],
+          [
+            73.823576,
+            18.4977715
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087051_0",
+        "road_name": "G. A. Kulkarni Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8040047,
+            18.4966841
+          ],
+          [
+            73.804128,
+            18.4967713
+          ],
+          [
+            73.8041953,
+            18.4968457
+          ],
+          [
+            73.8042334,
+            18.4969563
+          ],
+          [
+            73.8042547,
+            18.4970722
+          ],
+          [
+            73.8042695,
+            18.4971526
+          ],
+          [
+            73.8043661,
+            18.4976769
+          ],
+          [
+            73.8043745,
+            18.4978224
+          ],
+          [
+            73.804388,
+            18.4980583
+          ],
+          [
+            73.80444,
+            18.4985846
+          ],
+          [
+            73.8044633,
+            18.4989912
+          ],
+          [
+            73.804475,
+            18.4991712
+          ],
+          [
+            73.8044788,
+            18.4992221
+          ],
+          [
+            73.8044922,
+            18.4992592
+          ],
+          [
+            73.8046611,
+            18.4995405
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/22841840_0_2689",
+        "road_name": "Gandhibhavan Marg",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.823576,
+            18.4977715
+          ],
+          [
+            73.8234978,
+            18.4978945
+          ],
+          [
+            73.8234284,
+            18.4980037
+          ],
+          [
+            73.8233851,
+            18.4980718
+          ],
+          [
+            73.8232638,
+            18.4982626
+          ],
+          [
+            73.823198,
+            18.4983661
+          ],
+          [
+            73.8228859,
+            18.4988569
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087051_0_2677",
+        "road_name": "G. A. Kulkarni Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.825677,
+            18.5010254
+          ],
+          [
+            73.8251103,
+            18.5008209
+          ],
+          [
+            73.8249993,
+            18.5007809
+          ],
+          [
+            73.8248184,
+            18.5007137
+          ],
+          [
+            73.8246842,
+            18.5006715
+          ],
+          [
+            73.8241599,
+            18.5005067
+          ],
+          [
+            73.8239233,
+            18.5004137
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087056_0",
+        "road_name": "Gulwani Maharaj Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8047995,
+            18.480284
+          ],
+          [
+            73.8052775,
+            18.4803164
+          ],
+          [
+            73.8054349,
+            18.4803318
+          ],
+          [
+            73.805548,
+            18.4803513
+          ],
+          [
+            73.8055806,
+            18.4803639
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/250140476_0",
+        "road_name": "Karve Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8361035,
+            18.5064975
+          ],
+          [
+            73.8367551,
+            18.5076536
+          ],
+          [
+            73.8368205,
+            18.5077427
+          ],
+          [
+            73.8369623,
+            18.5079007
+          ],
+          [
+            73.8395489,
+            18.5104495
+          ],
+          [
+            73.8396781,
+            18.5105866
+          ],
+          [
+            73.8397455,
+            18.510678
+          ],
+          [
+            73.8399122,
+            18.5109102
+          ],
+          [
+            73.8400212,
+            18.5110782
+          ],
+          [
+            73.8410056,
+            18.5126279
+          ],
+          [
+            73.8410874,
+            18.5127545
+          ],
+          [
+            73.8411528,
+            18.5128308
+          ],
+          [
+            73.8412346,
+            18.51292
+          ],
+          [
+            73.8413123,
+            18.5129897
+          ],
+          [
+            73.8414254,
+            18.5130737
+          ],
+          [
+            73.8423599,
+            18.5138048
+          ],
+          [
+            73.842799,
+            18.5141484
+          ],
+          [
+            73.842908,
+            18.5142466
+          ],
+          [
+            73.8430143,
+            18.5143655
+          ],
+          [
+            73.8436233,
+            18.5150868
+          ],
+          [
+            73.8437255,
+            18.5152108
+          ],
+          [
+            73.8440607,
+            18.5157084
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/817794776_0_2377",
+        "road_name": "Riverside Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8350406,
+            18.5044926
+          ],
+          [
+            73.8349259,
+            18.5044917
+          ],
+          [
+            73.834663,
+            18.5044965
+          ],
+          [
+            73.8344282,
+            18.5045008
+          ],
+          [
+            73.8342406,
+            18.5045145
+          ],
+          [
+            73.8340867,
+            18.5045442
+          ],
+          [
+            73.8339761,
+            18.5045898
+          ],
+          [
+            73.8338992,
+            18.5046627
+          ],
+          [
+            73.8334039,
+            18.505121
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/51874385_0",
+        "road_name": "Raveendra Mhatre Bridge / Amrutrao Khilare Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8394628,
+            18.5048966
+          ],
+          [
+            73.8393719,
+            18.5048366
+          ],
+          [
+            73.83899,
+            18.5045845
+          ],
+          [
+            73.8389303,
+            18.5045621
+          ],
+          [
+            73.8388339,
+            18.5045629
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/206412009_0",
+        "road_name": "Anant Kanhere Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8316587,
+            18.4984495
+          ],
+          [
+            73.8318753,
+            18.4982193
+          ],
+          [
+            73.8320764,
+            18.4980033
+          ],
+          [
+            73.8320927,
+            18.4979858
+          ],
+          [
+            73.8321142,
+            18.4979627
+          ],
+          [
+            73.8321804,
+            18.4978934
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087129_0",
+        "road_name": "V G alias Abasaheb Patwardhan Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8277499,
+            18.5068374
+          ],
+          [
+            73.8275672,
+            18.5067886
+          ],
+          [
+            73.8274723,
+            18.506745
+          ],
+          [
+            73.8264464,
+            18.5062579
+          ],
+          [
+            73.8262996,
+            18.5061966
+          ],
+          [
+            73.8259976,
+            18.5060846
+          ],
+          [
+            73.8256694,
+            18.5059645
+          ],
+          [
+            73.8255399,
+            18.5059285
+          ],
+          [
+            73.8254149,
+            18.5059072
+          ],
+          [
+            73.825262,
+            18.5059051
+          ],
+          [
+            73.8250961,
+            18.5059179
+          ],
+          [
+            73.8249376,
+            18.5059459
+          ],
+          [
+            73.8248231,
+            18.5059785
+          ],
+          [
+            73.8247095,
+            18.5060208
+          ],
+          [
+            73.8245506,
+            18.5061027
+          ],
+          [
+            73.8243577,
+            18.5062445
+          ],
+          [
+            73.824106,
+            18.506482
+          ],
+          [
+            73.8239595,
+            18.5066149
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/198570659_0",
+        "road_name": "Paud Road / Svatantryaveer Savarkar Flyover",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8250309,
+            18.5045368
+          ],
+          [
+            73.8247509,
+            18.504565
+          ],
+          [
+            73.8244669,
+            18.5045924
+          ],
+          [
+            73.8241023,
+            18.5046191
+          ],
+          [
+            73.8240076,
+            18.504625
+          ],
+          [
+            73.8239264,
+            18.5046235
+          ],
+          [
+            73.8238193,
+            18.5046063
+          ],
+          [
+            73.8237356,
+            18.5045796
+          ],
+          [
+            73.8236108,
+            18.5045282
+          ],
+          [
+            73.8235355,
+            18.5044784
+          ],
+          [
+            73.8234697,
+            18.5044278
+          ],
+          [
+            73.8233632,
+            18.5043336
+          ],
+          [
+            73.8231667,
+            18.5041569
+          ],
+          [
+            73.8230302,
+            18.503999
+          ],
+          [
+            73.8228893,
+            18.5039649
+          ],
+          [
+            73.8226022,
+            18.5038953
+          ],
+          [
+            73.8224327,
+            18.503865
+          ],
+          [
+            73.8222129,
+            18.5038258
+          ],
+          [
+            73.8217863,
+            18.5037855
+          ],
+          [
+            73.8214352,
+            18.5037614
+          ],
+          [
+            73.8213793,
+            18.5037576
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/227926124_0",
+        "road_name": "Narayandas Nagindas Gandhi Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8440607,
+            18.5157084
+          ],
+          [
+            73.8437255,
+            18.5152108
+          ],
+          [
+            73.8436233,
+            18.5150868
+          ],
+          [
+            73.8430143,
+            18.5143655
+          ],
+          [
+            73.842908,
+            18.5142466
+          ],
+          [
+            73.842799,
+            18.5141484
+          ],
+          [
+            73.8423599,
+            18.5138048
+          ],
+          [
+            73.8414254,
+            18.5130737
+          ],
+          [
+            73.8413123,
+            18.5129897
+          ],
+          [
+            73.8412346,
+            18.51292
+          ],
+          [
+            73.8411528,
+            18.5128308
+          ],
+          [
+            73.8410874,
+            18.5127545
+          ],
+          [
+            73.8410056,
+            18.5126279
+          ],
+          [
+            73.8400212,
+            18.5110782
+          ],
+          [
+            73.8399122,
+            18.5109102
+          ],
+          [
+            73.8397455,
+            18.510678
+          ],
+          [
+            73.8396781,
+            18.5105866
+          ],
+          [
+            73.8395489,
+            18.5104495
+          ],
+          [
+            73.8369623,
+            18.5079007
+          ],
+          [
+            73.8368205,
+            18.5077427
+          ],
+          [
+            73.8367551,
+            18.5076536
+          ],
+          [
+            73.8361035,
+            18.5064975
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/817794776_0",
+        "road_name": "Riverside Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8185946,
+            18.5023418
+          ],
+          [
+            73.8185477,
+            18.5023214
+          ],
+          [
+            73.8182906,
+            18.5021567
+          ],
+          [
+            73.8180899,
+            18.5020776
+          ],
+          [
+            73.8178756,
+            18.5020091
+          ],
+          [
+            73.8177312,
+            18.5019899
+          ],
+          [
+            73.8176343,
+            18.5019407
+          ],
+          [
+            73.8175666,
+            18.501853
+          ],
+          [
+            73.8174948,
+            18.5016866
+          ],
+          [
+            73.8174378,
+            18.5015545
+          ],
+          [
+            73.8174087,
+            18.5014872
+          ],
+          [
+            73.817341,
+            18.5013885
+          ],
+          [
+            73.8172508,
+            18.5013011
+          ],
+          [
+            73.8170005,
+            18.5011921
+          ],
+          [
+            73.8167298,
+            18.501145
+          ],
+          [
+            73.8164231,
+            18.5010188
+          ],
+          [
+            73.8162266,
+            18.5008737
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087153_0_10277",
+        "road_name": "Canal Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8454593,
+            18.5018274
+          ],
+          [
+            73.8454237,
+            18.5020724
+          ],
+          [
+            73.8453685,
+            18.5024249
+          ],
+          [
+            73.8453472,
+            18.5025608
+          ],
+          [
+            73.8453282,
+            18.5026821
+          ],
+          [
+            73.8453161,
+            18.5027716
+          ],
+          [
+            73.8453136,
+            18.5027897
+          ],
+          [
+            73.8452914,
+            18.5029064
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/199637801_0_6378",
+        "road_name": "Lalbahadur Shashtri Marg / Dandekar Bridge",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8020793,
+            18.4831767
+          ],
+          [
+            73.8021057,
+            18.4832026
+          ],
+          [
+            73.8021957,
+            18.4832559
+          ],
+          [
+            73.8023082,
+            18.4833081
+          ],
+          [
+            73.8026031,
+            18.4834191
+          ],
+          [
+            73.8027644,
+            18.4834799
+          ],
+          [
+            73.8029331,
+            18.4835641
+          ],
+          [
+            73.8030048,
+            18.4835893
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/158325409_0_6816",
+        "road_name": "Corridor Connector",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8432785,
+            18.5022739
+          ],
+          [
+            73.8433964,
+            18.5023897
+          ],
+          [
+            73.8435726,
+            18.5025414
+          ],
+          [
+            73.8438556,
+            18.5027371
+          ],
+          [
+            73.843921,
+            18.5027579
+          ],
+          [
+            73.8445303,
+            18.5027872
+          ],
+          [
+            73.8449004,
+            18.5028153
+          ],
+          [
+            73.8449846,
+            18.50283
+          ],
+          [
+            73.8450591,
+            18.5028681
+          ],
+          [
+            73.8451968,
+            18.5029485
+          ],
+          [
+            73.8452173,
+            18.5029586
+          ],
+          [
+            73.8452667,
+            18.5029831
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/68338440_0_6375",
+        "road_name": "Corridor Connector",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8125549,
+            18.5052571
+          ],
+          [
+            73.8121455,
+            18.505114
+          ],
+          [
+            73.8120948,
+            18.5050963
+          ],
+          [
+            73.811926,
+            18.5050527
+          ],
+          [
+            73.8117831,
+            18.5050213
+          ],
+          [
+            73.8116404,
+            18.5049995
+          ],
+          [
+            73.8114238,
+            18.5049663
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087106_0",
+        "road_name": "Corridor Connector",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8099012,
+            18.499978
+          ],
+          [
+            73.8108758,
+            18.4999151
+          ],
+          [
+            73.8110092,
+            18.4999065
+          ],
+          [
+            73.8110855,
+            18.4999109
+          ],
+          [
+            73.8117326,
+            18.4999479
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/218697360_0",
+        "road_name": "Corridor Connector",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8158905,
+            18.4982257
+          ],
+          [
+            73.8158297,
+            18.4977451
+          ],
+          [
+            73.8158144,
+            18.4976241
+          ],
+          [
+            73.8157911,
+            18.4974401
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087097_0_2683",
+        "road_name": "Corridor Connector",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8157911,
+            18.4974401
+          ],
+          [
+            73.8158144,
+            18.4976241
+          ],
+          [
+            73.8158297,
+            18.4977451
+          ],
+          [
+            73.8158905,
+            18.4982257
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/158325425_0_3514",
+        "road_name": "Corridor Connector",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8117326,
+            18.4999479
+          ],
+          [
+            73.8110855,
+            18.4999109
+          ],
+          [
+            73.8110092,
+            18.4999065
+          ],
+          [
+            73.8108758,
+            18.4999151
+          ],
+          [
+            73.8099012,
+            18.499978
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/218697360_0_3443",
+        "road_name": "Corridor Connector",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8114238,
+            18.5049663
+          ],
+          [
+            73.8116404,
+            18.5049995
+          ],
+          [
+            73.8117831,
+            18.5050213
+          ],
+          [
+            73.811926,
+            18.5050527
+          ],
+          [
+            73.8120948,
+            18.5050963
+          ],
+          [
+            73.8121455,
+            18.505114
+          ],
+          [
+            73.8125549,
+            18.5052571
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087106_0_8540",
+        "road_name": "Corridor Connector",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8200546,
+            18.5105085
+          ],
+          [
+            73.8198091,
+            18.5105268
+          ],
+          [
+            73.8196849,
+            18.5105314
+          ],
+          [
+            73.8196238,
+            18.5105371
+          ],
+          [
+            73.8193132,
+            18.5105409
+          ],
+          [
+            73.8188581,
+            18.5105204
+          ],
+          [
+            73.8186052,
+            18.5105007
+          ],
+          [
+            73.8181506,
+            18.5104642
+          ],
+          [
+            73.8177618,
+            18.5104348
+          ],
+          [
+            73.8174577,
+            18.510398
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1530306273_0_10228",
+        "road_name": "Corridor Connector",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8030048,
+            18.4835893
+          ],
+          [
+            73.8029331,
+            18.4835641
+          ],
+          [
+            73.8027644,
+            18.4834799
+          ],
+          [
+            73.8026031,
+            18.4834191
+          ],
+          [
+            73.8023082,
+            18.4833081
+          ],
+          [
+            73.8021957,
+            18.4832559
+          ],
+          [
+            73.8021057,
+            18.4832026
+          ],
+          [
+            73.8020793,
+            18.4831767
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/158325409_0_7118",
+        "road_name": "Corridor Connector",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8452667,
+            18.5029831
+          ],
+          [
+            73.8452173,
+            18.5029586
+          ],
+          [
+            73.8451968,
+            18.5029485
+          ],
+          [
+            73.8450591,
+            18.5028681
+          ],
+          [
+            73.8449846,
+            18.50283
+          ],
+          [
+            73.8449004,
+            18.5028153
+          ],
+          [
+            73.8445303,
+            18.5027872
+          ],
+          [
+            73.843921,
+            18.5027579
+          ],
+          [
+            73.8438556,
+            18.5027371
+          ],
+          [
+            73.8435726,
+            18.5025414
+          ],
+          [
+            73.8433964,
+            18.5023897
+          ],
+          [
+            73.8432785,
+            18.5022739
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/68338440_0",
+        "road_name": "Corridor Connector",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8159473,
+            18.5058423
+          ],
+          [
+            73.8156286,
+            18.5057959
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/857035791_0",
+        "road_name": "Pu. Bha. Bhave Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8175443,
+            18.5061213
+          ],
+          [
+            73.8178455,
+            18.5049842
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/22841819_0_31",
+        "road_name": "Chhatrapati Rajaram Maharaj Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8175443,
+            18.5061213
+          ],
+          [
+            73.8170283,
+            18.5060283
+          ],
+          [
+            73.8168506,
+            18.5059962
+          ],
+          [
+            73.8166933,
+            18.5059679
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/857035791_0_32",
+        "road_name": "Pu. Bha. Bhave Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8233974,
+            18.5053094
+          ],
+          [
+            73.823778,
+            18.5054138
+          ],
+          [
+            73.8242118,
+            18.5055329
+          ],
+          [
+            73.8247396,
+            18.5056786
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/198580673_0",
+        "road_name": "Karve Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8456423,
+            18.5012279
+          ],
+          [
+            73.8458628,
+            18.501227
+          ],
+          [
+            73.8459008,
+            18.5012294
+          ],
+          [
+            73.8459562,
+            18.501233
+          ],
+          [
+            73.8462138,
+            18.5012496
+          ],
+          [
+            73.8463011,
+            18.5012552
+          ],
+          [
+            73.8465063,
+            18.5012628
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/22841354_0",
+        "road_name": "Tanaji Malusare Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8318167,
+            18.4898946
+          ],
+          [
+            73.8321697,
+            18.4901454
+          ],
+          [
+            73.8322682,
+            18.4902335
+          ],
+          [
+            73.8326626,
+            18.4906432
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1232402279_0",
+        "road_name": "Sinhagad Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8047937,
+            18.4997727
+          ],
+          [
+            73.8048107,
+            18.500016
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087055_0",
+        "road_name": "Gandhibhavan Marg",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8047937,
+            18.4997727
+          ],
+          [
+            73.8046611,
+            18.4995405
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/211087055_0_8",
+        "road_name": "Gandhibhavan Marg",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8122489,
+            18.5021609
+          ],
+          [
+            73.8124018,
+            18.5021726
+          ],
+          [
+            73.8125191,
+            18.5021815
+          ],
+          [
+            73.8126584,
+            18.5021844
+          ],
+          [
+            73.8128804,
+            18.5021771
+          ],
+          [
+            73.8133362,
+            18.5021525
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/198724057_0",
+        "road_name": "Balbhim Mokate Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8122489,
+            18.5021609
+          ],
+          [
+            73.8121275,
+            18.502089
+          ],
+          [
+            73.8118083,
+            18.5020327
+          ],
+          [
+            73.811526,
+            18.5020052
+          ],
+          [
+            73.8111863,
+            18.5019649
+          ],
+          [
+            73.8110744,
+            18.5019517
+          ],
+          [
+            73.8107863,
+            18.5019137
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/198730385_0",
+        "road_name": "Balbhim Mokate Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8136152,
+            18.5021138
+          ],
+          [
+            73.8137031,
+            18.5021092
+          ],
+          [
+            73.8138383,
+            18.502102
+          ],
+          [
+            73.8139301,
+            18.5021027
+          ],
+          [
+            73.8140258,
+            18.5021034
+          ],
+          [
+            73.8142135,
+            18.5021048
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/261258202_0",
+        "road_name": "Balbhim Mokate Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8150474,
+            18.5021502
+          ],
+          [
+            73.8152035,
+            18.502142
+          ],
+          [
+            73.8154481,
+            18.5021292
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/199261930_0",
+        "road_name": "Balbhim Mokate Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.818325,
+            18.5028109
+          ],
+          [
+            73.8183106,
+            18.5028804
+          ],
+          [
+            73.8183015,
+            18.5029247
+          ],
+          [
+            73.8181749,
+            18.5035373
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/22841819_0_15",
+        "road_name": "Chhatrapati Rajaram Maharaj Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8071232,
+            18.4815281
+          ],
+          [
+            73.8071072,
+            18.4815162
+          ],
+          [
+            73.806927,
+            18.4813807
+          ],
+          [
+            73.8066188,
+            18.4811209
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/206492416_0_10060",
+        "road_name": "Karve Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8054773,
+            18.5042278
+          ],
+          [
+            73.8054527,
+            18.5040593
+          ],
+          [
+            73.8054191,
+            18.5036863
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/198733123_0_10065",
+        "road_name": "Gandhibhavan Marg",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8329125,
+            18.5145118
+          ],
+          [
+            73.8327499,
+            18.5145503
+          ],
+          [
+            73.8325649,
+            18.5145942
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/22840820_0_412",
+        "road_name": "Prabhat Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8329125,
+            18.5145118
+          ],
+          [
+            73.8329891,
+            18.5144904
+          ],
+          [
+            73.8338015,
+            18.5142631
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/22840820_0_413",
+        "road_name": "Prabhat Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8362069,
+            18.5139216
+          ],
+          [
+            73.8355252,
+            18.5139677
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/22840820_0_415",
+        "road_name": "Prabhat Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8362069,
+            18.5139216
+          ],
+          [
+            73.8365564,
+            18.5139243
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/22840820_0_416",
+        "road_name": "Prabhat Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8362069,
+            18.5139216
+          ],
+          [
+            73.8362191,
+            18.5142054
+          ],
+          [
+            73.8362212,
+            18.5142378
+          ],
+          [
+            73.8362406,
+            18.5145309
+          ],
+          [
+            73.8362448,
+            18.514564
+          ],
+          [
+            73.8362627,
+            18.5147063
+          ],
+          [
+            73.8363172,
+            18.5151377
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/215732199_0",
+        "road_name": "Lane 7",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8362069,
+            18.5139216
+          ],
+          [
+            73.8362536,
+            18.5135396
+          ],
+          [
+            73.8362756,
+            18.51336
+          ],
+          [
+            73.8363364,
+            18.5131722
+          ],
+          [
+            73.8363619,
+            18.5130936
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1147910710_0",
+        "road_name": "8th Lane",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8405641,
+            18.5130809
+          ],
+          [
+            73.840485,
+            18.5130505
+          ],
+          [
+            73.8402424,
+            18.5129587
+          ],
+          [
+            73.839788,
+            18.5127867
+          ],
+          [
+            73.8397044,
+            18.5127507
+          ],
+          [
+            73.8395117,
+            18.5126677
+          ],
+          [
+            73.8393448,
+            18.5125958
+          ],
+          [
+            73.8393109,
+            18.5125812
+          ],
+          [
+            73.838844,
+            18.5123529
+          ],
+          [
+            73.8382004,
+            18.512039
+          ],
+          [
+            73.8374298,
+            18.5116572
+          ],
+          [
+            73.8374197,
+            18.5116522
+          ],
+          [
+            73.8373048,
+            18.5115953
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1147910707_0",
+        "road_name": "Karve Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8368888,
+            18.512254
+          ],
+          [
+            73.8369499,
+            18.5121611
+          ],
+          [
+            73.837068,
+            18.5119739
+          ],
+          [
+            73.8372232,
+            18.5117308
+          ],
+          [
+            73.8372619,
+            18.5116703
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1545694408_0",
+        "road_name": "8th Lane",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8363619,
+            18.5130936
+          ],
+          [
+            73.836554,
+            18.512771
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1147910710_0_425",
+        "road_name": "8th Lane",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8363619,
+            18.5130936
+          ],
+          [
+            73.8363364,
+            18.5131722
+          ],
+          [
+            73.8362756,
+            18.51336
+          ],
+          [
+            73.8362536,
+            18.5135396
+          ],
+          [
+            73.8362069,
+            18.5139216
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1147910710_0_426",
+        "road_name": "8th Lane",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8283159,
+            18.4859583
+          ],
+          [
+            73.8282885,
+            18.4857918
+          ],
+          [
+            73.8281819,
+            18.4852057
+          ],
+          [
+            73.8281111,
+            18.4848518
+          ],
+          [
+            73.8280234,
+            18.4844915
+          ],
+          [
+            73.8279664,
+            18.4842607
+          ],
+          [
+            73.8275949,
+            18.4832583
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/199637816_0_10003",
+        "road_name": "Sinhagad Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8420168,
+            18.5112563
+          ],
+          [
+            73.8420571,
+            18.5112238
+          ],
+          [
+            73.8421281,
+            18.5111817
+          ],
+          [
+            73.8421828,
+            18.5111629
+          ],
+          [
+            73.842266,
+            18.5111661
+          ],
+          [
+            73.8430925,
+            18.5112367
+          ],
+          [
+            73.8431556,
+            18.5112421
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/23016234_0",
+        "road_name": "Shivram Mhatre Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8368888,
+            18.512254
+          ],
+          [
+            73.8367854,
+            18.5124136
+          ],
+          [
+            73.8367184,
+            18.5125172
+          ],
+          [
+            73.8365884,
+            18.5127179
+          ],
+          [
+            73.836554,
+            18.512771
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1147910710_0_423",
+        "road_name": "8th Lane",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8015216,
+            18.5024226
+          ],
+          [
+            73.8007844,
+            18.5026078
+          ],
+          [
+            73.8007367,
+            18.5026154
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/651748864_0_9938",
+        "road_name": "DP Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.807892,
+            18.5020519
+          ],
+          [
+            73.8080421,
+            18.5020464
+          ],
+          [
+            73.8081965,
+            18.5020543
+          ],
+          [
+            73.8082414,
+            18.5020607
+          ],
+          [
+            73.8086653,
+            18.5020469
+          ],
+          [
+            73.8088725,
+            18.5020509
+          ],
+          [
+            73.8093077,
+            18.5020594
+          ],
+          [
+            73.8095303,
+            18.5020637
+          ],
+          [
+            73.8095575,
+            18.5020628
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1545691381_0",
+        "road_name": "DP Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8075273,
+            18.5020646
+          ],
+          [
+            73.807892,
+            18.5020519
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/198733117_0_9919",
+        "road_name": "DP Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8251283,
+            18.5056806
+          ],
+          [
+            73.8249668,
+            18.5056211
+          ],
+          [
+            73.8248371,
+            18.5055812
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/198580672_0",
+        "road_name": "Karve Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8003429,
+            18.5074823
+          ],
+          [
+            73.8012474,
+            18.5073728
+          ],
+          [
+            73.8014796,
+            18.507338
+          ],
+          [
+            73.8015936,
+            18.5073139
+          ],
+          [
+            73.8017096,
+            18.5072791
+          ],
+          [
+            73.80182,
+            18.5072441
+          ],
+          [
+            73.802149,
+            18.5071326
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/283124050_0",
+        "road_name": "Paud Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8455389,
+            18.5129635
+          ],
+          [
+            73.8467444,
+            18.5130861
+          ],
+          [
+            73.8473191,
+            18.5131412
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/30876504_0_586",
+        "road_name": "R. B. Kumthekar Marg",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8455389,
+            18.5129635
+          ],
+          [
+            73.8455737,
+            18.5128313
+          ],
+          [
+            73.845601,
+            18.5122713
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/53744511_0",
+        "road_name": "Chhatrapati Sambhaji Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8455389,
+            18.5129635
+          ],
+          [
+            73.8454826,
+            18.513116
+          ],
+          [
+            73.8453115,
+            18.513457
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/53744511_0_588",
+        "road_name": "Chhatrapati Sambhaji Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8265994,
+            18.4889904
+          ],
+          [
+            73.8264452,
+            18.4887113
+          ],
+          [
+            73.826351,
+            18.4884927
+          ],
+          [
+            73.8262437,
+            18.4881624
+          ],
+          [
+            73.8262156,
+            18.4880723
+          ],
+          [
+            73.8261016,
+            18.4879403
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1391507670_0",
+        "road_name": "Cummins College Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8165101,
+            18.4889904
+          ],
+          [
+            73.8159069,
+            18.4890004
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1219444716_0",
+        "road_name": "Canal Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8017399,
+            18.5023666
+          ],
+          [
+            73.8015918,
+            18.502405
+          ],
+          [
+            73.8015216,
+            18.5024226
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/651748864_0_9884",
+        "road_name": "DP Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8361462,
+            18.5111245
+          ],
+          [
+            73.8363573,
+            18.5112168
+          ],
+          [
+            73.8364074,
+            18.5112415
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/246580203_0_9869",
+        "road_name": "Karve Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8285018,
+            18.483284
+          ],
+          [
+            73.8289111,
+            18.4833814
+          ],
+          [
+            73.8290334,
+            18.4833929
+          ],
+          [
+            73.8291673,
+            18.4833714
+          ],
+          [
+            73.8292551,
+            18.4833335
+          ],
+          [
+            73.8293215,
+            18.483294
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1426555673_0_10078",
+        "road_name": "Late Narayanrao Kondiba Jagtap Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8314873,
+            18.4896717
+          ],
+          [
+            73.8318167,
+            18.4898946
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1232402279_0_9857",
+        "road_name": "Sinhagad Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8280858,
+            18.4855276
+          ],
+          [
+            73.8280879,
+            18.4857415
+          ],
+          [
+            73.8280973,
+            18.4859557
+          ],
+          [
+            73.828153,
+            18.486204
+          ],
+          [
+            73.828207,
+            18.4864424
+          ],
+          [
+            73.8282655,
+            18.4865833
+          ],
+          [
+            73.8283202,
+            18.4867032
+          ],
+          [
+            73.8284766,
+            18.487012
+          ],
+          [
+            73.8287118,
+            18.4874019
+          ],
+          [
+            73.8287988,
+            18.4875515
+          ],
+          [
+            73.8289514,
+            18.4877881
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1313154261_0",
+        "road_name": "Sinhagad Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8302213,
+            18.4946858
+          ],
+          [
+            73.8285756,
+            18.4952108
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/209172189_0",
+        "road_name": "Appasaheb Kulkarni Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8302213,
+            18.4946858
+          ],
+          [
+            73.8310209,
+            18.4954331
+          ],
+          [
+            73.8317748,
+            18.4962641
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/218697385_0",
+        "road_name": "Raja Mantri Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8290287,
+            18.4926236
+          ],
+          [
+            73.8291612,
+            18.4928715
+          ],
+          [
+            73.8295397,
+            18.4935922
+          ],
+          [
+            73.8299697,
+            18.4941948
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/858493454_0",
+        "road_name": "Raja Mantri Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8405749,
+            18.5131772
+          ],
+          [
+            73.8406368,
+            18.5132022
+          ],
+          [
+            73.8407609,
+            18.513253
+          ],
+          [
+            73.8409232,
+            18.5133433
+          ],
+          [
+            73.8410905,
+            18.513455
+          ],
+          [
+            73.8412146,
+            18.5135751
+          ],
+          [
+            73.8413569,
+            18.5137105
+          ],
+          [
+            73.8414998,
+            18.5138464
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/246580195_0_9847",
+        "road_name": "Karve Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8354409,
+            18.508472
+          ],
+          [
+            73.8356257,
+            18.508603
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/51874380_0_767",
+        "road_name": "Kashibai Amrutrao Khilare Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8364334,
+            18.5092206
+          ],
+          [
+            73.8359736,
+            18.508869
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/51874380_0_768",
+        "road_name": "Kashibai Amrutrao Khilare Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8364334,
+            18.5092206
+          ],
+          [
+            73.8370833,
+            18.5097677
+          ],
+          [
+            73.8371734,
+            18.5098435
+          ],
+          [
+            73.8375322,
+            18.5102127
+          ],
+          [
+            73.8375653,
+            18.5102468
+          ],
+          [
+            73.8377125,
+            18.5103984
+          ],
+          [
+            73.8379295,
+            18.5106666
+          ],
+          [
+            73.8382277,
+            18.511035
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/51874380_0_769",
+        "road_name": "Kashibai Amrutrao Khilare Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8354112,
+            18.510667
+          ],
+          [
+            73.8352092,
+            18.5105732
+          ],
+          [
+            73.8350321,
+            18.5104965
+          ],
+          [
+            73.8347217,
+            18.5103621
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1147910708_0",
+        "road_name": "Karve Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8313753,
+            18.5086051
+          ],
+          [
+            73.8312923,
+            18.5085624
+          ],
+          [
+            73.8312011,
+            18.5085154
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/250116179_0",
+        "road_name": "Karve Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8322472,
+            18.5068803
+          ],
+          [
+            73.8318351,
+            18.5077266
+          ],
+          [
+            73.8316243,
+            18.5081022
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1464087873_0",
+        "road_name": "Amrutrao Khilare Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8058621,
+            18.5115415
+          ],
+          [
+            73.8058607,
+            18.5115629
+          ],
+          [
+            73.8058576,
+            18.511609
+          ],
+          [
+            73.8058507,
+            18.5117137
+          ],
+          [
+            73.8058359,
+            18.5118937
+          ],
+          [
+            73.8058207,
+            18.5122921
+          ],
+          [
+            73.8058866,
+            18.5123479
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/857163308_0_9797",
+        "road_name": "Ramchandra More Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8058866,
+            18.5123479
+          ],
+          [
+            73.8059374,
+            18.5122889
+          ],
+          [
+            73.8059511,
+            18.5118845
+          ],
+          [
+            73.8059587,
+            18.511708
+          ],
+          [
+            73.805968,
+            18.5114934
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1299174036_0_9799",
+        "road_name": "Ramchandra More Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8172837,
+            18.4869466
+          ],
+          [
+            73.8170245,
+            18.4869146
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/106365405_0_9767",
+        "road_name": "Cummins College Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8350735,
+            18.5028503
+          ],
+          [
+            73.8350646,
+            18.5033486
+          ],
+          [
+            73.8350406,
+            18.5044926
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/218697385_0_9743",
+        "road_name": "Raja Mantri Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8351575,
+            18.5028545
+          ],
+          [
+            73.8351509,
+            18.5022491
+          ],
+          [
+            73.83514,
+            18.5021891
+          ],
+          [
+            73.8350952,
+            18.5019405
+          ],
+          [
+            73.8350877,
+            18.5018988
+          ],
+          [
+            73.834953,
+            18.5013071
+          ],
+          [
+            73.8348289,
+            18.5008667
+          ],
+          [
+            73.8347013,
+            18.5005708
+          ],
+          [
+            73.8346636,
+            18.5005163
+          ],
+          [
+            73.8343733,
+            18.5000968
+          ],
+          [
+            73.8339834,
+            18.4995791
+          ],
+          [
+            73.8337653,
+            18.4991723
+          ],
+          [
+            73.8337334,
+            18.4990849
+          ],
+          [
+            73.8336735,
+            18.4988263
+          ],
+          [
+            73.8336306,
+            18.4986411
+          ],
+          [
+            73.8334473,
+            18.4980702
+          ],
+          [
+            73.8333945,
+            18.4979058
+          ],
+          [
+            73.8333683,
+            18.4978241
+          ],
+          [
+            73.8333458,
+            18.497768
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/858511878_0_9745",
+        "road_name": "Raja Mantri Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8318797,
+            18.4962299
+          ],
+          [
+            73.8317834,
+            18.4961323
+          ],
+          [
+            73.8310316,
+            18.4953166
+          ],
+          [
+            73.8306075,
+            18.4948969
+          ],
+          [
+            73.8304898,
+            18.4947807
+          ],
+          [
+            73.8304048,
+            18.4946892
+          ],
+          [
+            73.8303249,
+            18.4946212
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/858511878_0_9746",
+        "road_name": "Raja Mantri Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8299697,
+            18.4941948
+          ],
+          [
+            73.8295397,
+            18.4935922
+          ],
+          [
+            73.8291612,
+            18.4928715
+          ],
+          [
+            73.8290287,
+            18.4926236
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/858493454_0_9747",
+        "road_name": "Raja Mantri Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8299697,
+            18.4941948
+          ],
+          [
+            73.8299835,
+            18.4942714
+          ],
+          [
+            73.8300232,
+            18.4943432
+          ],
+          [
+            73.8302213,
+            18.4946858
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/858511879_0",
+        "road_name": "Raja Mantri Path",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            73.8312011,
+            18.5085154
+          ],
+          [
+            73.8309827,
+            18.5084029
+          ],
+          [
+            73.8308827,
+            18.5083514
+          ]
+        ]
+      },
+      "properties": {
+        "segment_id": "way/1464087872_0",
+        "road_name": "Karve Road",
+        "horizon_h": 4,
+        "risk_class": "low",
+        "probability": 0.01,
+        "confidence": "Low",
+        "top_reasons": [
+          "Rainfall near zero in available forecast snapshot",
+          "No geocoded source-backed segment incident labels",
+          "Terrain and road geometry snapshot not independently verified"
+        ],
+        "rain_next_h_mm": 0.0,
+        "generated_at": "2026-10-16T08:01:22+00:00",
+        "rain_data_timestamp": "2026-10-13T14:22:18.017497+00:00",
+        "mode": "replay",
+        "is_prediction": true,
+        "confidence_basis": "baseline; sparse labels; forecast snapshot age unknown or >3 h"
+      }
+    }
+  ]
+}

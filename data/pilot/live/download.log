@@ -1,0 +1,1 @@
+2026-10-16T08:01:23.797619+00:00 failed; retry exhausted; attempt=2 error=URLError: <urlopen error [Errno 8] nodename nor servname provided, or not known>; url=https://api.open-meteo.com/v1/forecast?latitude=18.492&longitude=73.825&hourly=precipitation&forecast_days=2&timezone=Asia%2FKolkata

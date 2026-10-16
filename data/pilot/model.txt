@@ -1,0 +1,4 @@
+model_type=baseline
+rule=rain-threshold + hotspot contribution only when geocoded source-backed segment labels exist
+training=not run (fewer than five distinct labelled events)
+probability=0.01 when available forecast-hour rain < 0.1 mm; otherwise bounded heuristic, not calibrated

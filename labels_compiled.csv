@@ -1,0 +1,5 @@
+place_or_segment,lat,lon,date,source_url,severity,event_id
+Pune city (reported citywide road flooding; exact pilot-zone road not specified),,,2019-09-24,https://timesofindia.indiatimes.com/city/pune/waterlogging-reveals-poor-standard-of-smart-roads/articleshow/71284804.cms,reported flooding; location too broad for segment label,pune-2019-09
+"Sinhagad Road, Pune",,,2023-09-28,https://www.hindustantimes.com/cities/pune-news/thursday-downpour-leads-to-waterlogging-in-some-areas-101696011409574.html,reported flash-flooding; road segment unspecified,pune-2023-09
+"Ektanagar, Vitthalwadi and Sinhagad Road, Pune",,,2024-07-24,https://www.hindustantimes.com/cities/pune-news/pmc-panel-to-identify-causes-of-flooding-suggest-preventive-measures-101722452082351.html,"flooding; affected localities reported, exact road points unavailable",pune-2024-07
+"Ektanagar, Vitthalwadi and Sinhagad Road, Pune",,,2024-07-25,https://www.hindustantimes.com/cities/pune-news/pmc-panel-to-identify-causes-of-flooding-suggest-preventive-measures-101722452082351.html,"flooding; affected localities reported, exact road points unavailable",pune-2024-07
