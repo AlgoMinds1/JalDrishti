@@ -482,6 +482,89 @@ html, body {
   animation: slideInRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Responsive Modal Overlay & Dialogs */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(37, 37, 31, 0.48);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2200;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.modal-dialog-large {
+  width: 100%;
+  max-width: 660px;
+  max-height: 88vh;
+  background: var(--bg-card, #FFFCF6);
+  border-radius: 20px;
+  border: 1px solid var(--border-color, #E4DACA);
+  padding: 26px 28px;
+  box-shadow: 0 16px 48px rgba(37, 37, 31, 0.18);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-sizing: border-box;
+  animation: modalPop 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.modal-dialog-medium {
+  width: 100%;
+  max-width: 540px;
+  max-height: 86vh;
+  background: var(--bg-card, #FFFCF6);
+  border-radius: 20px;
+  border: 1px solid var(--border-color, #E4DACA);
+  padding: 24px 26px;
+  box-shadow: 0 16px 48px rgba(37, 37, 31, 0.18);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-sizing: border-box;
+  animation: modalPop 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@media (max-width: 767px) {
+  .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .modal-dialog-large,
+  .modal-dialog-medium {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 22px 22px 0 0;
+    border-bottom: none;
+    padding: 18px 20px calc(var(--sab, 0px) + 20px);
+    animation: slideUp 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .modal-drag-handle {
+    display: block !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .modal-drag-handle {
+    display: none !important;
+  }
+}
+
 /* Mobile Bottom Sheet drag pill */
 .sheet-drag-handle {
   width: 36px;

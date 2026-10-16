@@ -30,7 +30,7 @@ export function App() {
   const apiUnavailable = useRef(false);
   const [reportsData, setReportsData] = useState<any>(null);
   const [showReportsLayer, setShowReportsLayer] = useState<boolean>(true);
-  const [showRainfall, setShowRainfall] = useState<boolean>(true);
+  const [showRainfall, setShowRainfall] = useState<boolean>(false);
   const [targetCoords, setTargetCoords] = useState<{ lat: number; lon: number; name: string } | null>(null);
 
   // Modals

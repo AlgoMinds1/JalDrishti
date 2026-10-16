@@ -82,5 +82,65 @@
     "admin_id": "admin_ops_01",
     "timestamp": "2026-10-16T11:20:44.062654+00:00",
     "details": "Generated inspection queue for scenario 'What-If Sandbox (60.0mm in 2h)'. Top priority: Wakad Road Underpass / Wakad Road"
+  },
+  {
+    "action": "INSPECTION_QUEUE_GENERATED",
+    "admin_id": "admin_ops_01",
+    "timestamp": "2026-10-16T11:24:19.425730+00:00",
+    "details": "Generated inspection queue for scenario 'What-If Sandbox (60.0mm in 2h)'. Top priority: Wakad Road Underpass / Wakad Road"
+  },
+  {
+    "action": "INSPECTION_QUEUE_GENERATED",
+    "admin_id": "admin_ops_01",
+    "timestamp": "2026-10-16T11:25:57.468331+00:00",
+    "details": "Generated inspection queue for scenario 'What-If Sandbox (60.0mm in 2h)'. Top priority: Wakad Road Underpass / Wakad Road"
+  },
+  {
+    "action": "INSPECTION_QUEUE_GENERATED",
+    "admin_id": "admin_ops_01",
+    "timestamp": "2026-10-16T11:27:23.794415+00:00",
+    "details": "Generated inspection queue for scenario 'What-If Sandbox (60.0mm in 2h)'. Top priority: Wakad Road Underpass / Wakad Road"
+  },
+  {
+    "action": "INSPECTION_QUEUE_GENERATED",
+    "admin_id": "admin_ops_01",
+    "timestamp": "2026-10-16T11:27:38.024241+00:00",
+    "details": "Generated inspection queue for scenario 'What-If Sandbox (60.0mm in 2h)'. Top priority: Wakad Road Underpass / Wakad Road"
+  },
+  {
+    "action": "INSPECTION_QUEUE_GENERATED",
+    "admin_id": "admin_ops_01",
+    "timestamp": "2026-10-16T11:30:59.203269+00:00",
+    "details": "Generated inspection queue for scenario 'What-If Sandbox (60.0mm in 2h)'. Top priority: Wakad Road Underpass / Wakad Road"
+  },
+  {
+    "action": "INSPECTION_QUEUE_GENERATED",
+    "admin_id": "admin_ops_01",
+    "timestamp": "2026-10-16T11:31:01.376253+00:00",
+    "details": "Generated inspection queue for scenario 'What-If Sandbox (60.0mm in 2h)'. Top priority: Wakad Road Underpass / Wakad Road"
+  },
+  {
+    "action": "INSPECTION_QUEUE_GENERATED",
+    "admin_id": "admin_ops_01",
+    "timestamp": "2026-10-16T11:31:16.469377+00:00",
+    "details": "Generated inspection queue for scenario 'What-If Sandbox (60.0mm in 2h)'. Top priority: Wakad Road Underpass / Wakad Road"
+  },
+  {
+    "action": "INSPECTION_QUEUE_GENERATED",
+    "admin_id": "admin_ops_01",
+    "timestamp": "2026-10-16T11:37:02.310806+00:00",
+    "details": "Generated inspection queue for scenario 'What-If Sandbox (60.0mm in 2h)'. Top priority: Wakad Road Underpass / Wakad Road"
+  },
+  {
+    "action": "INSPECTION_QUEUE_GENERATED",
+    "admin_id": "admin_ops_01",
+    "timestamp": "2026-10-16T11:39:50.616044+00:00",
+    "details": "Generated inspection queue for scenario 'What-If Sandbox (60.0mm in 2h)'. Top priority: Wakad Road Underpass / Wakad Road"
+  },
+  {
+    "action": "INSPECTION_QUEUE_GENERATED",
+    "admin_id": "admin_ops_01",
+    "timestamp": "2026-10-16T11:45:46.050565+00:00",
+    "details": "Generated inspection queue for scenario 'What-If Sandbox (60.0mm in 2h)'. Top priority: Wakad Road Underpass / Wakad Road"
   }
 ]

@@ -65,43 +65,18 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
   };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 2200,
-        background: 'rgba(37, 37, 31, 0.45)',
-        backdropFilter: 'blur(4px)',
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-        padding: '0'
-      }}
-      onClick={onClose}
-    >
+    <div className="modal-overlay" onClick={onClose}>
       <div
-        className="animate-slide-up"
+        className="modal-dialog-medium"
+        onClick={(e) => e.stopPropagation()}
         style={{
-          width: '100%',
-          maxWidth: '460px',
-          maxHeight: '86vh',
-          background: 'var(--bg-card, #FFFCF6)',
-          borderTopLeftRadius: '20px',
-          borderTopRightRadius: '20px',
-          border: '1px solid var(--border-color, #E4DACA)',
-          borderBottom: 'none',
-          padding: '16px 20px',
-          paddingBottom: 'calc(var(--sab, 0px) + 20px)',
-          boxShadow: 'var(--shadow-sheet)',
           display: 'flex',
           flexDirection: 'column',
-          overflowY: 'auto',
-          boxSizing: 'border-box'
+          gap: '16px'
         }}
-        onClick={(e) => e.stopPropagation()}
       >
-        {/* Drag handle */}
-        <div className="sheet-drag-handle" />
+        {/* Mobile Drag handle */}
+        <div className="sheet-drag-handle modal-drag-handle" />
 
         {/* Header */}
         <div

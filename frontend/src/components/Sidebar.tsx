@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import { useEffect, useState, type FC } from 'react';
 import {
   Map,
   Megaphone,
@@ -29,9 +29,19 @@ export const Sidebar: FC<SidebarProps> = ({
   onOpenAdminModal,
   onOpenReplay,
   onToggleRainfall,
-  showRainfall,
   rainAgeMin = 0
 }) => {
+  const [selectedItem, setSelectedItem] = useState<'map' | 'report' | 'route' | 'admin' | null>(
+    activeTab === 'map' ? 'map' : null
+  );
+
+  useEffect(() => {
+    if (activeTab !== 'map') setSelectedItem(null);
+    else setSelectedItem((current) => current ?? 'map');
+  }, [activeTab]);
+
+  const isMapSelected = selectedItem === 'map';
+
   return (
     <aside
       className="desktop-only"
@@ -54,16 +64,16 @@ export const Sidebar: FC<SidebarProps> = ({
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
         {/* Live Map */}
         <button
-          onClick={() => setActiveTab('map')}
+          onClick={() => { setSelectedItem('map'); setActiveTab('map'); }}
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
             padding: '10px 14px',
             borderRadius: '12px',
-            border: activeTab === 'map' ? '1px solid var(--accent-cyan, #77745B)' : '1px solid transparent',
-            background: activeTab === 'map' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
-            color: activeTab === 'map' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-main, #25251F)',
+            border: isMapSelected ? '1px solid var(--accent-cyan, #77745B)' : '1px solid transparent',
+            background: isMapSelected ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
+            color: isMapSelected ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-main, #25251F)',
             cursor: 'pointer',
             textAlign: 'left',
             transition: 'all 0.15s ease'
@@ -71,7 +81,7 @@ export const Sidebar: FC<SidebarProps> = ({
         >
           <div
             style={{
-              color: activeTab === 'map' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)',
+              color: isMapSelected ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
@@ -80,7 +90,7 @@ export const Sidebar: FC<SidebarProps> = ({
             <Map size={19} />
           </div>
           <div>
-            <div style={{ fontSize: '13.5px', fontWeight: activeTab === 'map' ? 700 : 600 }}>
+            <div style={{ fontSize: '13.5px', fontWeight: isMapSelected ? 700 : 600 }}>
               Live Map
             </div>
             <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>
@@ -91,28 +101,26 @@ export const Sidebar: FC<SidebarProps> = ({
 
         {/* Report Flooding */}
         <button
-          onClick={onOpenReportModal}
+          onClick={() => { setSelectedItem('report'); onOpenReportModal(); }}
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
             padding: '10px 14px',
             borderRadius: '12px',
-            border: 'none',
-            background: 'transparent',
-            color: 'var(--text-main, #25251F)',
+            border: selectedItem === 'report' ? '1px solid var(--accent-cyan, #77745B)' : '1px solid transparent',
+            background: selectedItem === 'report' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
+            color: selectedItem === 'report' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-main, #25251F)',
             cursor: 'pointer',
             textAlign: 'left',
             transition: 'all 0.15s ease'
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-pill, #E7DDCC)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
         >
-          <div style={{ color: 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ color: selectedItem === 'report' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Megaphone size={19} />
           </div>
           <div>
-            <div style={{ fontSize: '13.5px', fontWeight: 600 }}>
+            <div style={{ fontSize: '13.5px', fontWeight: selectedItem === 'report' ? 700 : 600 }}>
               Report Flooding
             </div>
             <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>
@@ -123,28 +131,26 @@ export const Sidebar: FC<SidebarProps> = ({
 
         {/* Plan Dry Route */}
         <button
-          onClick={onToggleRoutePlanner}
+          onClick={() => { setSelectedItem('route'); onToggleRoutePlanner(); }}
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
             padding: '10px 14px',
             borderRadius: '12px',
-            border: 'none',
-            background: 'transparent',
-            color: 'var(--text-main, #25251F)',
+            border: selectedItem === 'route' ? '1px solid var(--accent-cyan, #77745B)' : '1px solid transparent',
+            background: selectedItem === 'route' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
+            color: selectedItem === 'route' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-main, #25251F)',
             cursor: 'pointer',
             textAlign: 'left',
             transition: 'all 0.15s ease'
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-pill, #E7DDCC)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
         >
-          <div style={{ color: 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ color: selectedItem === 'route' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Navigation size={19} />
           </div>
           <div>
-            <div style={{ fontSize: '13.5px', fontWeight: 600 }}>
+            <div style={{ fontSize: '13.5px', fontWeight: selectedItem === 'route' ? 700 : 600 }}>
               Plan Dry Route
             </div>
             <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>
@@ -155,24 +161,22 @@ export const Sidebar: FC<SidebarProps> = ({
 
         {/* Live Rainfall Toggle */}
         <button
-          onClick={onToggleRainfall}
+          onClick={() => { setSelectedItem(null); onToggleRainfall(); }}
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
             padding: '10px 14px',
             borderRadius: '12px',
-            border: showRainfall ? '1px solid var(--accent-cyan, #77745B)' : 'none',
-            background: showRainfall ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
-            color: showRainfall ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-main, #25251F)',
+            border: '1px solid transparent',
+            background: 'transparent',
+            color: 'var(--text-main, #25251F)',
             cursor: 'pointer',
             textAlign: 'left',
             transition: 'all 0.15s ease'
           }}
-          onMouseEnter={(e) => { if (!showRainfall) e.currentTarget.style.background = 'var(--bg-pill, #E7DDCC)'; }}
-          onMouseLeave={(e) => { if (!showRainfall) e.currentTarget.style.background = 'transparent'; }}
         >
-          <div style={{ color: showRainfall ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ color: 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <CloudRain size={19} />
           </div>
           <div>
@@ -187,28 +191,26 @@ export const Sidebar: FC<SidebarProps> = ({
 
         {/* Admin & Sandbox */}
         <button
-          onClick={onOpenAdminModal}
+          onClick={() => { setSelectedItem('admin'); onOpenAdminModal(); }}
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '12px',
             padding: '10px 14px',
             borderRadius: '12px',
-            border: 'none',
-            background: 'transparent',
-            color: 'var(--text-main, #25251F)',
+            border: selectedItem === 'admin' ? '1px solid var(--accent-cyan, #77745B)' : '1px solid transparent',
+            background: selectedItem === 'admin' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
+            color: selectedItem === 'admin' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-main, #25251F)',
             cursor: 'pointer',
             textAlign: 'left',
             transition: 'all 0.15s ease'
           }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--bg-pill, #E7DDCC)'; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
         >
-          <div style={{ color: 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ color: selectedItem === 'admin' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Settings size={19} />
           </div>
           <div>
-            <div style={{ fontSize: '13.5px', fontWeight: 600 }}>
+            <div style={{ fontSize: '13.5px', fontWeight: selectedItem === 'admin' ? 700 : 600 }}>
               Admin & Sandbox
             </div>
             <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>

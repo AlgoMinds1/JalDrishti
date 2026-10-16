@@ -9,22 +9,6 @@ interface ReportModalProps {
   defaultCoords: { lat: number; lon: number };
 }
 
-const photoActionStyle: React.CSSProperties = {
-  flex: 1,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  gap: '7px',
-  padding: '10px 8px',
-  border: '1px solid var(--border-color, #E4DACA)',
-  borderRadius: '10px',
-  background: 'var(--bg-primary, #F5F0E7)',
-  color: 'var(--text-main, #25251F)',
-  fontSize: '12px',
-  fontWeight: 600,
-  cursor: 'pointer'
-};
-
 export const ReportModal: FC<ReportModalProps> = ({
   isOpen,
   onClose,
@@ -130,70 +114,91 @@ export const ReportModal: FC<ReportModalProps> = ({
   };
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        inset: 0,
-        background: 'rgba(37, 37, 31, 0.45)',
-        backdropFilter: 'blur(4px)',
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-        zIndex: 2200,
-        padding: '0'
-      }}
-      onClick={handleReset}
-    >
+    <div className="modal-overlay" onClick={handleReset}>
       <div
-        className="animate-slide-up"
+        className="modal-dialog-large"
+        onClick={(e) => e.stopPropagation()}
         style={{
-          width: '100%',
-          maxWidth: '480px',
-          maxHeight: '90vh',
-          background: 'var(--bg-card, #FFFCF6)',
-          borderTopLeftRadius: '20px',
-          borderTopRightRadius: '20px',
-          border: '1px solid var(--border-color, #E4DACA)',
-          borderBottom: 'none',
-          padding: '16px 20px',
-          paddingBottom: 'calc(var(--sab, 0px) + 20px)',
-          boxShadow: 'var(--shadow-sheet)',
           display: 'flex',
           flexDirection: 'column',
-          overflowY: 'auto',
-          boxSizing: 'border-box'
+          gap: '18px'
         }}
-        onClick={(e) => e.stopPropagation()}
       >
-        {/* Drag handle */}
-        <div className="sheet-drag-handle" />
+        {/* Mobile Drag handle */}
+        <div className="sheet-drag-handle modal-drag-handle" />
 
-        {/* Header */}
+        {/* Modal Header */}
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'center',
-            paddingBottom: '12px',
+            alignItems: 'flex-start',
+            paddingBottom: '14px',
             borderBottom: '1px solid var(--border-color, #E4DACA)'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <MapPin size={18} color="var(--accent-cyan, #77745B)" />
-            <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-main, #25251F)' }}>
-              Report Road Waterlogging
-            </h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div
+              style={{
+                width: '42px',
+                height: '42px',
+                borderRadius: '12px',
+                background: 'var(--accent-beige-light, #E7DDCC)',
+                color: 'var(--accent-beige-dark, #4b4836)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+                boxShadow: '0 2px 8px rgba(119, 116, 91, 0.15)'
+              }}
+            >
+              <MapPin size={22} />
+            </div>
+            <div>
+              <h3
+                style={{
+                  fontSize: '18px',
+                  fontWeight: 800,
+                  color: 'var(--text-main, #25251F)',
+                  margin: 0,
+                  letterSpacing: '-0.3px',
+                  lineHeight: 1.2
+                }}
+              >
+                Report Road Waterlogging
+              </h3>
+              <p
+                style={{
+                  fontSize: '12.5px',
+                  color: 'var(--text-muted, #706D62)',
+                  margin: '3px 0 0 0',
+                  lineHeight: 1.4
+                }}
+              >
+                Citizen ground truth • Corroborated by Pune AI Early-Warning Engine
+              </p>
+            </div>
           </div>
+
           <button
             onClick={handleReset}
             aria-label="Close report form"
             style={{
-              background: 'transparent',
-              border: 'none',
+              width: '34px',
+              height: '34px',
+              borderRadius: '50%',
+              background: 'var(--bg-primary, #F5F0E7)',
+              border: '1px solid var(--border-color, #E4DACA)',
               color: 'var(--text-muted, #706D62)',
               cursor: 'pointer',
-              padding: '4px'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.15s ease',
+              flexShrink: 0
             }}
+            onMouseEnter={(e) => { e.currentTarget.style.background = '#e8ded0'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--bg-primary, #F5F0E7)'; }}
           >
             <X size={18} />
           </button>
@@ -201,47 +206,65 @@ export const ReportModal: FC<ReportModalProps> = ({
 
         {submissionResult ? (
           /* Submission Feedback with Trust Engine Score */
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', textAlign: 'center', padding: '16px 0' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', textAlign: 'center', padding: '12px 0' }}>
             <div
               style={{
                 margin: '0 auto',
-                width: '48px',
-                height: '48px',
+                width: '56px',
+                height: '56px',
                 borderRadius: '50%',
-                background: 'var(--risk-low-bg)',
+                background: 'rgba(22, 134, 106, 0.12)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
               }}
             >
-              <CheckCircle2 size={28} color="var(--status-green, #16866A)" />
+              <CheckCircle2 size={34} color="var(--status-green, #16866A)" />
             </div>
 
-            <h4 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-main, #25251F)' }}>
-              Report Ingested by Trust Engine
-            </h4>
+            <div>
+              <h4 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-main, #25251F)', margin: '0 0 6px 0' }}>
+                Report Ingested by Trust Engine
+              </h4>
+              <p style={{ fontSize: '13px', color: 'var(--text-muted, #706D62)', margin: 0 }}>
+                Thank you for contributing to Pune's real-time safety network.
+              </p>
+            </div>
 
             <div
               style={{
                 background: 'var(--bg-primary, #F5F0E7)',
                 border: '1px solid var(--border-color, #E4DACA)',
-                padding: '14px',
-                borderRadius: '12px',
-                fontSize: '13px',
-                textAlign: 'left'
+                padding: '18px',
+                borderRadius: '16px',
+                fontSize: '13.5px',
+                textAlign: 'left',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ color: 'var(--text-muted, #706D62)' }}>Trust Score:</span>
-                <span style={{ fontWeight: 700, color: 'var(--accent-cyan, #77745B)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: 'var(--text-muted, #706D62)', fontWeight: 500 }}>Initial Trust Score:</span>
+                <span style={{ fontWeight: 800, fontSize: '15px', color: 'var(--accent-beige-dark, #4b4836)' }}>
                   {submissionResult.trust_score} / 100
                 </span>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                <span style={{ color: 'var(--text-muted, #706D62)' }}>Verification State:</span>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ color: 'var(--text-muted, #706D62)', fontWeight: 500 }}>Verification State:</span>
                 <span
                   style={{
-                    fontWeight: 700,
+                    fontWeight: 750,
+                    fontSize: '13px',
+                    padding: '3px 10px',
+                    borderRadius: '9999px',
+                    background:
+                      submissionResult.state === 'Likely'
+                        ? 'rgba(217, 119, 6, 0.15)'
+                        : submissionResult.state === 'Confirmed'
+                        ? 'rgba(22, 134, 106, 0.15)'
+                        : 'rgba(112, 109, 98, 0.15)',
                     color:
                       submissionResult.state === 'Likely'
                         ? 'var(--risk-moderate, #d97706)'
@@ -253,16 +276,28 @@ export const ReportModal: FC<ReportModalProps> = ({
                   {submissionResult.state}
                 </span>
               </div>
-              <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '8px', lineHeight: 1.4 }}>
-                ℹ️ Strict Safety Rule: No single report triggers an alert alone. Independent corroboration from a second nearby citizen is required to elevate to Confirmed.
+
+              <div
+                style={{
+                  fontSize: '11.5px',
+                  color: 'var(--text-muted, #706D62)',
+                  lineHeight: 1.5,
+                  paddingTop: '8px',
+                  borderTop: '1px solid var(--border-color, #E4DACA)'
+                }}
+              >
+                ℹ️ <strong>Strict Multi-Citizen Corroboration:</strong> To prevent false alarms, no single citizen report triggers a civic alert alone. Corroboration from a second nearby report elevates this segment to <em>Confirmed</em>.
               </div>
+
               {submissionResult.photo_verification && (
-                <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '8px', lineHeight: 1.4 }}>
-                  Photo metadata: {submissionResult.photo_verification.status === 'camera_metadata_present'
-                    ? 'Camera metadata found.'
+                <div style={{ fontSize: '11.5px', color: 'var(--text-muted, #706D62)', lineHeight: 1.5 }}>
+                  📷 <strong>Photo Verification Clue:</strong>{' '}
+                  {submissionResult.photo_verification.status === 'camera_metadata_present'
+                    ? 'Camera metadata detected in image.'
                     : submissionResult.photo_verification.status === 'possible_generated_metadata'
-                    ? 'Metadata contains a possible AI-generation marker.'
-                    : 'No camera metadata found.'} This is a clue only; metadata can be missing or changed and does not verify image authenticity.
+                    ? 'Metadata contains potential AI-generation markers.'
+                    : 'Standard web photo without EXIF camera metadata.'}{' '}
+                  (Image metadata is treated as a supporting provenance clue only).
                 </div>
               )}
             </div>
@@ -270,15 +305,16 @@ export const ReportModal: FC<ReportModalProps> = ({
             <button
               onClick={handleReset}
               style={{
-                background: 'var(--accent-beige, #77745B)',
+                background: 'var(--accent-beige-dark, #28392c)',
                 color: '#ffffff',
-                padding: '11px 16px',
-                borderRadius: '10px',
+                padding: '13px 20px',
+                borderRadius: '12px',
                 border: 'none',
                 fontWeight: 700,
-                fontSize: '13.5px',
+                fontSize: '14px',
                 cursor: 'pointer',
-                boxShadow: '0 3px 12px rgba(119, 116, 91, 0.25)'
+                boxShadow: '0 4px 14px rgba(40, 57, 44, 0.25)',
+                transition: 'all 0.15s ease'
               }}
             >
               Done & Return to Map
@@ -286,113 +322,181 @@ export const ReportModal: FC<ReportModalProps> = ({
           </div>
         ) : (
           /* Report Intake Form */
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginTop: '14px' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             {errorMessage && (
               <div
                 style={{
                   background: 'var(--risk-severe-bg)',
                   border: '1px solid var(--risk-severe-border)',
-                  borderRadius: '8px',
-                  padding: '9px 12px',
-                  fontSize: '12px',
+                  borderRadius: '10px',
+                  padding: '10px 14px',
+                  fontSize: '12.5px',
                   color: 'var(--risk-severe)',
                   display: 'flex',
                   gap: '8px',
                   alignItems: 'center'
                 }}
               >
-                <AlertCircle size={15} />
+                <AlertCircle size={16} />
                 <span>{errorMessage}</span>
               </div>
             )}
 
-            {/* Location preview */}
+            {/* Location & Corridor Info Card */}
             <div
               style={{
                 background: 'var(--bg-primary, #F5F0E7)',
                 border: '1px solid var(--border-color, #E4DACA)',
-                padding: '8px 12px',
-                borderRadius: '10px',
-                fontSize: '11.5px',
-                color: 'var(--text-muted, #706D62)',
+                padding: '10px 16px',
+                borderRadius: '12px',
                 display: 'flex',
                 justifyContent: 'space-between',
-                alignItems: 'center'
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '8px'
               }}
             >
-              <span>Coords: {lat.toFixed(4)}° N, {lon.toFixed(4)}° E</span>
-              <span style={{ color: 'var(--accent-cyan, #77745B)', fontWeight: 600 }}>Aundh–Baner Corridor</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span
+                  style={{
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    backgroundColor: 'var(--status-green, #16866A)',
+                    boxShadow: '0 0 6px rgba(22, 134, 106, 0.5)'
+                  }}
+                />
+                <span style={{ fontSize: '12px', color: 'var(--text-main, #25251F)', fontWeight: 600 }}>
+                  GPS: {lat.toFixed(4)}° N, {lon.toFixed(4)}° E
+                </span>
+              </div>
+              <span
+                style={{
+                  fontSize: '11.5px',
+                  fontWeight: 650,
+                  color: 'var(--accent-beige-dark, #4b4836)',
+                  background: 'var(--accent-beige-light, #E7DDCC)',
+                  padding: '2px 8px',
+                  borderRadius: '6px'
+                }}
+              >
+                Aundh–Baner Corridor
+              </span>
             </div>
 
-            {/* Language Selector */}
-            <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
-              <span style={{ fontSize: '11.5px', color: 'var(--text-muted, #706D62)', fontWeight: 600 }}>Language:</span>
-              {(['mr', 'hi', 'en'] as const).map((lang) => (
-                <button
-                  type="button"
-                  key={lang}
-                  onClick={() => setLanguage(lang)}
-                  style={{
-                    background: language === lang ? 'var(--accent-beige, #77745B)' : 'var(--bg-primary, #F5F0E7)',
-                    border: language === lang ? '1px solid var(--accent-beige-dark, #4b4836)' : '1px solid var(--border-color, #E4DACA)',
-                    color: language === lang ? '#ffffff' : 'var(--text-main, #25251F)',
-                    padding: '5px 12px',
-                    borderRadius: '9999px',
-                    fontSize: '11.5px',
-                    fontWeight: language === lang ? 700 : 500,
-                    cursor: 'pointer'
-                  }}
-                >
-                  {lang === 'mr' ? 'मराठी' : lang === 'hi' ? 'हिंदी' : 'English'}
-                </button>
-              ))}
+            {/* Language Selector Segmented Control */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <label style={{ fontSize: '12px', color: 'var(--text-main, #25251F)', fontWeight: 700 }}>
+                Preferred Language:
+              </label>
+              <div
+                style={{
+                  display: 'flex',
+                  background: 'var(--bg-primary, #F5F0E7)',
+                  border: '1px solid var(--border-color, #E4DACA)',
+                  borderRadius: '10px',
+                  padding: '3px',
+                  gap: '4px'
+                }}
+              >
+                {(['mr', 'hi', 'en'] as const).map((lang) => {
+                  const isSelected = language === lang;
+                  return (
+                    <button
+                      type="button"
+                      key={lang}
+                      onClick={() => setLanguage(lang)}
+                      style={{
+                        flex: 1,
+                        background: isSelected ? 'var(--accent-beige-dark, #28392c)' : 'transparent',
+                        border: 'none',
+                        color: isSelected ? '#ffffff' : 'var(--text-main, #25251F)',
+                        padding: '7px 10px',
+                        borderRadius: '7px',
+                        fontSize: '12.5px',
+                        fontWeight: isSelected ? 700 : 500,
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
+                        boxShadow: isSelected ? '0 2px 6px rgba(40, 57, 44, 0.2)' : 'none'
+                      }}
+                    >
+                      {lang === 'mr' ? 'मराठी' : lang === 'hi' ? 'हिंदी' : 'English'}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Description Text Input */}
-            <div>
-              <label
-                style={{
-                  fontSize: '12px',
-                  color: 'var(--text-main, #25251F)',
-                  fontWeight: 600,
-                  display: 'block',
-                  marginBottom: '4px'
-                }}
-              >
-                Water Condition Description:
-              </label>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <label style={{ fontSize: '12.5px', color: 'var(--text-main, #25251F)', fontWeight: 700 }}>
+                  Water Condition Description:
+                </label>
+                <span style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)' }}>
+                  Depth, passability & landmarks
+                </span>
+              </div>
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder={
                   language === 'mr'
-                    ? 'उदा. पुलाखाली गुडघाभर पाणी साचले आहे, गाड्या थांबल्यात...'
+                    ? 'उदा. बाणेर पुलाखाली गुडघाभर पाणी साचले आहे, दुचाकी वाहने पुढे जाऊ शकत नाहीत...'
                     : language === 'hi'
-                    ? 'उदा. पुल के नीचे घुटने तक पानी भरा है, गाड़ियां फंसी हैं...'
-                    : 'e.g. Knee-deep water under the underpass, vehicles cannot pass...'
+                    ? 'उदा. बाणेर पुल के नीचे घुटने तक पानी भरा है, दोपहिया वाहन आगे नहीं जा पा रहे हैं...'
+                    : 'e.g. Knee-deep water pooling under Baner underpass, two-wheelers unable to pass...'
                 }
-                rows={3}
+                rows={4}
                 style={{
                   width: '100%',
                   background: 'var(--bg-primary, #F5F0E7)',
                   border: '1px solid var(--border-color, #E4DACA)',
-                  borderRadius: '10px',
+                  borderRadius: '12px',
                   color: 'var(--text-main, #25251F)',
-                  padding: '10px',
-                  fontSize: '13px',
+                  padding: '12px 14px',
+                  fontSize: '13.5px',
+                  lineHeight: 1.55,
                   fontFamily: 'inherit',
                   resize: 'none',
                   outline: 'none',
-                  boxSizing: 'border-box'
+                  boxSizing: 'border-box',
+                  transition: 'border-color 0.15s ease'
                 }}
+                onFocus={(e) => { e.currentTarget.style.borderColor = 'var(--accent-beige-dark, #28392c)'; }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = 'var(--border-color, #E4DACA)'; }}
               />
             </div>
 
-            {/* Optional image evidence */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <label style={photoActionStyle}>
-                  <Camera size={16} /> Take photo
+            {/* Photo Evidence & Voice Input Grid */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <label style={{ fontSize: '12px', color: 'var(--text-main, #25251F)', fontWeight: 700 }}>
+                Attach Ground Evidence (Optional):
+              </label>
+
+              {/* Action Buttons Row */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <label
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    padding: '11px',
+                    borderRadius: '10px',
+                    border: '1px solid var(--border-color, #E4DACA)',
+                    background: 'var(--bg-primary, #F5F0E7)',
+                    color: 'var(--text-main, #25251F)',
+                    fontSize: '12.5px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = '#eee5d8'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--bg-primary, #F5F0E7)'; }}
+                >
+                  <Camera size={16} color="var(--accent-beige-dark, #4b4836)" />
+                  <span>Take Photo</span>
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
@@ -401,8 +505,28 @@ export const ReportModal: FC<ReportModalProps> = ({
                     style={{ display: 'none' }}
                   />
                 </label>
-                <label style={photoActionStyle}>
-                  <ImagePlus size={16} /> Upload photo
+
+                <label
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    padding: '11px',
+                    borderRadius: '10px',
+                    border: '1px solid var(--border-color, #E4DACA)',
+                    background: 'var(--bg-primary, #F5F0E7)',
+                    color: 'var(--text-main, #25251F)',
+                    fontSize: '12.5px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onMouseEnter={(e) => { e.currentTarget.style.background = '#eee5d8'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.background = 'var(--bg-primary, #F5F0E7)'; }}
+                >
+                  <ImagePlus size={16} color="var(--accent-beige-dark, #4b4836)" />
+                  <span>Upload Image</span>
                   <input
                     type="file"
                     accept="image/jpeg,image/png,image/webp"
@@ -411,41 +535,97 @@ export const ReportModal: FC<ReportModalProps> = ({
                   />
                 </label>
               </div>
+
+              {/* Photo Preview Card */}
               {photo && photoPreview && (
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', background: 'var(--bg-primary, #F5F0E7)', border: '1px solid var(--border-color, #E4DACA)', borderRadius: '10px', padding: '8px' }}>
-                  <img src={photoPreview} alt="Selected report evidence" style={{ width: '64px', height: '52px', objectFit: 'cover', borderRadius: '6px' }} />
-                  <span style={{ flex: 1, minWidth: 0, fontSize: '11px', color: 'var(--text-muted, #706D62)', overflow: 'hidden', textOverflow: 'ellipsis' }}>{photo.name}</span>
-                  <button type="button" aria-label="Remove photo" onClick={() => setPhoto(null)} style={{ border: 0, background: 'transparent', color: 'var(--text-muted, #706D62)', cursor: 'pointer' }}><Trash2 size={16} /></button>
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: '12px',
+                    alignItems: 'center',
+                    background: 'var(--bg-primary, #F5F0E7)',
+                    border: '1px solid var(--border-color, #E4DACA)',
+                    borderRadius: '12px',
+                    padding: '10px 12px'
+                  }}
+                >
+                  <img
+                    src={photoPreview}
+                    alt="Selected report evidence"
+                    style={{
+                      width: '64px',
+                      height: '52px',
+                      objectFit: 'cover',
+                      borderRadius: '8px',
+                      border: '1px solid var(--border-color, #E4DACA)'
+                    }}
+                  />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div
+                      style={{
+                        fontSize: '12px',
+                        fontWeight: 650,
+                        color: 'var(--text-main, #25251F)',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
+                      }}
+                    >
+                      {photo.name}
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'var(--status-green, #16866A)', marginTop: '2px' }}>
+                      Ready to attach ({(photo.size / 1024).toFixed(0)} KB)
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    aria-label="Remove photo"
+                    onClick={() => setPhoto(null)}
+                    style={{
+                      border: 'none',
+                      background: 'rgba(220, 38, 38, 0.1)',
+                      color: 'var(--risk-severe, #dc2626)',
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <Trash2 size={16} />
+                  </button>
                 </div>
               )}
-              <span style={{ fontSize: '10.5px', color: 'var(--text-muted, #706D62)', lineHeight: 1.4 }}>Optional. JPEG, PNG, or WebP, up to 8 MB. Image metadata is only a provenance clue, not proof of authenticity.</span>
+
+              {/* Voice Input Option */}
+              <button
+                type="button"
+                onClick={startVoiceInput}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  background: isListening ? 'var(--risk-severe, #dc2626)' : 'var(--bg-primary, #F5F0E7)',
+                  border: isListening ? '1px solid #b91c1c' : '1px solid var(--border-color, #E4DACA)',
+                  color: isListening ? '#ffffff' : 'var(--text-main, #25251F)',
+                  padding: '11px',
+                  borderRadius: '10px',
+                  fontSize: '12.5px',
+                  fontWeight: 650,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  boxShadow: isListening ? '0 0 12px rgba(220, 38, 38, 0.4)' : 'none'
+                }}
+              >
+                <Mic size={16} />
+                <span>{isListening ? 'Listening (Speak now)...' : 'Record Voice Description (Speech-to-Text)'}</span>
+              </button>
             </div>
 
-            {/* Voice Input Button */}
-            <button
-              type="button"
-              onClick={startVoiceInput}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                background: isListening ? 'var(--risk-severe, #dc2626)' : 'var(--bg-primary, #F5F0E7)',
-                border: '1px solid var(--border-color, #E4DACA)',
-                color: isListening ? '#ffffff' : 'var(--text-main, #25251F)',
-                padding: '10px',
-                borderRadius: '10px',
-                fontSize: '12.5px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-            >
-              <Mic size={16} />
-              <span>{isListening ? 'Listening (Speak now)...' : 'Record Voice Description'}</span>
-            </button>
-
-            {/* Submit Button */}
+            {/* Submit Action CTA */}
             <button
               type="submit"
               disabled={isSubmitting}
@@ -454,20 +634,23 @@ export const ReportModal: FC<ReportModalProps> = ({
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '8px',
-                background: 'var(--accent-beige, #77745B)',
+                background: 'var(--accent-beige-dark, #28392c)',
                 color: '#ffffff',
-                padding: '11px',
-                borderRadius: '10px',
+                padding: '13px',
+                borderRadius: '12px',
                 border: 'none',
-                fontSize: '13.5px',
+                fontSize: '14px',
                 fontWeight: 700,
                 cursor: isSubmitting ? 'not-allowed' : 'pointer',
-                boxShadow: '0 3px 12px rgba(119, 116, 91, 0.25)',
-                transition: 'all 0.15s ease'
+                boxShadow: '0 4px 16px rgba(40, 57, 44, 0.28)',
+                transition: 'all 0.15s ease',
+                marginTop: '4px'
               }}
+              onMouseEnter={(e) => { if (!isSubmitting) e.currentTarget.style.background = '#1a251d'; }}
+              onMouseLeave={(e) => { if (!isSubmitting) e.currentTarget.style.background = 'var(--accent-beige-dark, #28392c)'; }}
             >
-              <Send size={15} />
-                <span>{isSubmitting ? 'Evaluating Trust Score...' : 'Submit Ground Truth'}</span>
+              <Send size={16} />
+              <span>{isSubmitting ? 'Evaluating Trust Score & Corroborating...' : 'Submit Ground Truth'}</span>
             </button>
           </form>
         )}
