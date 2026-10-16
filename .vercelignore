@@ -1,6 +1,6 @@
 # Backend code and serverless function detection prevention
 api/
-data/
+/data/
 ml/
 pipeline/
 trust/
