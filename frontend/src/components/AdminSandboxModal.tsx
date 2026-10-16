@@ -93,7 +93,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
       left: 0,
       width: '100vw',
       height: '100vh',
-      background: 'rgba(2, 6, 23, 0.65)',
+      background: 'rgba(37, 37, 31, 0.58)',
       backdropFilter: 'blur(8px)',
       zIndex: 2500,
       display: 'flex',
@@ -141,7 +141,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
         }}>
           <div>
             <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-main)', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Sliders size={20} color="var(--accent-cyan)" />
+              <Sliders size={20} color="var(--accent-beige, #77745B)" />
               Admin Operations & What-If Storm Sandbox
             </h2>
             <p style={{ fontSize: '12px', color: 'var(--text-muted)', margin: '4px 0 0 0' }}>
@@ -227,8 +227,8 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                   {/* Rain Slider */}
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                      <label style={{ fontSize: '12px', color: '#cbd5e1', fontWeight: 600 }}>Total Rainfall:</label>
-                      <span style={{ fontSize: '13px', color: '#38bdf8', fontWeight: 700 }}>{rainfallMm} mm</span>
+                      <label style={{ fontSize: '12px', color: 'var(--text-main)', fontWeight: 600 }}>Total Rainfall:</label>
+                      <span style={{ fontSize: '13px', color: 'var(--accent-beige-dark)', fontWeight: 700 }}>{rainfallMm} mm</span>
                     </div>
                     <input
                       type="range"
@@ -237,9 +237,9 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                       step={5}
                       value={rainfallMm}
                       onChange={(e) => setRainfallMm(Number(e.target.value))}
-                      style={{ width: '100%', accentColor: '#38bdf8' }}
+                      style={{ width: '100%', accentColor: 'var(--accent-beige)' }}
                     />
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: '#64748b', marginTop: '2px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>
                       <span>10 mm (Light)</span>
                       <span>60 mm (Cloudburst)</span>
                       <span>120 mm (Extreme)</span>
@@ -249,8 +249,8 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                   {/* Duration Slider */}
                   <div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                      <label style={{ fontSize: '12px', color: '#cbd5e1', fontWeight: 600 }}>Storm Duration:</label>
-                      <span style={{ fontSize: '13px', color: '#38bdf8', fontWeight: 700 }}>{durationH} Hours ({Math.round(rainfallMm / durationH)} mm/h)</span>
+                      <label style={{ fontSize: '12px', color: 'var(--text-main)', fontWeight: 600 }}>Storm Duration:</label>
+                      <span style={{ fontSize: '13px', color: 'var(--accent-beige-dark)', fontWeight: 700 }}>{durationH} Hours ({Math.round(rainfallMm / durationH)} mm/h)</span>
                     </div>
                     <input
                       type="range"
@@ -259,9 +259,9 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                       step={1}
                       value={durationH}
                       onChange={(e) => setDurationH(Number(e.target.value))}
-                      style={{ width: '100%', accentColor: '#38bdf8' }}
+                      style={{ width: '100%', accentColor: 'var(--accent-beige)' }}
                     />
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: '#64748b', marginTop: '2px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-muted)', marginTop: '2px' }}>
                       <span>1 Hour (Flash)</span>
                       <span>3 Hours</span>
                       <span>6 Hours (Sustained)</span>
@@ -273,7 +273,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                     onClick={runSimulation}
                     disabled={isSimulating}
                     style={{
-                      background: 'linear-gradient(135deg, #b8905e, #8f6738)',
+                      background: 'var(--accent-beige-gradient)',
                       color: '#ffffff',
                       border: 'none',
                       padding: '10px 18px',
@@ -284,7 +284,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                       display: 'flex',
                       alignItems: 'center',
                       gap: '8px',
-                      boxShadow: '0 4px 14px rgba(143, 103, 56, 0.35)'
+                      boxShadow: '0 4px 14px rgba(119, 116, 91, 0.28)'
                     }}
                   >
                     <RefreshCw size={15} className={isSimulating ? 'spin' : ''} />
@@ -297,18 +297,18 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
               {simulationData && (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
                   {[
-                    { label: 'Severe Risk Segments', val: simulationData.summary?.counts?.severe || 0, color: '#ef4444' },
-                    { label: 'High Risk Segments', val: simulationData.summary?.counts?.high || 0, color: '#f97316' },
-                    { label: 'Moderate Risk Segments', val: simulationData.summary?.counts?.moderate || 0, color: '#f59e0b' },
-                    { label: 'Inference Speed', val: `${simulationData.execution_time_ms} ms`, color: '#38bdf8' }
+                    { label: 'Severe Risk Segments', val: simulationData.summary?.counts?.severe || 0, color: 'var(--risk-severe)' },
+                    { label: 'High Risk Segments', val: simulationData.summary?.counts?.high || 0, color: 'var(--risk-high)' },
+                    { label: 'Moderate Risk Segments', val: simulationData.summary?.counts?.moderate || 0, color: 'var(--risk-moderate)' },
+                    { label: 'Inference Speed', val: `${simulationData.execution_time_ms} ms`, color: 'var(--accent-beige-dark)' }
                   ].map((c, i) => (
                     <div key={i} style={{
-                      background: 'rgba(15, 23, 42, 0.7)',
+                      background: 'var(--bg-pill)',
                       padding: '14px',
                       borderRadius: '10px',
-                      border: '1px solid rgba(255, 255, 255, 0.06)'
+                      border: '1px solid var(--border-color)'
                     }}>
-                      <div style={{ fontSize: '11px', color: '#94a3b8' }}>{c.label}</div>
+                      <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{c.label}</div>
                       <div style={{ fontSize: '20px', fontWeight: 800, color: c.color, marginTop: '4px' }}>{c.val}</div>
                     </div>
                   ))}
@@ -318,7 +318,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
               {/* Top Failing Corridors List */}
               {simulationData?.top_failing_corridors && (
                 <div>
-                  <h4 style={{ fontSize: '13px', color: '#cbd5e1', marginBottom: '8px', fontWeight: 600 }}>
+                  <h4 style={{ fontSize: '13px', color: 'var(--text-main)', marginBottom: '8px', fontWeight: 600 }}>
                     First Corridors to Inundate at {rainfallMm} mm:
                   </h4>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -328,7 +328,8 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                         justifyContent: 'space-between',
                         alignItems: 'center',
                         padding: '10px 14px',
-                        background: 'rgba(15, 23, 42, 0.5)',
+                        background: 'var(--bg-pill)',
+                        border: '1px solid var(--border-color)',
                         borderRadius: '8px',
                         fontSize: '12px'
                       }}>
@@ -365,7 +366,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                     Ranked by Priority Score = Risk Weight × Exposure Score × Citizen Corroboration
                   </p>
                 </div>
-                <span style={{ fontSize: '11px', color: 'var(--accent-cyan)', fontWeight: 600 }}>Top 10 High-Priority Dispatches</span>
+                <span style={{ fontSize: '11px', color: 'var(--accent-beige-dark)', fontWeight: 600 }}>Top 10 High-Priority Dispatches</span>
               </div>
 
               <div style={{ overflowX: 'auto' }}>
@@ -382,25 +383,25 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                   <tbody>
                     {queueData.map((item: any) => (
                       <tr key={item.rank} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                        <td style={{ padding: '10px 8px', fontWeight: 700, color: 'var(--accent-cyan)' }}>#{item.rank}</td>
+                        <td style={{ padding: '10px 8px', fontWeight: 700, color: 'var(--accent-beige-dark)' }}>#{item.rank}</td>
                         <td style={{ padding: '10px 8px', color: 'var(--text-main)', fontWeight: 600 }}>
                           {item.name}
                           {item.is_underpass && <span style={{ color: 'var(--risk-severe)', marginLeft: '6px', fontSize: '10px' }}>[UNDERPASS]</span>}
                         </td>
-                        <td style={{ padding: '10px 8px', fontWeight: 700, color: '#e2e8f0' }}>{item.priority_score}</td>
+                        <td style={{ padding: '10px 8px', fontWeight: 700, color: 'var(--text-main)' }}>{item.priority_score}</td>
                         <td style={{ padding: '10px 8px' }}>
                           <span style={{
                             padding: '2px 6px',
                             borderRadius: '4px',
                             fontSize: '11px',
                             fontWeight: 600,
-                            background: item.risk_class === 'severe' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(249, 115, 22, 0.2)',
-                            color: item.risk_class === 'severe' ? '#ef4444' : '#f97316'
+                            background: item.risk_class === 'severe' ? 'var(--risk-severe-bg)' : 'var(--risk-high-bg)',
+                            color: item.risk_class === 'severe' ? 'var(--risk-severe)' : 'var(--risk-high)'
                           }}>
                             {item.risk_class?.toUpperCase()}
                           </span>
                         </td>
-                        <td style={{ padding: '10px 8px', color: '#cbd5e1' }}>{item.recommended_action}</td>
+                        <td style={{ padding: '10px 8px', color: 'var(--text-sub)' }}>{item.recommended_action}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -429,13 +430,13 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                     gap: '6px',
                     padding: '6px 12px',
                     borderRadius: '6px',
-                    background: 'linear-gradient(135deg, #b8905e, #8f6738)',
+                    background: 'var(--accent-beige-gradient)',
                     color: '#fff',
                     border: 'none',
                     fontSize: '12px',
                     fontWeight: 700,
                     cursor: 'pointer',
-                    boxShadow: '0 2px 8px rgba(143, 103, 56, 0.3)'
+                    boxShadow: '0 2px 8px rgba(119, 116, 91, 0.25)'
                   }}
                 >
                   <PlusCircle size={14} /> Log Civic Intervention
@@ -454,21 +455,21 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                       <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ fontSize: '11px', color: 'var(--accent-cyan)', fontWeight: 600 }}>{item.intervention_id}</span>
+                          <span style={{ fontSize: '11px', color: 'var(--accent-beige-dark)', fontWeight: 600 }}>{item.intervention_id}</span>
                           <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>• Completed: {item.completion_date}</span>
                         </div>
                         <h4 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-main)', margin: '4px 0' }}>{item.name}</h4>
                         <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Target: {item.segment_name} ({item.agency})</div>
                       </div>
                       <div style={{
-                        background: 'rgba(16, 185, 129, 0.15)',
-                        border: '1px solid rgba(16, 185, 129, 0.3)',
+                        background: 'var(--risk-low-bg)',
+                        border: '1px solid var(--risk-low-border)',
                         borderRadius: '8px',
                         padding: '6px 12px',
                         textAlign: 'right'
                       }}>
-                        <div style={{ fontSize: '11px', color: '#10b981', fontWeight: 600 }}>Flood Rate Reduction</div>
-                        <div style={{ fontSize: '18px', fontWeight: 800, color: '#34d399' }}>
+                        <div style={{ fontSize: '11px', color: 'var(--risk-low)', fontWeight: 600 }}>Flood Rate Reduction</div>
+                        <div style={{ fontSize: '18px', fontWeight: 800, color: 'var(--risk-low)' }}>
                           ↓ {item.metrics?.reduction_pct}%
                         </div>
                       </div>
@@ -479,34 +480,35 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                       display: 'grid',
                       gridTemplateColumns: 'repeat(3, 1fr)',
                       gap: '8px',
-                      background: 'rgba(15, 23, 42, 0.4)',
+                      background: 'var(--bg-primary)',
+                      border: '1px solid var(--border-color)',
                       padding: '10px',
                       borderRadius: '8px',
                       marginTop: '12px',
                       fontSize: '11px'
                     }}>
                       <div>
-                        <span style={{ color: '#94a3b8' }}>Before Intervention:</span>
-                        <div style={{ fontWeight: 700, color: '#f87171' }}>
+                        <span style={{ color: 'var(--text-muted)' }}>Before Intervention:</span>
+                        <div style={{ fontWeight: 700, color: 'var(--risk-severe)' }}>
                           {item.metrics?.before_high_severe_count} / {item.metrics?.before_events_monitored} Events ({item.metrics?.before_waterlogging_rate_pct}%)
                         </div>
                       </div>
                       <div>
-                        <span style={{ color: '#94a3b8' }}>After Intervention:</span>
-                        <div style={{ fontWeight: 700, color: '#34d399' }}>
+                        <span style={{ color: 'var(--text-muted)' }}>After Intervention:</span>
+                        <div style={{ fontWeight: 700, color: 'var(--risk-low)' }}>
                           {item.metrics?.after_high_severe_count} / {item.metrics?.after_events_monitored} Events ({item.metrics?.after_waterlogging_rate_pct}%)
                         </div>
                       </div>
                       <div>
-                        <span style={{ color: '#94a3b8' }}>Comparable Window:</span>
-                        <div style={{ fontWeight: 600, color: '#cbd5e1' }}>{item.metrics?.comparable_rainfall_window}</div>
+                        <span style={{ color: 'var(--text-muted)' }}>Comparable Window:</span>
+                        <div style={{ fontWeight: 600, color: 'var(--text-main)' }}>{item.metrics?.comparable_rainfall_window}</div>
                       </div>
                     </div>
 
                     {/* Observational Limitations Disclaimer */}
                     <div style={{
                       fontSize: '11px',
-                      color: '#94a3b8',
+                      color: 'var(--text-muted)',
                       marginTop: '10px',
                       borderLeft: '3px solid #f59e0b',
                       paddingLeft: '8px'
@@ -525,7 +527,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                   left: 0,
                   width: '100%',
                   height: '100%',
-                  background: 'rgba(0,0,0,0.7)',
+                  background: 'rgba(37, 37, 31, 0.58)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -595,7 +597,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                       <button
                         type="submit"
                         style={{
-                          background: 'linear-gradient(135deg, #b8905e, #8f6738)',
+                          background: 'var(--accent-beige-gradient)',
                           color: '#fff',
                           border: 'none',
                           padding: '10px',
@@ -603,7 +605,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                           fontWeight: 700,
                           cursor: 'pointer',
                           marginTop: '6px',
-                          boxShadow: '0 2px 8px rgba(143, 103, 56, 0.3)'
+                          boxShadow: '0 2px 8px rgba(119, 116, 91, 0.25)'
                         }}
                       >
                         Submit to Effectiveness Ledger
