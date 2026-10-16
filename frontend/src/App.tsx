@@ -19,7 +19,7 @@ import { ScenarioReplayBar, type ScenarioId } from './components/ScenarioReplayB
 import { simulateEventScenario, type SegmentCollection } from './data/scenarioSimulation';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState<'home' | 'signin' | 'map' | 'evaluate' | 'limits'>('home');
+  const [activeTab, setActiveTab] = useState<'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay'>('home');
   const [currentHour, setCurrentHour] = useState<number>(1);
   const [scenario, setScenario] = useState<'live' | 'storm_july2024'>('live');
   const [geojsonData, setGeojsonData] = useState<any>(null);
@@ -173,10 +173,25 @@ export function App() {
     setScenarioSimulationActive(true);
   }, []);
 
+  const openEventReplay = useCallback(() => {
+    setActiveTab('replay');
+    setSelectedEventScenario('2024');
+    setCurrentHour(1);
+    setScenarioSimulationActive(true);
+  }, []);
+
   const exitScenarioSimulation = useCallback(() => {
     setScenarioSimulationActive(false);
     setSimulationSummary(null);
+    setActiveTab('map');
   }, []);
+
+  useEffect(() => {
+    if (activeTab !== 'replay' && scenarioSimulationActive) {
+      setScenarioSimulationActive(false);
+      setSimulationSummary(null);
+    }
+  }, [activeTab, scenarioSimulationActive]);
 
   if (activeTab === 'home') {
     return (
@@ -213,6 +228,8 @@ export function App() {
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
+        onOpenAdminModal={() => setIsAdminModalOpen(true)}
+        onOpenReplay={openEventReplay}
         scenario={scenario}
         setScenario={setScenario}
         rainAgeMin={rainAgeMin}
@@ -239,6 +256,7 @@ export function App() {
           onOpenReportModal={() => setIsReportModalOpen(true)}
           onToggleRoutePlanner={() => setIsRoutePlannerOpen(true)}
           onOpenAdminModal={() => setIsAdminModalOpen(true)}
+          onOpenReplay={openEventReplay}
           onToggleRainfall={() => setShowRainfall(!showRainfall)}
           showRainfall={showRainfall}
           rainAgeMin={rainAgeMin}
@@ -250,11 +268,11 @@ export function App() {
             flex: 1,
             position: 'relative',
             height: '100%',
-            overflow: activeTab === 'map' ? 'hidden' : 'auto',
-            paddingBottom: activeTab === 'map' ? '0' : 'calc(58px + var(--sab, 0px))'
+            overflow: activeTab === 'map' || activeTab === 'replay' ? 'hidden' : 'auto',
+            paddingBottom: activeTab === 'map' || activeTab === 'replay' ? '0' : 'calc(58px + var(--sab, 0px))'
           }}
         >
-          {activeTab === 'map' && (
+          {(activeTab === 'map' || activeTab === 'replay') && (
             <>
               {/* Floating Top Controls (Location search, Live Rainfall toggle) */}
               <TopControls
@@ -263,15 +281,17 @@ export function App() {
                 onSelectLocation={(lat, lon, name) => setTargetCoords({ lat, lon, name })}
               />
 
-              <ScenarioReplayBar
-                onRunScenario={runSelectedScenario}
-                onSimulationChange={setScenarioSimulationActive}
-                onExitSimulation={exitScenarioSimulation}
-                summary={simulationSummary}
-              />
+              {activeTab === 'replay' && (
+                <ScenarioReplayBar
+                  onRunScenario={runSelectedScenario}
+                  onSimulationChange={setScenarioSimulationActive}
+                  onExitSimulation={exitScenarioSimulation}
+                  summary={simulationSummary}
+                />
+              )}
 
               {/* Waterlogging Risk Legend (Desktop card & Mobile bottom sheet) */}
-              <RiskLegend />
+              <RiskLegend hideMobile={activeTab === 'replay'} />
 
               {/* Full Interactive Leaflet Map */}
               <MapComponent
@@ -285,12 +305,13 @@ export function App() {
               />
 
               {/* Forecast Horizon Selector & Overview Card */}
-              {!scenarioSimulationActive && (
+              {activeTab === 'map' && (
                 <TimeSlider
                   currentHour={currentHour}
                   setHour={setCurrentHour}
                   stats={stats}
                   rainAgeMin={rainAgeMin}
+                  onOpenReplay={openEventReplay}
                 />
               )}
 

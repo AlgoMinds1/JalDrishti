@@ -1,7 +1,7 @@
 import { useState, type FC } from 'react';
 import { Info, X, ShieldAlert } from 'lucide-react';
 
-export const RiskLegend: FC = () => {
+export const RiskLegend: FC<{ hideMobile?: boolean }> = ({ hideMobile = false }) => {
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const items = [
@@ -70,6 +70,7 @@ export const RiskLegend: FC = () => {
       </div>
 
       {/* ── Mobile Floating Pill Button (Visible on < 1024px) ── */}
+      {!hideMobile && <>
       <div
         className="mobile-only"
         style={{
@@ -225,6 +226,7 @@ export const RiskLegend: FC = () => {
           </div>
         </div>
       )}
+      </>}
     </>
   );
 };

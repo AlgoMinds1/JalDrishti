@@ -8,8 +8,8 @@ import {
 } from 'lucide-react';
 
 interface MobileBottomNavProps {
-  activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits';
-  setActiveTab: (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits') => void;
+  activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay';
+  setActiveTab: (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay') => void;
   onOpenReportModal: () => void;
   onToggleRoutePlanner: () => void;
   onOpenAdminModal: () => void;
@@ -65,7 +65,7 @@ export const MobileBottomNav: FC<MobileBottomNavProps> = ({
           border: 'none',
           cursor: 'pointer',
           padding: '4px 2px',
-          color: activeTab === 'map' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)',
+          color: activeTab === 'map' || activeTab === 'replay' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)',
           transition: 'all 0.15s ease'
         }}
       >
@@ -77,16 +77,16 @@ export const MobileBottomNav: FC<MobileBottomNavProps> = ({
             width: '36px',
             height: '26px',
             borderRadius: '13px',
-            background: activeTab === 'map' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
+            background: activeTab === 'map' || activeTab === 'replay' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
             transition: 'background 0.15s ease'
           }}
         >
-          <Map size={18} strokeWidth={activeTab === 'map' ? 2.4 : 1.9} />
+          <Map size={18} strokeWidth={activeTab === 'map' || activeTab === 'replay' ? 2.4 : 1.9} />
         </div>
         <span
           style={{
             fontSize: '11px',
-            fontWeight: activeTab === 'map' ? 700 : 500,
+            fontWeight: activeTab === 'map' || activeTab === 'replay' ? 700 : 500,
             letterSpacing: '-0.1px'
           }}
         >

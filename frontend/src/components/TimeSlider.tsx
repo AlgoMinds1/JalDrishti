@@ -1,5 +1,5 @@
 import { useState, useEffect, type FC, type Dispatch, type SetStateAction } from 'react';
-import { CloudRain, Play, Pause, ChevronUp, ChevronDown } from 'lucide-react';
+import { CalendarClock, CloudRain, Play, Pause, ChevronUp, ChevronDown } from 'lucide-react';
 
 interface TimeSliderProps {
   currentHour: number;
@@ -12,6 +12,7 @@ interface TimeSliderProps {
   };
   rainAgeMin?: number;
   disabled?: boolean;
+  onOpenReplay?: () => void;
 }
 
 export const TimeSlider: FC<TimeSliderProps> = ({
@@ -19,7 +20,8 @@ export const TimeSlider: FC<TimeSliderProps> = ({
   setHour,
   stats = { low: 0, moderate: 0, high: 0, severe: 0 },
   rainAgeMin = 0,
-  disabled = false
+  disabled = false,
+  onOpenReplay
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isOverviewExpanded, setIsOverviewExpanded] = useState(false);
@@ -130,6 +132,20 @@ export const TimeSlider: FC<TimeSliderProps> = ({
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px', color: 'var(--text-muted, #706D62)' }}>
+            {onOpenReplay && (
+              <button
+                type="button"
+                aria-label="Open historical event replay"
+                title="Historical event replay"
+                onClick={(event) => { event.stopPropagation(); onOpenReplay(); }}
+                style={{
+                  display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: 4,
+                  border: '1px solid var(--border-color, #E4DACA)', borderRadius: 999,
+                  padding: '4px 8px', background: 'var(--bg-card, #FFFCF6)',
+                  color: 'var(--text-muted, #706D62)', fontSize: 10, cursor: 'pointer'
+                }}
+              ><CalendarClock size={13} /><span>Events</span></button>
+            )}
             <span style={{ fontSize: '11px' }}>{isOverviewExpanded ? 'Hide' : 'Details'}</span>
             {isOverviewExpanded ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
           </div>

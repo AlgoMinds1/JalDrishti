@@ -5,15 +5,17 @@ import {
   Navigation,
   CloudRain,
   Settings,
-  BarChart3
+  BarChart3,
+  CalendarClock
 } from 'lucide-react';
 
 interface SidebarProps {
-  activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits';
-  setActiveTab: (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits') => void;
+  activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay';
+  setActiveTab: (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay') => void;
   onOpenReportModal: () => void;
   onToggleRoutePlanner: () => void;
   onOpenAdminModal: () => void;
+  onOpenReplay: () => void;
   onToggleRainfall: () => void;
   showRainfall: boolean;
   rainAgeMin?: number;
@@ -25,6 +27,7 @@ export const Sidebar: FC<SidebarProps> = ({
   onOpenReportModal,
   onToggleRoutePlanner,
   onOpenAdminModal,
+  onOpenReplay,
   onToggleRainfall,
   showRainfall,
   rainAgeMin = 0
@@ -211,6 +214,26 @@ export const Sidebar: FC<SidebarProps> = ({
             <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>
               Model tools & inspection
             </div>
+          </div>
+        </button>
+
+        {/* Historical event replay */}
+        <button
+          onClick={onOpenReplay}
+          style={{
+            display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px',
+            borderRadius: '12px', border: activeTab === 'replay' ? '1px solid var(--accent-cyan, #77745B)' : '1px solid transparent',
+            background: activeTab === 'replay' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
+            color: activeTab === 'replay' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-main, #25251F)',
+            cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s ease'
+          }}
+          onMouseEnter={(e) => { if (activeTab !== 'replay') e.currentTarget.style.background = 'var(--bg-pill, #E7DDCC)'; }}
+          onMouseLeave={(e) => { if (activeTab !== 'replay') e.currentTarget.style.background = 'transparent'; }}
+        >
+          <div style={{ color: 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CalendarClock size={19} /></div>
+          <div>
+            <div style={{ fontSize: '13.5px', fontWeight: activeTab === 'replay' ? 700 : 600 }}>Historical Replay</div>
+            <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>Explore past flood scenarios</div>
           </div>
         </button>
       </div>

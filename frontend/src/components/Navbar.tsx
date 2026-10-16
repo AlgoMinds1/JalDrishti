@@ -10,12 +10,16 @@ import {
   Menu,
   ChevronRight,
   Home,
-  ShieldCheck
+  ShieldCheck,
+  CalendarClock,
+  Settings
 } from 'lucide-react';
 
 interface NavbarProps {
-  activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits';
-  setActiveTab: (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits') => void;
+  activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay';
+  setActiveTab: (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay') => void;
+  onOpenAdminModal?: () => void;
+  onOpenReplay?: () => void;
   scenario?: 'live' | 'storm_july2024';
   setScenario?: (scen: 'live' | 'storm_july2024') => void;
   rainAgeMin?: number;
@@ -28,13 +32,15 @@ interface NavbarProps {
 export const Navbar: FC<NavbarProps> = ({
   activeTab,
   setActiveTab,
+  onOpenAdminModal,
+  onOpenReplay,
   theme = 'light',
   setTheme
 }) => {
   const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleNavigate = (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits') => {
+  const handleNavigate = (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay') => {
     setActiveTab(tab);
     setIsMobileMenuOpen(false);
   };
@@ -178,11 +184,11 @@ export const Navbar: FC<NavbarProps> = ({
               gap: '6px',
               padding: '6px 14px',
               borderRadius: '8px',
-              border: activeTab === 'map' ? '1px solid var(--accent-cyan, #77745B)' : '1px solid transparent',
-              background: activeTab === 'map' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
-              color: activeTab === 'map' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)',
+              border: activeTab === 'map' || activeTab === 'replay' ? '1px solid var(--accent-cyan, #77745B)' : '1px solid transparent',
+              background: activeTab === 'map' || activeTab === 'replay' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
+              color: activeTab === 'map' || activeTab === 'replay' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)',
               fontSize: '13px',
-              fontWeight: activeTab === 'map' ? 700 : 500,
+              fontWeight: activeTab === 'map' || activeTab === 'replay' ? 700 : 500,
               cursor: 'pointer',
               transition: 'all 0.15s ease'
             }}
@@ -417,11 +423,11 @@ export const Navbar: FC<NavbarProps> = ({
                   padding: '12px 14px',
                   borderRadius: '10px',
                   border: 'none',
-                  background: activeTab === 'map' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
+                  background: activeTab === 'map' || activeTab === 'replay' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
                   color: 'var(--text-main, #25251F)',
                   cursor: 'pointer',
                   fontSize: '14px',
-                  fontWeight: activeTab === 'map' ? 700 : 500,
+                  fontWeight: activeTab === 'map' || activeTab === 'replay' ? 700 : 500,
                   textAlign: 'left'
                 }}
               >
@@ -477,6 +483,31 @@ export const Navbar: FC<NavbarProps> = ({
                   <Info size={18} color="var(--accent-cyan, #77745B)" />
                   <span>Data & Limitations</span>
                 </div>
+                <ChevronRight size={16} color="var(--text-muted, #706D62)" />
+              </button>
+
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); onOpenAdminModal?.(); }}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px',
+                  borderRadius: '10px', border: 'none', background: 'transparent', color: 'var(--text-main, #25251F)',
+                  cursor: 'pointer', fontSize: '14px', fontWeight: 500, textAlign: 'left'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><Settings size={18} color="var(--accent-cyan, #77745B)" /><span>Admin &amp; Sandbox</span></div>
+                <ChevronRight size={16} color="var(--text-muted, #706D62)" />
+              </button>
+
+              <button
+                onClick={() => { setIsMobileMenuOpen(false); onOpenReplay?.(); }}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px',
+                  borderRadius: '10px', border: 'none', background: activeTab === 'replay' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
+                  color: 'var(--text-main, #25251F)', cursor: 'pointer', fontSize: '14px',
+                  fontWeight: activeTab === 'replay' ? 700 : 500, textAlign: 'left'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CalendarClock size={18} color="var(--accent-cyan, #77745B)" /><span>Historical Replay</span></div>
                 <ChevronRight size={16} color="var(--text-muted, #706D62)" />
               </button>
             </div>
