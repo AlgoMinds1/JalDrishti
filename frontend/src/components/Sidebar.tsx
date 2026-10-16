@@ -31,24 +31,25 @@ export const Sidebar: FC<SidebarProps> = ({
 }) => {
   return (
     <aside
-      className="desktop-only"
+      className="desktop-only app-sidebar"
       style={{
-        width: '240px',
-        minWidth: '240px',
+        width: '64px',
+        minWidth: '64px',
         height: '100%',
         background: 'var(--bg-card, #FFFCF6)',
         borderRight: '1px solid var(--border-color, #E4DACA)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        padding: '16px 14px',
+        padding: '16px 8px',
         zIndex: 950,
         boxShadow: '2px 0 12px rgba(37, 37, 31, 0.04)',
-        overflowY: 'auto'
+        overflow: 'hidden',
+        transition: 'width 0.22s ease, min-width 0.22s ease, padding 0.22s ease'
       }}
     >
       {/* Top Navigation Links */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', minWidth: '224px' }}>
         {/* Live Map */}
         <button
           onClick={() => setActiveTab('map')}
@@ -76,7 +77,7 @@ export const Sidebar: FC<SidebarProps> = ({
           >
             <Map size={19} />
           </div>
-          <div>
+          <div className="sidebar-label">
             <div style={{ fontSize: '13.5px', fontWeight: activeTab === 'map' ? 700 : 600 }}>
               Live Map
             </div>
@@ -108,7 +109,7 @@ export const Sidebar: FC<SidebarProps> = ({
           <div style={{ color: 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Megaphone size={19} />
           </div>
-          <div>
+          <div className="sidebar-label">
             <div style={{ fontSize: '13.5px', fontWeight: 600 }}>
               Report Flooding
             </div>
@@ -140,7 +141,7 @@ export const Sidebar: FC<SidebarProps> = ({
           <div style={{ color: 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Navigation size={19} />
           </div>
-          <div>
+          <div className="sidebar-label">
             <div style={{ fontSize: '13.5px', fontWeight: 600 }}>
               Plan Dry Route
             </div>
@@ -172,7 +173,7 @@ export const Sidebar: FC<SidebarProps> = ({
           <div style={{ color: showRainfall ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <CloudRain size={19} />
           </div>
-          <div>
+          <div className="sidebar-label">
             <div style={{ fontSize: '13.5px', fontWeight: 600 }}>
               Rainfall & Radar
             </div>
@@ -204,7 +205,7 @@ export const Sidebar: FC<SidebarProps> = ({
           <div style={{ color: 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Settings size={19} />
           </div>
-          <div>
+          <div className="sidebar-label">
             <div style={{ fontSize: '13.5px', fontWeight: 600 }}>
               Admin & Sandbox
             </div>
@@ -216,7 +217,7 @@ export const Sidebar: FC<SidebarProps> = ({
       </div>
 
       {/* Bottom Section: Rain Data Widget & Pune Brand Watermark */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: 'auto' }}>
+      <div className="sidebar-footer" style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginTop: 'auto', minWidth: '224px' }}>
         {/* Rain data IMD card */}
         <div
           style={{
