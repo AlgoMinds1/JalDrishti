@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FC } from 'react';
+import { useEffect, useMemo, useRef, useState, type FC } from 'react';
 import { MapContainer, TileLayer, GeoJSON, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import {
@@ -72,6 +72,42 @@ const BASEMAP_OPTIONS: BasemapOption[] = [
     maxZoom: 19
   }
 ];
+
+const GEOJSON_GEOMETRY_TYPES = new Set([
+  'Point', 'MultiPoint', 'LineString', 'MultiLineString', 'Polygon', 'MultiPolygon'
+]);
+
+function isCoordinateTree(value: unknown): boolean {
+  if (!Array.isArray(value) || value.length === 0) return false;
+  if (value.length >= 2 && typeof value[0] === 'number' && typeof value[1] === 'number') {
+    return Number.isFinite(value[0]) && Number.isFinite(value[1]);
+  }
+  return value.every(isCoordinateTree);
+}
+
+function isValidGeometry(geometry: any): boolean {
+  if (geometry === null) return true;
+  if (!geometry || typeof geometry !== 'object') return false;
+  if (geometry.type === 'GeometryCollection') {
+    return Array.isArray(geometry.geometries) && geometry.geometries.every(isValidGeometry);
+  }
+  return GEOJSON_GEOMETRY_TYPES.has(geometry.type) && isCoordinateTree(geometry.coordinates);
+}
+
+function validFeatureCollection(data: any): any | null {
+  if (!data || data.type !== 'FeatureCollection' || !Array.isArray(data.features)) return null;
+  const features = data.features.filter((feature: any) =>
+    feature?.type === 'Feature' && isValidGeometry(feature.geometry)
+  );
+  return features.length ? { ...data, features } : null;
+}
+
+function validFeature(data: any): any | null {
+  if (data?.type === 'Feature' && isValidGeometry(data.geometry)) return data;
+  // Leaflet also accepts a FeatureCollection, which lets the same validation
+  // safely handle a route if an API returns a collection instead of a Feature.
+  return validFeatureCollection(data);
+}
 
 // Helper to center and adjust map view
 const MapController: FC<{
@@ -374,6 +410,10 @@ export const MapComponent: FC<MapComponentProps> = ({
   const [selectedBasemap, setSelectedBasemap] = useState<BasemapKey>('osm');
   const [isLayerMenuOpen, setIsLayerMenuOpen] = useState<boolean>(false);
   const [baseRoads, setBaseRoads] = useState<any>(null);
+  const mapGeojson = useMemo(() => validFeatureCollection(geojsonData), [geojsonData]);
+  const mapBaseRoads = useMemo(() => validFeatureCollection(baseRoads), [baseRoads]);
+  const mapReports = useMemo(() => validFeatureCollection(reportsData), [reportsData]);
+  const mapRoute = useMemo(() => validFeature(routeGeojson), [routeGeojson]);
 
   // Load Pune foundational road network on mount so roads are always visible offline
   useEffect(() => {
@@ -495,10 +535,10 @@ export const MapComponent: FC<MapComponentProps> = ({
 
 
         {/* Foundational Offline Road Network (Ensures streets are ALWAYS rendered even with 0 internet) */}
-        {baseRoads && (
+        {mapBaseRoads && (
           <GeoJSON
             key="base_offline_road_grid"
-            data={baseRoads}
+            data={mapBaseRoads}
             style={(feat) => ({
               color: '#8b846f',
               weight: feat?.properties?.road_class === 'primary' ? 3.5 : 1.8,
@@ -510,11 +550,11 @@ export const MapComponent: FC<MapComponentProps> = ({
         )}
 
         {/* Road Inundation Prediction Polylines */}
-        {geojsonData && (
+        {mapGeojson && (
           <GeoJSON
-            key={JSON.stringify(geojsonData.name || 'geojson') + geojsonData.features?.length}
+            key={JSON.stringify(mapGeojson.name || 'geojson') + mapGeojson.features.length}
             ref={geojsonLayerRef}
-            data={geojsonData}
+            data={mapGeojson}
             style={styleFeature}
             onEachFeature={onEachFeature}
           />
@@ -556,10 +596,10 @@ export const MapComponent: FC<MapComponentProps> = ({
         <Marker position={[18.455, 73.858]} icon={localityLabelIcon('Katraj')} />
 
         {/* Planned Dry Navigation Route */}
-        {routeGeojson && (
+        {mapRoute && (
           <GeoJSON
-            key={"nav_route_" + JSON.stringify(routeGeojson.geometry?.coordinates?.length)}
-            data={routeGeojson}
+            key={"nav_route_" + JSON.stringify(mapRoute.geometry?.coordinates?.length)}
+            data={mapRoute}
             style={() => ({
               color: 'var(--accent-beige-dark, #4b4836)',
               weight: 7,
@@ -571,10 +611,10 @@ export const MapComponent: FC<MapComponentProps> = ({
         )}
 
         {/* Citizen Reports */}
-        {showReports && reportsData && (
+        {showReports && mapReports && (
           <GeoJSON
-            key={"citizen_reports_" + reportsData.features?.length}
-            data={reportsData}
+            key={"citizen_reports_" + mapReports.features.length}
+            data={mapReports}
             pointToLayer={(_feature, latlng) => {
               return L.circleMarker(latlng, {
                 radius: 7,
