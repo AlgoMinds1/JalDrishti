@@ -186,11 +186,14 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // C. GRACEFUL OFFLINE API ENDPOINTS (Zero 503 errors)
+  // C. API endpoints: allow normal server latency and surface offline failures.
   if (url.pathname.includes('/api/notifications')) {
     event.respondWith(
-      quickFetch(request, 1000).catch(() =>
-        new Response(JSON.stringify([]), { headers: { 'Content-Type': 'application/json' } })
+      quickFetch(request, 10000).catch(() =>
+        new Response(JSON.stringify({ detail: 'Notification service is unavailable. Check your connection and retry.' }), {
+          status: 503,
+          headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
+        })
       )
     );
     return;
@@ -198,8 +201,11 @@ self.addEventListener('fetch', (event) => {
 
   if (url.pathname.includes('/api/reports')) {
     event.respondWith(
-      quickFetch(request, 1000).catch(() =>
-        new Response(JSON.stringify({ type: 'FeatureCollection', features: [] }), { headers: { 'Content-Type': 'application/json' } })
+      quickFetch(request, 10000).catch(() =>
+        new Response(JSON.stringify({ detail: 'Report service is unavailable. Check your connection and retry.' }), {
+          status: 503,
+          headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-store' }
+        })
       )
     );
     return;

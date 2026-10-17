@@ -36,6 +36,7 @@ def send_broadcast_now(title, body, translations=None):
     db = _session_factory()()
     sent = failed = 0
     push_configured = bool(_private_key() and public_key())
+    push_error = None
     try:
         clean_translations = {
             lang: {key: value.strip() for key, value in content.items() if key in ("title", "body") and isinstance(value, str) and value.strip()}
@@ -45,7 +46,15 @@ def send_broadcast_now(title, body, translations=None):
         db.add(notice)
         db.commit()
         db.refresh(notice)
-        subscriptions = db.query(PushSubscription).all()
+        try:
+            subscriptions = db.query(PushSubscription).all()
+        except Exception:
+            # The in-app notice is already committed. A push-table issue must
+            # not turn a successfully saved notice into an apparent send failure.
+            db.rollback()
+            subscriptions = []
+            push_configured = False
+            push_error = "Push subscription storage is unavailable."
         if push_configured and subscriptions:
             try:
                 from pywebpush import WebPushException, webpush
@@ -73,6 +82,7 @@ def send_broadcast_now(title, body, translations=None):
         db.commit()
         return {"status": "sent", "notification_id": notice.id,
                 "sent_count": sent, "failed_count": failed,
-                "recipient_count": len(subscriptions), "push_configured": push_configured}
+                "recipient_count": len(subscriptions), "push_configured": push_configured,
+                "inbox_saved": True, "push_error": push_error}
     finally:
         db.close()

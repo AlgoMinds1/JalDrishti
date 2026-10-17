@@ -2,9 +2,10 @@ import { useCallback, useEffect, useRef, useState, type FC, type FormEvent } fro
 import axios from 'axios';
 import { Bell, FileText, Image, X } from 'lucide-react';
 import { enableBrowserPush } from '../services/push';
+import { getPendingReports } from '../utils/offlineStorage';
 
 interface Props { isOpen: boolean; onClose: () => void }
-interface CitizenReport { id: string; description: string; language: string; created_at: string | null; lat: number; lon: number; trust_score: number | null; state: string | null; has_photo: boolean }
+interface CitizenReport { id: string; description: string; language: string; created_at: string | null; lat: number; lon: number; trust_score: number | null; state: string | null; has_photo: boolean; pending_sync?: boolean; local_photo_url?: string }
 
 export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
   const [password, setPassword] = useState('');
@@ -31,14 +32,36 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
       const response = await axios.get<CitizenReport[]>('/api/notifications/admin/reports?limit=50', {
         headers: { 'X-Admin-Password': password },
       });
-      const newCount = response.data.filter(report => !knownReportIds.current.has(report.id)).length;
+      const serverReports = Array.isArray(response.data)
+        ? response.data
+        : Array.isArray((response.data as any)?.reports) ? (response.data as any).reports : [];
+      const pending = await getPendingReports();
+      const localReports: CitizenReport[] = pending.slice(0, 50).map(report => ({
+        id: report.id,
+        description: report.text,
+        language: report.language,
+        created_at: report.timestamp,
+        lat: report.lat,
+        lon: report.lon,
+        trust_score: null,
+        state: 'Pending Sync',
+        has_photo: Boolean(report.photoBase64),
+        pending_sync: true,
+        local_photo_url: report.photoBase64,
+      }));
+      const localIds = new Set(localReports.map(report => report.id));
+      const mergedReports = [
+        ...localReports,
+        ...serverReports.filter((report: CitizenReport) => !localIds.has(report.id)),
+      ].slice(0, 50);
+      const newCount = mergedReports.filter(report => !knownReportIds.current.has(report.id)).length;
       if (knownReportIds.current.size && newCount) setReportStatus(`${newCount} new citizen report${newCount === 1 ? '' : 's'} received.`);
-      const reportIds = response.data.map(report => report.id);
+      const reportIds = mergedReports.map(report => report.id);
       if (!knownReportIds.current.size && !sessionStorage.getItem('jaldrishti_admin_read_report_ids')) {
         sessionStorage.setItem('jaldrishti_admin_read_report_ids', JSON.stringify(reportIds));
       }
       knownReportIds.current = new Set(reportIds);
-      setReports(response.data);
+      setReports(mergedReports);
       return true;
     } catch (error: any) {
       setReportStatus(error?.response?.data?.detail || 'Could not load citizen reports.');
@@ -95,7 +118,8 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
     void fetchReports();
     try {
       const response = await axios.get('/api/notifications/subscriber-count');
-      setDeviceCount(response.data.opted_in_devices);
+      const count = Number(response.data?.opted_in_devices ?? response.data?.count);
+      setDeviceCount(Number.isFinite(count) && count >= 0 ? count : null);
     } catch {
       setStatus('Signed in. Subscriber count will appear when the updated API is running.');
     } finally { setBusy(false); }
@@ -106,7 +130,8 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
     try {
       await enableBrowserPush();
       const response = await axios.get('/api/notifications/subscriber-count');
-      setDeviceCount(response.data.opted_in_devices);
+      const count = Number(response.data?.opted_in_devices ?? response.data?.count);
+      setDeviceCount(Number.isFinite(count) && count >= 0 ? count : null);
       setStatus('This browser is subscribed and ready for the demo notification.');
     } catch (error: any) {
       setStatus(error?.response?.data?.detail || error?.message || 'Could not subscribe this browser.');
@@ -126,6 +151,8 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
       const delivery = response.data;
       setStatus(delivery.sent_count > 0
         ? `Added to the app inbox and sent immediately to ${delivery.sent_count} browser${delivery.sent_count === 1 ? '' : 's'}.`
+        : delivery.push_error
+          ? `Added to the app inbox. Push delivery is unavailable: ${delivery.push_error}`
         : !delivery.push_configured
           ? 'Added to the app inbox. Push delivery is not configured, but users can read it from the notification bell.'
           : delivery.recipient_count === 0
@@ -168,9 +195,9 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
                 {reports.length === 0 ? <p style={{ margin: 0, padding: 16, color: 'var(--text-muted)', fontSize: 13, textAlign: 'center' }}>No citizen reports received yet.</p> : <div style={{ display: 'grid', gap: 10, maxHeight: '52vh', overflowY: 'auto' }}>
                   {reports.map(report => <article key={report.id} style={{ padding: 12, border: '1px solid var(--border-color)', borderRadius: 9, background: 'var(--bg-card)' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'start' }}><strong style={{ fontSize: 13, lineHeight: 1.4 }}>{report.description || 'No description provided.'}</strong><span style={{ flexShrink: 0, borderRadius: 99, background: 'var(--bg-pill)', padding: '3px 7px', fontSize: 10, color: 'var(--text-muted)' }}>{report.language.toUpperCase()}</span></div>
-                    <div style={{ marginTop: 6, color: 'var(--text-muted)', fontSize: 11 }}>{report.created_at ? new Date(report.created_at).toLocaleString() : 'Time unavailable'} · {report.lat.toFixed(4)}, {report.lon.toFixed(4)} · Trust {Math.round(report.trust_score ?? 0)} · {report.state ?? 'Unverified'}</div>
+                    <div style={{ marginTop: 6, color: 'var(--text-muted)', fontSize: 11 }}>{report.created_at ? new Date(report.created_at).toLocaleString() : 'Time unavailable'} · {report.lat.toFixed(4)}, {report.lon.toFixed(4)} · {report.trust_score == null ? 'Trust pending' : `Trust ${Math.round(report.trust_score)}`} · {report.pending_sync ? 'Pending sync on this device' : report.state ?? 'Unverified'}</div>
                     {report.has_photo && <div style={{ marginTop: 9 }}>
-                      {photoUrls[report.id] ? <img src={photoUrls[report.id]} alt="Photo attached to citizen report" style={{ display: 'block', maxWidth: '100%', maxHeight: 250, borderRadius: 7, objectFit: 'contain' }} /> : <button type="button" disabled={loadingPhotoId === report.id} onClick={() => void loadReportPhoto(report.id)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: '1px solid var(--border-color)', borderRadius: 7, padding: '7px 9px', background: 'var(--bg-pill)', color: 'var(--text-main)', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}><Image size={14} />{loadingPhotoId === report.id ? 'Loading photo…' : 'View uploaded photo'}</button>}
+                      {report.local_photo_url ? <img src={report.local_photo_url} alt="Photo attached to queued citizen report" style={{ display: 'block', maxWidth: '100%', maxHeight: 250, borderRadius: 7, objectFit: 'contain' }} /> : photoUrls[report.id] ? <img src={photoUrls[report.id]} alt="Photo attached to citizen report" style={{ display: 'block', maxWidth: '100%', maxHeight: 250, borderRadius: 7, objectFit: 'contain' }} /> : <button type="button" disabled={loadingPhotoId === report.id} onClick={() => void loadReportPhoto(report.id)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: '1px solid var(--border-color)', borderRadius: 7, padding: '7px 9px', background: 'var(--bg-pill)', color: 'var(--text-main)', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}><Image size={14} />{loadingPhotoId === report.id ? 'Loading photo…' : 'View uploaded photo'}</button>}
                     </div>}
                   </article>)}
                 </div>}
