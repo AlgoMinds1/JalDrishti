@@ -1,7 +1,7 @@
-"""Persistent Web Push subscriptions and delayed broadcast delivery."""
+"""Persistent Web Push subscriptions and in-app notification delivery."""
 import json
 import os
-from data.models import PushSubscription
+from data.models import AppNotification, PushSubscription
 
 
 def _session_factory():
@@ -33,32 +33,41 @@ def save_subscription(payload):
 
 def send_broadcast_now(title, body):
     """Send a demo broadcast synchronously to every opted-in browser."""
-    if not _private_key() or not public_key():
-        raise RuntimeError("Browser push is not configured")
-    from pywebpush import WebPushException, webpush
-
     db = _session_factory()()
     sent = failed = 0
+    push_configured = bool(_private_key() and public_key())
     try:
-        subscriptions = db.query(PushSubscription).all()
-        for subscription in subscriptions:
-            try:
-                webpush(
-                    subscription_info=subscription.subscription_json,
-                    data=json.dumps({"title": title, "body": body}),
-                    vapid_private_key=_private_key(),
-                    vapid_claims={"sub": os.getenv("VAPID_SUBJECT", "mailto:admin@jaldrishti.local")},
-                )
-                sent += 1
-            except WebPushException as exc:
-                failed += 1
-                response = getattr(exc, "response", None)
-                if response is not None and response.status_code in (404, 410):
-                    db.delete(subscription)
-            except Exception:
-                failed += 1
+        notice = AppNotification(title=title, body=body)
+        db.add(notice)
         db.commit()
-        return {"status": "sent", "sent_count": sent, "failed_count": failed,
-                "recipient_count": len(subscriptions)}
+        db.refresh(notice)
+        subscriptions = db.query(PushSubscription).all()
+        if push_configured and subscriptions:
+            try:
+                from pywebpush import WebPushException, webpush
+            except ImportError:
+                push_configured = False
+                failed = len(subscriptions)
+            else:
+                for subscription in subscriptions:
+                    try:
+                        webpush(
+                            subscription_info=subscription.subscription_json,
+                            data=json.dumps({"title": title, "body": body}),
+                            vapid_private_key=_private_key(),
+                            vapid_claims={"sub": os.getenv("VAPID_SUBJECT", "mailto:admin@jaldrishti.local")},
+                        )
+                        sent += 1
+                    except WebPushException as exc:
+                        failed += 1
+                        response = getattr(exc, "response", None)
+                        if response is not None and response.status_code in (404, 410):
+                            db.delete(subscription)
+                    except Exception:
+                        failed += 1
+        db.commit()
+        return {"status": "sent", "notification_id": notice.id,
+                "sent_count": sent, "failed_count": failed,
+                "recipient_count": len(subscriptions), "push_configured": push_configured}
     finally:
         db.close()

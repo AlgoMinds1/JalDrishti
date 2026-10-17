@@ -1,7 +1,5 @@
 """Opt-in browser push and immediate admin broadcasts."""
-import os
-
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
 from api.services import push_notifications
@@ -35,6 +33,25 @@ def subscriber_count():
             "identity_note": "This prototype tracks opted-in browser devices, not named user accounts."}
 
 
+@router.get("/feed")
+def get_notification_feed(limit: int = Query(20, ge=1, le=50)):
+    try:
+        from data.db import SessionLocal
+        from data.models import AppNotification
+        db = SessionLocal()
+        try:
+            rows = (db.query(AppNotification)
+                    .order_by(AppNotification.created_at.desc(), AppNotification.id.desc())
+                    .limit(limit).all())
+            return [{"id": row.id, "title": row.title, "body": row.body,
+                     "created_at": row.created_at.isoformat() + "Z"}
+                    for row in rows]
+        finally:
+            db.close()
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail="Notification feed is unavailable") from exc
+
+
 @router.get("/public-key")
 def get_push_public_key():
     key = push_notifications.public_key()
@@ -56,8 +73,6 @@ def subscribe(payload: SubscriptionPayload):
 
 @router.post("/broadcasts/send-now")
 def send_broadcast_now(payload: ImmediateBroadcastPayload):
-    if not push_notifications.public_key() or not os.getenv("VAPID_PRIVATE_KEY"):
-        raise HTTPException(status_code=503, detail="Browser push is not configured")
     try:
         return push_notifications.send_broadcast_now(payload.title, payload.body)
     except Exception as exc:

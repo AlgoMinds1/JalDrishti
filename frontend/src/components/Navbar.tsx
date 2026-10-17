@@ -1,4 +1,5 @@
-import { useState, type FC } from 'react';
+import { useCallback, useEffect, useState, type FC } from 'react';
+import axios from 'axios';
 import {
   Map,
   BarChart3,
@@ -32,6 +33,8 @@ interface NavbarProps {
   setTheme?: (theme: 'light' | 'dark') => void;
 }
 
+interface AppNotice { id: number; title: string; body: string; created_at: string }
+
 export const Navbar: FC<NavbarProps> = ({
   activeTab,
   setActiveTab,
@@ -44,6 +47,40 @@ export const Navbar: FC<NavbarProps> = ({
   const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [pushStatus, setPushStatus] = useState('');
+  const [notifications, setNotifications] = useState<AppNotice[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [isInboxOpen, setIsInboxOpen] = useState(false);
+
+  const fetchNotifications = useCallback(async () => {
+    try {
+      const { data } = await axios.get('/api/notifications/feed?limit=30');
+      const rows = data as AppNotice[];
+      setNotifications(rows);
+      let readIds: number[] = [];
+      try { readIds = JSON.parse(localStorage.getItem('jaldrishti_read_notifications') || '[]'); } catch { /* reset malformed local state */ }
+      setUnreadCount(rows.filter(row => !readIds.includes(row.id)).length);
+      return rows;
+    } catch {
+      return [];
+    }
+  }, []);
+
+  useEffect(() => {
+    void fetchNotifications();
+    const interval = window.setInterval(() => { void fetchNotifications(); }, 10000);
+    return () => window.clearInterval(interval);
+  }, [fetchNotifications]);
+
+  const toggleInbox = async () => {
+    if (isInboxOpen) { setIsInboxOpen(false); return; }
+    setIsInboxOpen(true);
+    const latest = await fetchNotifications();
+    let readIds: number[] = [];
+    try { readIds = JSON.parse(localStorage.getItem('jaldrishti_read_notifications') || '[]'); } catch { /* reset malformed local state */ }
+    const updated = Array.from(new Set([...readIds, ...latest.map(row => row.id)])).slice(-100);
+    localStorage.setItem('jaldrishti_read_notifications', JSON.stringify(updated));
+    setUnreadCount(0);
+  };
 
   const enablePush = async () => {
     try {
@@ -275,12 +312,13 @@ export const Navbar: FC<NavbarProps> = ({
             </button>
           )}
 
-          <button onClick={onOpenAdminNotifications} title="Admin notification center" aria-label="Admin notification center" style={{
+          <button onClick={toggleInbox} title="Notifications" aria-label={`Notifications${unreadCount ? `, ${unreadCount} unread` : ''}`} style={{
             height: '32px', padding: '0 9px', borderRadius: '8px',
             border: '1px solid var(--border-color, #E4DACA)',
             background: 'var(--bg-widget, #FFFCF6)', color: 'var(--text-main, #25251F)',
-            display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '12px'
-          }}><Bell size={14} /> Notifications</button>
+            display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '12px', position: 'relative'
+          }}><Bell size={14} /> Notifications{unreadCount > 0 && <span aria-label="Unread notifications" style={{ position: 'absolute', top: -3, right: -3, width: 9, height: 9, borderRadius: '50%', background: '#dc2626', border: '2px solid var(--bg-card, #FFFCF6)' }} />}</button>
+          <button onClick={onOpenAdminNotifications} title="Admin notification center" aria-label="Admin notification center" style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid var(--border-color, #E4DACA)', background: 'var(--bg-widget, #FFFCF6)', color: 'var(--text-main, #25251F)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><ShieldCheck size={15} /></button>
           <button onClick={enablePush} title="Enable browser notifications" style={{
             border: 'none', background: 'transparent', color: 'var(--text-muted, #706D62)',
             cursor: 'pointer', fontSize: '11px', padding: '4px'
@@ -308,11 +346,12 @@ export const Navbar: FC<NavbarProps> = ({
 
         {/* Mobile Right Action: Compact Menu Button */}
         <div className="mobile-only" style={{ alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
-          <button onClick={onOpenAdminNotifications} aria-label="Admin notification center" title="Admin notification center" style={{
+          <button onClick={toggleInbox} aria-label={`Notifications${unreadCount ? `, ${unreadCount} unread` : ''}`} title="Notifications" style={{
             width: '34px', height: '34px', borderRadius: '8px',
             border: '1px solid var(--border-color, #E4DACA)', background: 'var(--bg-card, #FFFCF6)',
-            color: 'var(--text-main, #25251F)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
-          }}><Bell size={16} /></button>
+            color: 'var(--text-main, #25251F)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', position: 'relative'
+          }}><Bell size={16} />{unreadCount > 0 && <span aria-label="Unread notifications" style={{ position: 'absolute', top: 3, right: 3, width: 8, height: 8, borderRadius: '50%', background: '#dc2626', border: '1px solid var(--bg-card, #FFFCF6)' }} />}</button>
+          <button onClick={onOpenAdminNotifications} aria-label="Admin notification center" title="Admin notification center" style={{ width: 34, height: 34, borderRadius: 8, border: '1px solid var(--border-color, #E4DACA)', background: 'var(--bg-card, #FFFCF6)', color: 'var(--text-main, #25251F)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><ShieldCheck size={16} /></button>
           <button
             onClick={enablePush}
             aria-label="Enable browser notifications"
@@ -366,6 +405,10 @@ export const Navbar: FC<NavbarProps> = ({
         </div>
       </nav>
       {pushStatus && <div role="status" style={{ padding: '5px 16px', fontSize: '12px', color: 'var(--text-muted)' }}>{pushStatus}</div>}
+      {isInboxOpen && <section role="dialog" aria-label="Notifications" style={{ position: 'fixed', top: 'calc(var(--sat, 0px) + 72px)', right: 12, zIndex: 2600, width: 'min(380px, calc(100vw - 24px))', maxHeight: 'min(70vh, 520px)', overflowY: 'auto', background: 'var(--bg-card, #FFFCF6)', color: 'var(--text-main)', border: '1px solid var(--border-color)', borderRadius: 12, boxShadow: '0 12px 32px rgba(0,0,0,.22)' }}>
+        <div style={{ padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)' }}><strong>Notifications</strong><button onClick={() => setIsInboxOpen(false)} aria-label="Close notifications" style={{ border: 0, background: 'transparent', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={17} /></button></div>
+        {notifications.length === 0 ? <p style={{ padding: 16, margin: 0, color: 'var(--text-muted)', fontSize: 13 }}>No notifications yet.</p> : notifications.map(item => <article key={item.id} style={{ padding: '12px 14px', borderBottom: '1px solid var(--border-color)' }}><div style={{ fontWeight: 700, fontSize: 13 }}>{item.title}</div><div style={{ marginTop: 4, fontSize: 12, lineHeight: 1.45 }}>{item.body}</div><time style={{ display: 'block', marginTop: 6, color: 'var(--text-muted)', fontSize: 10 }}>{new Date(item.created_at).toLocaleString()}</time></article>)}
+      </section>}
 
       {/* Slide-out Mobile Navigation Drawer */}
       {isMobileMenuOpen && (

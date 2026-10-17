@@ -46,9 +46,14 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
       const response = await axios.post('/api/notifications/broadcasts/send-now', {
         title, body: message
       });
-      setStatus(response.data.sent_count > 0
-        ? `Sent immediately to ${response.data.sent_count} browser${response.data.sent_count === 1 ? '' : 's'}.`
-        : 'Sent request immediately, but there are no opted-in browsers yet. Enable this browser above first.');
+      const delivery = response.data;
+      setStatus(delivery.sent_count > 0
+        ? `Added to the app inbox and sent immediately to ${delivery.sent_count} browser${delivery.sent_count === 1 ? '' : 's'}.`
+        : !delivery.push_configured
+          ? 'Added to the app inbox. Push delivery is not configured, but users can read it from the notification bell.'
+          : delivery.recipient_count === 0
+            ? 'Added to the app inbox immediately. No devices currently have push enabled; users can still read it from the notification bell.'
+            : `Added to the app inbox. Push delivery failed for ${delivery.failed_count} device${delivery.failed_count === 1 ? '' : 's'}.`);
       setMessage('');
     } catch (error: any) {
       setStatus(error?.response?.data?.detail || 'Could not schedule the notification.');
