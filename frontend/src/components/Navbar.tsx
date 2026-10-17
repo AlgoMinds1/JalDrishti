@@ -51,6 +51,8 @@ export const Navbar: FC<NavbarProps> = ({
   const [unreadCount, setUnreadCount] = useState(0);
   const [isInboxOpen, setIsInboxOpen] = useState(false);
   const [speakingId, setSpeakingId] = useState<number | null>(null);
+  const [adminUnreadCount, setAdminUnreadCount] = useState(0);
+  const [adminReportIds, setAdminReportIds] = useState<string[]>([]);
 
   const fetchNotifications = useCallback(async () => {
     try {
@@ -73,6 +75,28 @@ export const Navbar: FC<NavbarProps> = ({
   }, [fetchNotifications]);
 
   useEffect(() => () => window.speechSynthesis?.cancel(), []);
+
+  useEffect(() => {
+    const refreshAdminReports = async () => {
+      const password = sessionStorage.getItem('jaldrishti_admin_password');
+      if (!password) return;
+      try {
+        const { data } = await axios.get<{ id: string }[]>('/api/notifications/admin/reports?limit=50', {
+          headers: { 'X-Admin-Password': password },
+        });
+        const rows = data.map(item => item.id);
+        setAdminReportIds(rows);
+        let readIds: string[] = [];
+        try { readIds = JSON.parse(sessionStorage.getItem('jaldrishti_admin_read_report_ids') || '[]'); } catch { /* ignore malformed session state */ }
+        setAdminUnreadCount(rows.filter(id => !readIds.includes(id)).length);
+      } catch {
+        // The report indicator stays quiet when admin access or the API is unavailable.
+      }
+    };
+    void refreshAdminReports();
+    const interval = window.setInterval(() => { void refreshAdminReports(); }, 15000);
+    return () => window.clearInterval(interval);
+  }, []);
 
   const toggleInbox = async () => {
     if (isInboxOpen) { setIsInboxOpen(false); return; }
@@ -118,6 +142,15 @@ export const Navbar: FC<NavbarProps> = ({
   const handleNavigate = (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay') => {
     setActiveTab(tab);
     setIsMobileMenuOpen(false);
+  };
+
+  const openAdminNotifications = () => {
+    if (adminReportIds.length) {
+      sessionStorage.setItem('jaldrishti_admin_read_report_ids', JSON.stringify(adminReportIds.slice(-100)));
+      setAdminUnreadCount(0);
+    }
+    setIsMobileMenuOpen(false);
+    onOpenAdminNotifications?.();
   };
 
   return (
@@ -306,7 +339,7 @@ export const Navbar: FC<NavbarProps> = ({
             background: 'var(--bg-widget, #FFFCF6)', color: 'var(--text-main, #25251F)',
             display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '12px', position: 'relative'
           }}><Bell size={14} /> {t('notifications')}{unreadCount > 0 && <span aria-label="Unread notifications" style={{ position: 'absolute', top: -3, right: -3, width: 9, height: 9, borderRadius: '50%', background: '#dc2626', border: '2px solid var(--bg-card, #FFFCF6)' }} />}</button>
-          <button onClick={onOpenAdminNotifications} title={t('adminNotifications')} aria-label={t('adminNotifications')} style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid var(--border-color, #E4DACA)', background: 'var(--bg-widget, #FFFCF6)', color: 'var(--text-main, #25251F)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><ShieldCheck size={15} /></button>
+          <button onClick={openAdminNotifications} title={t('adminNotifications')} aria-label={t('adminNotifications')} style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid var(--border-color, #E4DACA)', background: 'var(--bg-widget, #FFFCF6)', color: 'var(--text-main, #25251F)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', position: 'relative' }}><ShieldCheck size={15} />{adminUnreadCount > 0 && <span aria-label={`${adminUnreadCount} new citizen reports`} style={{ position: 'absolute', top: -3, right: -3, width: 9, height: 9, borderRadius: '50%', background: '#dc2626', border: '2px solid var(--bg-card, #FFFCF6)' }} />}</button>
           <button onClick={enablePush} title="Enable browser notifications" style={{
             border: 'none', background: 'transparent', color: 'var(--text-muted, #706D62)',
             cursor: 'pointer', fontSize: '11px', padding: '4px'
@@ -535,6 +568,14 @@ export const Navbar: FC<NavbarProps> = ({
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><Settings size={18} color="var(--accent-cyan, #77745B)" /><span>{t('settings')}</span></div>
+                <ChevronRight size={16} color="var(--text-muted, #706D62)" />
+              </button>
+
+              <button
+                onClick={openAdminNotifications}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px', borderRadius: '10px', border: 'none', background: 'transparent', color: 'var(--text-main, #25251F)', cursor: 'pointer', fontSize: '14px', fontWeight: 500, textAlign: 'left' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><Bell size={18} color="var(--accent-cyan, #77745B)" /><span>{t('adminNotifications')}</span>{adminUnreadCount > 0 && <span aria-label={`${adminUnreadCount} new citizen reports`} style={{ width: 8, height: 8, borderRadius: '50%', background: '#dc2626' }} />}</div>
                 <ChevronRight size={16} color="var(--text-muted, #706D62)" />
               </button>
 

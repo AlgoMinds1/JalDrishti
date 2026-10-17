@@ -1,11 +1,19 @@
 """Opt-in browser push and immediate admin broadcasts."""
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Header, HTTPException, Query, Response
 from pydantic import BaseModel, Field
 from typing import Optional
+from datetime import timezone
+import hmac
 
 from api.services import push_notifications
 
 router = APIRouter(prefix="/notifications", tags=["Notifications"])
+DEMO_ADMIN_PASSWORD = "123456"
+
+
+def _require_admin(password: str | None):
+    if not password or not hmac.compare_digest(password, DEMO_ADMIN_PASSWORD):
+        raise HTTPException(status_code=401, detail="Admin sign-in required")
 
 
 class SubscriptionPayload(BaseModel):
@@ -53,6 +61,65 @@ def get_notification_feed(limit: int = Query(20, ge=1, le=50)):
             db.close()
     except Exception as exc:
         raise HTTPException(status_code=503, detail="Notification feed is unavailable") from exc
+
+
+@router.get("/admin/reports", summary="Private report inbox for the admin device")
+def get_admin_report_feed(
+    limit: int = Query(30, ge=1, le=100),
+    x_admin_password: Optional[str] = Header(None),
+):
+    _require_admin(x_admin_password)
+    try:
+        from data.db import SessionLocal
+        from data.models import Report, ReportMedia
+        db = SessionLocal()
+        try:
+            rows = (db.query(Report)
+                    .order_by(Report.time_server.desc(), Report.id.desc())
+                    .limit(limit).all())
+            media_ids = {row.report_id for row in db.query(ReportMedia.report_id).filter(
+                ReportMedia.report_id.in_([item.id for item in rows])
+            ).all()} if rows else set()
+            return [{
+                "id": row.id,
+                "description": row.text_original or "",
+                "language": row.language or "en",
+                "created_at": (row.time_server.replace(tzinfo=timezone.utc).isoformat()
+                               if row.time_server and row.time_server.tzinfo is None
+                               else row.time_server.isoformat() if row.time_server else None),
+                "lat": row.lat,
+                "lon": row.lon,
+                "trust_score": row.trust_score,
+                "state": row.state,
+                "has_photo": row.id in media_ids,
+            } for row in rows]
+        finally:
+            db.close()
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail="Admin report inbox is unavailable") from exc
+
+
+@router.get("/admin/reports/{report_id}/photo", summary="Private citizen report photo for the admin")
+def get_admin_report_photo(report_id: str, x_admin_password: Optional[str] = Header(None)):
+    _require_admin(x_admin_password)
+    try:
+        from data.db import SessionLocal
+        from data.models import ReportMedia
+        db = SessionLocal()
+        try:
+            media = db.query(ReportMedia).filter(ReportMedia.report_id == report_id).first()
+            if not media:
+                raise HTTPException(status_code=404, detail="Photo not found")
+            return Response(content=media.image_data, media_type=media.content_type,
+                            headers={"Cache-Control": "private, no-store", "X-Content-Type-Options": "nosniff"})
+        finally:
+            db.close()
+    except HTTPException:
+        raise
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail="Report photo is unavailable") from exc
 
 
 @router.get("/public-key")

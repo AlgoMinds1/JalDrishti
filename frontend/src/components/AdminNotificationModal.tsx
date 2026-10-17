@@ -1,12 +1,13 @@
-import { useState, type FC, type FormEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type FC, type FormEvent } from 'react';
 import axios from 'axios';
-import { Bell, X } from 'lucide-react';
+import { Bell, FileText, Image, X } from 'lucide-react';
 import { enableBrowserPush } from '../services/push';
 
 interface Props { isOpen: boolean; onClose: () => void }
+interface CitizenReport { id: string; description: string; language: string; created_at: string | null; lat: number; lon: number; trust_score: number | null; state: string | null; has_photo: boolean }
 
 export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
-  const [password, setPassword] = useState('123456');
+  const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [deviceCount, setDeviceCount] = useState<number | null>(null);
   const [title, setTitle] = useState('JalDrishti update');
@@ -17,6 +18,59 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
   const [marathiMessage, setMarathiMessage] = useState('');
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
+  const [activePanel, setActivePanel] = useState<'compose' | 'reports'>('reports');
+  const [reports, setReports] = useState<CitizenReport[]>([]);
+  const [reportStatus, setReportStatus] = useState('');
+  const [photoUrls, setPhotoUrls] = useState<Record<string, string>>({});
+  const [loadingPhotoId, setLoadingPhotoId] = useState<string | null>(null);
+  const photoUrlsToRevoke = useRef<Set<string>>(new Set());
+  const knownReportIds = useRef<Set<string>>(new Set());
+
+  const fetchReports = useCallback(async () => {
+    try {
+      const response = await axios.get<CitizenReport[]>('/api/notifications/admin/reports?limit=50', {
+        headers: { 'X-Admin-Password': password },
+      });
+      const newCount = response.data.filter(report => !knownReportIds.current.has(report.id)).length;
+      if (knownReportIds.current.size && newCount) setReportStatus(`${newCount} new citizen report${newCount === 1 ? '' : 's'} received.`);
+      const reportIds = response.data.map(report => report.id);
+      if (!knownReportIds.current.size && !sessionStorage.getItem('jaldrishti_admin_read_report_ids')) {
+        sessionStorage.setItem('jaldrishti_admin_read_report_ids', JSON.stringify(reportIds));
+      }
+      knownReportIds.current = new Set(reportIds);
+      setReports(response.data);
+      return true;
+    } catch (error: any) {
+      setReportStatus(error?.response?.data?.detail || 'Could not load citizen reports.');
+      return false;
+    }
+  }, [password]);
+
+  useEffect(() => {
+    if (!isOpen || !isAuthenticated) return;
+    void fetchReports();
+    const interval = window.setInterval(() => { void fetchReports(); }, 15000);
+    return () => window.clearInterval(interval);
+  }, [isOpen, isAuthenticated, fetchReports]);
+
+  useEffect(() => () => {
+    photoUrlsToRevoke.current.forEach(url => URL.revokeObjectURL(url));
+  }, []);
+
+  const loadReportPhoto = async (reportId: string) => {
+    if (photoUrls[reportId]) return;
+    setLoadingPhotoId(reportId);
+    try {
+      const response = await axios.get(`/api/notifications/admin/reports/${encodeURIComponent(reportId)}/photo`, {
+        responseType: 'blob', headers: { 'X-Admin-Password': password },
+      });
+      const url = URL.createObjectURL(response.data);
+      photoUrlsToRevoke.current.add(url);
+      setPhotoUrls(current => ({ ...current, [reportId]: url }));
+    } catch (error: any) {
+      setReportStatus(error?.response?.data?.detail || 'Could not load this report photo.');
+    } finally { setLoadingPhotoId(null); }
+  };
 
   if (!isOpen) return null;
 
@@ -24,6 +78,10 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
     e.preventDefault(); setStatus(''); setBusy(true);
     if (password !== '123456') { setStatus('Incorrect admin password.'); setBusy(false); return; }
     setIsAuthenticated(true);
+    sessionStorage.setItem('jaldrishti_admin_password', password);
+    setReportStatus('');
+    setActivePanel('reports');
+    void fetchReports();
     try {
       const response = await axios.get('/api/notifications/subscriber-count');
       setDeviceCount(response.data.opted_in_devices);
@@ -87,6 +145,26 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
               <button disabled={busy} style={{ border: 0, borderRadius: 7, padding: 11, color: '#fff', background: 'var(--accent-beige-gradient)', fontWeight: 700, cursor: 'pointer' }}>{busy ? 'Signing in…' : 'Sign in'}</button>
             </form>
           ) : (
+            <>
+            <nav aria-label="Admin notification sections" style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
+              <button type="button" onClick={() => setActivePanel('reports')} style={{ flex: 1, border: '1px solid var(--border-color)', borderRadius: 8, padding: 9, background: activePanel === 'reports' ? 'var(--accent-beige-gradient)' : 'var(--bg-pill)', color: activePanel === 'reports' ? '#fff' : 'var(--text-main)', fontWeight: 700, cursor: 'pointer' }}><FileText size={14} style={{ verticalAlign: 'middle', marginRight: 5 }} />Citizen reports{reports.length > 0 ? ` (${reports.length})` : ''}</button>
+              <button type="button" onClick={() => setActivePanel('compose')} style={{ flex: 1, border: '1px solid var(--border-color)', borderRadius: 8, padding: 9, background: activePanel === 'compose' ? 'var(--accent-beige-gradient)' : 'var(--bg-pill)', color: activePanel === 'compose' ? '#fff' : 'var(--text-main)', fontWeight: 700, cursor: 'pointer' }}><Bell size={14} style={{ verticalAlign: 'middle', marginRight: 5 }} />Compose notice</button>
+            </nav>
+            {activePanel === 'reports' ? (
+              <div>
+                <div style={{ padding: 10, borderRadius: 8, background: 'var(--bg-primary, #F5F0E7)', color: 'var(--text-muted)', fontSize: 12, marginBottom: 10 }}>Private admin inbox. Incoming reports refresh automatically every 15 seconds.</div>
+                {reportStatus && <p role="status" style={{ margin: '0 0 10px', color: 'var(--text-muted)', fontSize: 12 }}>{reportStatus}</p>}
+                {reports.length === 0 ? <p style={{ margin: 0, padding: 16, color: 'var(--text-muted)', fontSize: 13, textAlign: 'center' }}>No citizen reports received yet.</p> : <div style={{ display: 'grid', gap: 10, maxHeight: '52vh', overflowY: 'auto' }}>
+                  {reports.map(report => <article key={report.id} style={{ padding: 12, border: '1px solid var(--border-color)', borderRadius: 9, background: 'var(--bg-card)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'start' }}><strong style={{ fontSize: 13, lineHeight: 1.4 }}>{report.description || 'No description provided.'}</strong><span style={{ flexShrink: 0, borderRadius: 99, background: 'var(--bg-pill)', padding: '3px 7px', fontSize: 10, color: 'var(--text-muted)' }}>{report.language.toUpperCase()}</span></div>
+                    <div style={{ marginTop: 6, color: 'var(--text-muted)', fontSize: 11 }}>{report.created_at ? new Date(report.created_at).toLocaleString() : 'Time unavailable'} · {report.lat.toFixed(4)}, {report.lon.toFixed(4)} · Trust {Math.round(report.trust_score ?? 0)} · {report.state ?? 'Unverified'}</div>
+                    {report.has_photo && <div style={{ marginTop: 9 }}>
+                      {photoUrls[report.id] ? <img src={photoUrls[report.id]} alt="Photo attached to citizen report" style={{ display: 'block', maxWidth: '100%', maxHeight: 250, borderRadius: 7, objectFit: 'contain' }} /> : <button type="button" disabled={loadingPhotoId === report.id} onClick={() => void loadReportPhoto(report.id)} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, border: '1px solid var(--border-color)', borderRadius: 7, padding: '7px 9px', background: 'var(--bg-pill)', color: 'var(--text-main)', fontSize: 11, fontWeight: 600, cursor: 'pointer' }}><Image size={14} />{loadingPhotoId === report.id ? 'Loading photo…' : 'View uploaded photo'}</button>}
+                    </div>}
+                  </article>)}
+                </div>}
+              </div>
+            ) : (
             <form onSubmit={sendNow} style={{ display: 'grid', gap: 12 }}>
               <div style={{ padding: 10, borderRadius: 8, background: 'var(--bg-primary, #F5F0E7)', color: 'var(--text-main)', fontSize: 13 }}>
                 <strong>{deviceCount === null ? 'Subscriber count unavailable' : `${deviceCount} opted-in browser${deviceCount === 1 ? '' : 's'}`}</strong>
@@ -107,6 +185,8 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
               </details>
               <button disabled={busy || !message.trim()} style={{ border: 0, borderRadius: 7, padding: 11, color: '#fff', background: 'var(--accent-beige-gradient)', fontWeight: 700, cursor: 'pointer' }}>{busy ? 'Sending…' : 'Send notification now'}</button>
             </form>
+            )}
+            </>
           )}
           {status && <p role="status" style={{ margin: '12px 0 0', color: 'var(--text-main)', fontSize: 12 }}>{status}</p>}
         </div>
