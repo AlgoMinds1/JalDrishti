@@ -6,8 +6,10 @@ import {
   CloudRain,
   Settings,
   BarChart3,
-  CalendarClock
+  CalendarClock,
+  ShieldCheck
 } from 'lucide-react';
+import { useAppLanguage } from '../language';
 
 interface SidebarProps {
   activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay';
@@ -15,6 +17,7 @@ interface SidebarProps {
   onOpenReportModal: () => void;
   onToggleRoutePlanner: () => void;
   onOpenAdminModal: () => void;
+  onOpenSettings: () => void;
   onOpenReplay: () => void;
   onToggleRainfall: () => void;
   showRainfall: boolean;
@@ -27,6 +30,7 @@ export const Sidebar: FC<SidebarProps> = ({
   onOpenReportModal,
   onToggleRoutePlanner,
   onOpenAdminModal,
+  onOpenSettings,
   onOpenReplay,
   onToggleRainfall,
   rainAgeMin = 0
@@ -41,6 +45,7 @@ export const Sidebar: FC<SidebarProps> = ({
   }, [activeTab]);
 
   const isMapSelected = selectedItem === 'map';
+  const { t } = useAppLanguage();
 
   return (
     <aside
@@ -207,7 +212,7 @@ export const Sidebar: FC<SidebarProps> = ({
           }}
         >
           <div style={{ color: selectedItem === 'admin' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Settings size={19} />
+            <ShieldCheck size={19} />
           </div>
           <div>
             <div style={{ fontSize: '13.5px', fontWeight: selectedItem === 'admin' ? 700 : 600 }}>
@@ -216,6 +221,24 @@ export const Sidebar: FC<SidebarProps> = ({
             <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>
               Model tools & inspection
             </div>
+          </div>
+        </button>
+
+        {/* User Settings */}
+        <button
+          onClick={() => { setSelectedItem('settings'); onOpenSettings(); }}
+          style={{
+            display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', borderRadius: '12px',
+            border: selectedItem === 'settings' ? '1px solid var(--accent-cyan, #77745B)' : '1px solid transparent',
+            background: selectedItem === 'settings' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
+            color: selectedItem === 'settings' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-main, #25251F)',
+            cursor: 'pointer', textAlign: 'left', transition: 'all 0.15s ease'
+          }}
+        >
+          <div style={{ color: selectedItem === 'settings' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Settings size={19} /></div>
+          <div>
+            <div style={{ fontSize: '13.5px', fontWeight: selectedItem === 'settings' ? 700 : 600 }}>{t('settings')}</div>
+            <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>{t('settingsDescription')}</div>
           </div>
         </button>
 

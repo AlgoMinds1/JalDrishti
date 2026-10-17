@@ -17,7 +17,7 @@ const messages: Record<AppLanguage, Record<string, string>> = {
     rainfall: 'Live Rainfall', risk: 'Waterlogging Risk', riskLevels: 'Waterlogging Risk Levels', riskLegend: 'Risk legend',
     severe: 'Severe', high: 'High', moderate: 'Moderate', low: 'Low', noRisk: 'No significant risk',
     severeDesc: 'Likely road inundation >15cm', highDesc: 'Significant water accumulation risk', moderateDesc: 'Partial waterlogging / slow traffic', lowDesc: 'Passable, minimal predicted pooling', dryDesc: 'Dry / normal road conditions',
-    events: 'Events', details: 'Details', hide: 'Hide', forecast: 'Forecast Overview', highRiskCorridor: 'High Risk Corridor', localizedWaterlogging: 'Localized Waterlogging', minimalInundation: 'Minimal Inundation', severeHigh: 'Severe / High', moderateRisk: 'Moderate Risk', radarAge: 'IMD Radar Age', segments: 'segments', ago: 'ago', settings: 'Settings', appearance: 'Appearance', close: 'Close',
+    events: 'Events', details: 'Details', hide: 'Hide', forecast: 'Forecast Overview', highRiskCorridor: 'High Risk Corridor', localizedWaterlogging: 'Localized Waterlogging', minimalInundation: 'Minimal Inundation', severeHigh: 'Severe / High', moderateRisk: 'Moderate Risk', radarAge: 'IMD Radar Age', segments: 'segments', ago: 'ago', settings: 'Settings', settingsDescription: 'Language and appearance', appearance: 'Appearance', close: 'Close',
   },
   hi: {
     safety: 'यह निर्णय-सहायता प्रोटोटाइप है, आधिकारिक आपातकालीन सेवा नहीं। आपात स्थिति में आधिकारिक आपातकालीन सेवाओं से संपर्क करें।', dismiss: 'सुरक्षा सूचना हटाएँ',
@@ -31,7 +31,7 @@ const messages: Record<AppLanguage, Record<string, string>> = {
     rainfall: 'वर्तमान बारिश', risk: 'जलभराव का जोखिम', riskLevels: 'जलभराव के जोखिम के स्तर', riskLegend: 'जोखिम संकेत',
     severe: 'अत्यधिक', high: 'उच्च', moderate: 'मध्यम', low: 'कम', noRisk: 'कोई खास जोखिम नहीं',
     severeDesc: 'सड़क पर 15 सेमी से अधिक पानी भरने की आशंका', highDesc: 'पानी जमा होने का अधिक जोखिम', moderateDesc: 'आंशिक जलभराव / धीमा यातायात', lowDesc: 'रास्ता चलने योग्य, कम पानी जमा होने की आशंका', dryDesc: 'सूखी / सामान्य सड़क स्थिति',
-    events: 'घटनाएँ', details: 'विवरण', hide: 'छिपाएँ', forecast: 'पूर्वानुमान सारांश', highRiskCorridor: 'उच्च जोखिम गलियारा', localizedWaterlogging: 'स्थानीय जलभराव', minimalInundation: 'न्यूनतम जलभराव', severeHigh: 'अत्यधिक / उच्च', moderateRisk: 'मध्यम जोखिम', radarAge: 'IMD रडार की आयु', segments: 'खंड', ago: 'पहले', settings: 'सेटिंग्स', appearance: 'रूप', close: 'बंद करें',
+    events: 'घटनाएँ', details: 'विवरण', hide: 'छिपाएँ', forecast: 'पूर्वानुमान सारांश', highRiskCorridor: 'उच्च जोखिम गलियारा', localizedWaterlogging: 'स्थानीय जलभराव', minimalInundation: 'न्यूनतम जलभराव', severeHigh: 'अत्यधिक / उच्च', moderateRisk: 'मध्यम जोखिम', radarAge: 'IMD रडार की आयु', segments: 'खंड', ago: 'पहले', settings: 'सेटिंग्स', settingsDescription: 'भाषा और रूप', appearance: 'रूप', close: 'बंद करें',
   },
   mr: {
     safety: 'हे निर्णय-सहाय्य प्रोटोटाइप आहे, अधिकृत आपत्कालीन सेवा नाही. आपत्कालीन परिस्थितीत अधिकृत सेवांशी संपर्क साधा.', dismiss: 'सुरक्षा सूचना बंद करा',
@@ -45,7 +45,7 @@ const messages: Record<AppLanguage, Record<string, string>> = {
     rainfall: 'सध्याचा पाऊस', risk: 'पाणी साचण्याचा धोका', riskLevels: 'पाणी साचण्याच्या धोक्याचे स्तर', riskLegend: 'धोका दर्शक',
     severe: 'तीव्र', high: 'उच्च', moderate: 'मध्यम', low: 'कमी', noRisk: 'लक्षणीय धोका नाही',
     severeDesc: 'रस्त्यावर १५ सेमीपेक्षा जास्त पाणी साचण्याची शक्यता', highDesc: 'पाणी साचण्याचा मोठा धोका', moderateDesc: 'अंशतः पाणी साचणे / मंद वाहतूक', lowDesc: 'रस्ता वापरण्यायोग्य, कमी पाणी साचण्याची शक्यता', dryDesc: 'कोरडी / सामान्य रस्त्याची स्थिती',
-    events: 'घटना', details: 'तपशील', hide: 'लपवा', forecast: 'अंदाजाचा आढावा', highRiskCorridor: 'उच्च धोका क्षेत्र', localizedWaterlogging: 'स्थानिक पाणी साचणे', minimalInundation: 'किमान पाणी साचणे', severeHigh: 'तीव्र / उच्च', moderateRisk: 'मध्यम धोका', radarAge: 'IMD रडारचे वय', segments: 'भाग', ago: 'पूर्वी', settings: 'सेटिंग्ज', appearance: 'दिसणे', close: 'बंद करा',
+    events: 'घटना', details: 'तपशील', hide: 'लपवा', forecast: 'अंदाजाचा आढावा', highRiskCorridor: 'उच्च धोका क्षेत्र', localizedWaterlogging: 'स्थानिक पाणी साचणे', minimalInundation: 'किमान पाणी साचणे', severeHigh: 'तीव्र / उच्च', moderateRisk: 'मध्यम धोका', radarAge: 'IMD रडारचे वय', segments: 'भाग', ago: 'पूर्वी', settings: 'सेटिंग्ज', settingsDescription: 'भाषा आणि दिसणे', appearance: 'दिसणे', close: 'बंद करा',
   },
 };
 

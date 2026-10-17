@@ -377,6 +377,7 @@ export function App() {
           onOpenReportModal={() => setIsReportModalOpen(true)}
           onToggleRoutePlanner={() => setIsRoutePlannerOpen(true)}
           onOpenAdminModal={() => setIsAdminModalOpen(true)}
+          onOpenSettings={() => setIsUserSettingsOpen(true)}
           onOpenReplay={openEventReplay}
           onToggleRainfall={() => setShowRainfall(!showRainfall)}
           showRainfall={showRainfall}
