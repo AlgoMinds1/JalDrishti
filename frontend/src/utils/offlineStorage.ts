@@ -11,6 +11,7 @@ export interface OfflineReport {
   lon: number;
   text: string;
   language: string;
+  reporter_id?: string;
   timestamp: string;
   photoBase64?: string;
   synced: boolean;
@@ -131,14 +132,30 @@ export async function syncPendingReports(apiBaseUrl: string = ''): Promise<{ syn
         lon: report.lon,
         text: report.text,
         language: report.language,
+        reporter_id: report.reporter_id || 'offline_citizen',
         timestamp: report.timestamp,
         offline_submitted: true,
       };
 
-      const res = await fetch(`${apiBaseUrl}/api/reports`, {
+      let requestBody: BodyInit;
+      const headers: HeadersInit = {};
+      let endpoint = `${apiBaseUrl}/api/reports`;
+      if (report.photoBase64) {
+        const photoBlob = await fetch(report.photoBase64).then((response) => response.blob());
+        const form = new FormData();
+        Object.entries(payload).forEach(([key, value]) => form.append(key, String(value)));
+        form.append('photo', photoBlob, 'offline-report-photo');
+        endpoint = `${apiBaseUrl}/api/reports/with-photo`;
+        requestBody = form;
+      } else {
+        headers['Content-Type'] = 'application/json';
+        requestBody = JSON.stringify(payload);
+      }
+
+      const res = await fetch(endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        headers,
+        body: requestBody,
       });
 
       if (res.ok) {

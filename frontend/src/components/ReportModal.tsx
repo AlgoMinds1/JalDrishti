@@ -117,31 +117,30 @@ export const ReportModal: FC<ReportModalProps> = ({
       }
       setSubmissionResult(res.data);
       onReportSubmitted();
-    } catch {
-      // Offline fallback: save report locally in IndexedDB
-      try {
-        let photoBase64: string | undefined;
-        if (photo) {
-          photoBase64 = await fileToBase64(photo);
-        }
-        await saveOfflineReport({
-          lat,
-          lon,
-          text,
-          language,
-          photoBase64
-        });
+    } catch (error: any) {
+      const isOffline = !navigator.onLine || !error?.response;
+      if (!isOffline) {
+        const detail = error?.response?.data?.detail;
+        setErrorMessage(typeof detail === 'string' ? detail : 'The report could not be accepted by the server. Please review it and retry.');
+        return;
+      }
 
+      // Preserve the report and its photo evidence until the server is reachable.
+      try {
+        const photoBase64 = photo ? await fileToBase64(photo) : undefined;
+        const savedReport = await saveOfflineReport({ lat, lon, text, language, reporter_id: reporterId, photoBase64 });
         setSubmissionResult({
           offline_saved: true,
-          trust_score: 85,
           state: 'Pending Sync',
-          message: 'Saved offline to your device storage. It will automatically synchronize when network is restored.',
-          report_id: `offline_${Date.now()}`
+          time_server: savedReport.timestamp,
+          lat,
+          lon,
+          message: 'Saved on this device. The report and photo will upload when the connection is restored.',
+          report_id: savedReport.id
         });
         onReportSubmitted();
       } catch (offlineErr: any) {
-        setErrorMessage(offlineErr.message || 'Failed to save report offline.');
+        setErrorMessage(offlineErr.message || 'Could not reach the reporting service or save the report offline. Please retry.');
       }
     } finally {
       setIsSubmitting(false);
@@ -310,7 +309,7 @@ export const ReportModal: FC<ReportModalProps> = ({
                   return <div style={{ display: 'grid', gap: 7, padding: 12, borderRadius: 10, background: 'var(--bg-card)', border: '1px solid var(--border-color)', fontSize: 11.5 }}>
                     <strong style={{ fontSize: 13, color: 'var(--text-main)' }}>Photo and report metadata</strong>
                     <div style={{ color: 'var(--text-muted)', overflowWrap: 'anywhere' }}><strong>Photo captured:</strong> {photoMetadata.image_capture_time ? `${photoMetadata.image_capture_time}${photoMetadata.image_capture_offset ? ` ${photoMetadata.image_capture_offset}` : ''} (EXIF)` : 'Capture time not present in image metadata'}</div>
-                    <div style={{ color: 'var(--text-muted)', overflowWrap: 'anywhere' }}><strong>Report submitted:</strong> {reportTime}</div>
+                    <div style={{ color: 'var(--text-muted)', overflowWrap: 'anywhere' }}><strong>{submissionResult.offline_saved ? 'Queued on device:' : 'Report submitted:'}</strong> {reportTime}</div>
                     <div style={{ color: 'var(--text-muted)', overflowWrap: 'anywhere' }}><strong>{imageGps ? 'Photo GPS (EXIF)' : 'Reported GPS location'}:</strong> {photoLocation}</div>
                     {!imageGps && <div style={{ color: 'var(--text-muted)', lineHeight: 1.4 }}>The photo did not include GPS metadata; this is the location attached to the report.</div>}
                   </div>;
@@ -331,20 +330,26 @@ export const ReportModal: FC<ReportModalProps> = ({
                 gap: '12px'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: 'var(--text-muted, #706D62)', fontWeight: 500 }}>Initial Trust Score:</span>
-                <span style={{ fontWeight: 800, fontSize: '15px', color: 'var(--accent-beige-dark, #4b4836)' }}>
-                  {submissionResult.trust_score} / 100
-                </span>
-              </div>
+              {submissionResult.offline_saved ? (
+                <div style={{ color: 'var(--text-muted, #706D62)', fontSize: 12, lineHeight: 1.45 }}>
+                  Trust score and image verification will be calculated after the report reaches the server.
+                </div>
+              ) : (
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ color: 'var(--text-muted, #706D62)', fontWeight: 500 }}>Initial Trust Score:</span>
+                  <span style={{ fontWeight: 800, fontSize: '15px', color: 'var(--accent-beige-dark, #4b4836)' }}>
+                    {submissionResult.trust_score} / 100
+                  </span>
+                </div>
+              )}
 
-              {Number(submissionResult.trust_reasons?.photo_consistency_penalty) < 0 && (
+              {!submissionResult.offline_saved && Number(submissionResult.trust_reasons?.photo_consistency_penalty) < 0 && (
                 <div style={{ color: 'var(--risk-severe, #dc2626)', fontSize: 11.5, lineHeight: 1.4 }}>
                   Photo does not support the flood report: {submissionResult.trust_reasons.photo_consistency_penalty} points.
                 </div>
               )}
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              {!submissionResult.offline_saved && <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ color: 'var(--text-muted, #706D62)', fontWeight: 500 }}>Verification State:</span>
                 <span
                   style={{
@@ -368,7 +373,7 @@ export const ReportModal: FC<ReportModalProps> = ({
                 >
                   {submissionResult.state}
                 </span>
-              </div>
+              </div>}
 
               <div
                 style={{
@@ -382,7 +387,7 @@ export const ReportModal: FC<ReportModalProps> = ({
                 ℹ️ <strong>Strict Multi-Citizen Corroboration:</strong> To prevent false alarms, no single citizen report triggers a civic alert alone. Corroboration from a second nearby report elevates this segment to <em>Confirmed</em>.
               </div>
 
-              {submissionResult.photo_verification && (
+              {!submissionResult.offline_saved && submissionResult.photo_verification && (
                 <div style={{ fontSize: '11.5px', color: 'var(--text-muted, #706D62)', lineHeight: 1.5 }}>
                   📷 <strong>Photo Verification Clue:</strong>{' '}
                   {submissionResult.photo_verification.status === 'camera_metadata_present'

@@ -311,7 +311,7 @@ export function App() {
       fetchPredictions();
       fetchHealth();
 
-      const syncResult = await syncPendingReports();
+      const syncResult = await syncPendingReports(axios.defaults.baseURL || '');
       if (syncResult.syncedCount > 0) {
         console.log(`[OfflineSync] Synced ${syncResult.syncedCount} queued reports`);
       }
@@ -322,6 +322,14 @@ export function App() {
       setIsOnline(false);
       apiUnavailable.current = true;
     };
+
+    // Flush reports queued before this app session, including when the page is
+    // reopened after connectivity has already returned (no `online` event fires).
+    if (navigator.onLine) {
+      void syncPendingReports(axios.defaults.baseURL || '').then(({ syncedCount }) => {
+        if (syncedCount > 0) fetchReports();
+      });
+    }
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
