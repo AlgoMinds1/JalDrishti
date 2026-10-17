@@ -8,8 +8,8 @@ export const UserSettingsModal: FC<Props> = ({ isOpen, onClose, theme, setTheme 
   const { language, setLanguage, t } = useAppLanguage();
   if (!isOpen) return null;
   return (
-    <div role="presentation" onMouseDown={event => { if (event.target === event.currentTarget) onClose(); }} style={{ position: 'fixed', inset: 0, zIndex: 4900, background: 'rgba(20,20,18,.5)', display: 'grid', placeItems: 'center', padding: 16 }}>
-      <section role="dialog" aria-modal="true" aria-labelledby="user-settings-title" style={{ width: 'min(420px, 96vw)', borderRadius: 14, overflow: 'hidden', background: 'var(--bg-card, #FFFCF6)', border: '1px solid var(--border-color)', boxShadow: '0 18px 50px rgba(0,0,0,.24)', color: 'var(--text-main)' }}>
+    <section aria-labelledby="user-settings-title" style={{ width: '100%', height: 'calc(100% - 42px)', minHeight: 0, overflowY: 'auto', background: 'var(--bg-primary)', color: 'var(--text-main)' }}>
+      <div style={{ width: 'min(760px, 100%)', minHeight: '100%', margin: '0 auto', boxSizing: 'border-box', background: 'var(--bg-card, #FFFCF6)', borderInline: '1px solid var(--border-color)' }}>
         <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 18px', borderBottom: '1px solid var(--border-color)' }}>
           <h2 id="user-settings-title" style={{ margin: 0, fontSize: 18 }}>{t('settings')}</h2>
           <button onClick={onClose} aria-label={t('close')} style={{ border: 0, background: 'transparent', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
@@ -28,7 +28,7 @@ export const UserSettingsModal: FC<Props> = ({ isOpen, onClose, theme, setTheme 
             </button>
           </div>
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   );
 };

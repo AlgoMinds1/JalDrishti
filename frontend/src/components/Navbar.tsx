@@ -18,8 +18,8 @@ import { enableBrowserPush } from '../services/push';
 import { speechLocale, useAppLanguage } from '../language';
 
 interface NavbarProps {
-  activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay';
-  setActiveTab: (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay') => void;
+  activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay' | 'assistant' | 'settings';
+  setActiveTab: (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay' | 'assistant' | 'settings') => void;
   onOpenAdminModal?: () => void;
   onOpenAdminNotifications?: () => void;
   onOpenSettings?: () => void;
@@ -137,7 +137,7 @@ export const Navbar: FC<NavbarProps> = ({
     });
   };
 
-  const handleNavigate = (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay') => {
+  const handleNavigate = (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay' | 'assistant' | 'settings') => {
     setActiveTab(tab);
     setIsMobileMenuOpen(false);
   };

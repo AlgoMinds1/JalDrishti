@@ -121,8 +121,7 @@ export const FloodAssistantModal: FC<Props> = ({ isOpen, onClose }) => {
 
   const suggestions = [labels.supplies, labels.forecast];
   return (
-    <div role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }} style={{ position: 'fixed', inset: 0, zIndex: 4000, background: 'rgba(18, 18, 15, 0.48)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
-      <section role="dialog" aria-modal="true" aria-labelledby="flood-assistant-title" style={{ width: 'min(620px, 100%)', height: 'min(760px, 90dvh)', display: 'flex', flexDirection: 'column', overflow: 'hidden', borderRadius: '22px', background: 'var(--bg-card, #FFFCF6)', color: 'var(--text-main, #25251F)', border: '1px solid var(--border-color, #E4DACA)', boxShadow: '0 22px 70px rgba(0,0,0,.25)' }}>
+    <section aria-labelledby="flood-assistant-title" style={{ width: '100%', height: 'calc(100% - 42px)', minHeight: 0, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'var(--bg-card, #FFFCF6)', color: 'var(--text-main, #25251F)' }}>
         <header style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '16px 20px', borderBottom: '1px solid var(--border-color, #E4DACA)' }}>
           <span style={{ width: 40, height: 40, borderRadius: 14, display: 'grid', placeItems: 'center', background: 'var(--accent-beige-light, #E7DDCC)' }}><Bot size={22} /></span>
           <div style={{ flex: 1 }}><h2 id="flood-assistant-title" style={{ margin: 0, fontSize: 19 }}>{t('assistantTitle')}</h2><div style={{ fontSize: 12, color: 'var(--text-muted, #706D62)', marginTop: 3 }}>{language.toUpperCase()}</div></div>
@@ -140,7 +139,6 @@ export const FloodAssistantModal: FC<Props> = ({ isOpen, onClose }) => {
           <button type="submit" disabled={loading || !input.trim()} aria-label={labels.send} style={{ width: 46, height: 46, flexShrink: 0, border: 0, borderRadius: 14, color: '#fff', background: 'var(--accent-beige, #77745B)', opacity: loading || !input.trim() ? .55 : 1, cursor: loading || !input.trim() ? 'not-allowed' : 'pointer' }}><Send size={18} /></button>
         </form>
         <div style={{ padding: '0 16px 12px', fontSize: 11, color: 'var(--text-muted, #706D62)' }}>{labels.disclaimer}</div>
-      </section>
-    </div>
+    </section>
   );
 };

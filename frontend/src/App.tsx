@@ -30,7 +30,20 @@ import {
 } from './utils/offlineStorage';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState<'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay'>('home');
+  type AppTab = 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay' | 'assistant' | 'settings';
+  const tabForPath = (path: string): AppTab => ({ '/': 'home', '/landing': 'home', '/signin': 'signin', '/dashboard/live-map': 'map', '/dashboard/evaluation': 'evaluate', '/dashboard/limitations': 'limits', '/dashboard/replay': 'replay', '/dashboard/ai-chat': 'assistant', '/dashboard/settings': 'settings' } as Record<string, AppTab>)[path] ?? 'home';
+  const pathForTab: Record<AppTab, string> = { home: '/landing', signin: '/signin', map: '/dashboard/live-map', evaluate: '/dashboard/evaluation', limits: '/dashboard/limitations', replay: '/dashboard/replay', assistant: '/dashboard/ai-chat', settings: '/dashboard/settings' };
+  const [activeTab, setActiveTab] = useState<AppTab>(() => tabForPath(window.location.pathname));
+  const goToTab = useCallback((tab: AppTab) => {
+    setActiveTab(tab);
+    const path = pathForTab[tab];
+    if (window.location.pathname !== path) window.history.pushState({ tab }, '', path);
+  }, []);
+  useEffect(() => {
+    const onPopState = () => setActiveTab(tabForPath(window.location.pathname));
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
   const [currentHour, setCurrentHour] = useState<number>(1);
   const [scenario, setScenario] = useState<'live' | 'storm_july2024'>('live');
   const [geojsonData, setGeojsonData] = useState<any>(null);
@@ -48,8 +61,6 @@ export function App() {
   const [isRoutePlannerOpen, setIsRoutePlannerOpen] = useState<boolean>(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState<boolean>(false);
   const [isAdminNotificationModalOpen, setIsAdminNotificationModalOpen] = useState(false);
-  const [isUserSettingsOpen, setIsUserSettingsOpen] = useState(false);
-  const [isFloodAssistantOpen, setIsFloodAssistantOpen] = useState(false);
   const [isPushPromptOpen, setIsPushPromptOpen] = useState(false);
   const closePushPrompt = useCallback(() => setIsPushPromptOpen(false), []);
   const [activeRouteGeojson, setActiveRouteGeojson] = useState<any>(null);
@@ -332,7 +343,7 @@ export function App() {
   }, []);
 
   const openEventReplay = useCallback(() => {
-    setActiveTab('replay');
+    goToTab('replay');
     setSelectedEventScenario('2024');
     setCurrentHour(1);
     setScenarioSimulationActive(true);
@@ -341,8 +352,8 @@ export function App() {
   const exitScenarioSimulation = useCallback(() => {
     setScenarioSimulationActive(false);
     setSimulationSummary(null);
-    setActiveTab('map');
-  }, []);
+    goToTab('map');
+  }, [goToTab]);
 
   useEffect(() => {
     if (activeTab !== 'replay' && scenarioSimulationActive) {
@@ -354,9 +365,9 @@ export function App() {
   if (activeTab === 'home') {
     return (
       <LandingPage
-        onLaunchMap={() => setActiveTab('map')}
-        onNavigate={(tab) => setActiveTab(tab)}
-        onOpenSignIn={() => setActiveTab('signin')}
+        onLaunchMap={() => goToTab('map')}
+        onNavigate={(tab) => goToTab(tab)}
+        onOpenSignIn={() => goToTab('signin')}
       />
     );
   }
@@ -365,10 +376,10 @@ export function App() {
     return (
       <SignInPage
         onSignInSuccess={() => {
-          setActiveTab('map');
+          goToTab('map');
           setIsPushPromptOpen(localStorage.getItem('jaldrishti_push_prompt_dismissed') !== 'true');
         }}
-        onBackHome={() => setActiveTab('home')}
+        onBackHome={() => goToTab('home')}
       />
     );
   }
@@ -388,10 +399,10 @@ export function App() {
       {/* Top Header Navbar */}
       <Navbar
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={goToTab}
         onOpenAdminModal={() => setIsAdminModalOpen(true)}
         onOpenAdminNotifications={() => setIsAdminNotificationModalOpen(true)}
-        onOpenSettings={() => setIsUserSettingsOpen(true)}
+        onOpenSettings={() => goToTab('settings')}
         onOpenReplay={openEventReplay}
         scenario={scenario}
         setScenario={setScenario}
@@ -403,8 +414,6 @@ export function App() {
         isOpen={isAdminNotificationModalOpen}
         onClose={() => setIsAdminNotificationModalOpen(false)}
       />
-      <UserSettingsModal isOpen={isUserSettingsOpen} onClose={() => setIsUserSettingsOpen(false)} theme={theme} setTheme={setTheme} />
-      <FloodAssistantModal isOpen={isFloodAssistantOpen} onClose={() => setIsFloodAssistantOpen(false)} />
       <NotificationPermissionPrompt isOpen={isPushPromptOpen} onClose={closePushPrompt} />
 
       {/* Main Layout Area: Left Sidebar (Desktop only) + Center Map View (Full width on Mobile) */}
@@ -420,13 +429,13 @@ export function App() {
         {/* Left Sidebar Menu (Hidden on mobile via CSS desktop-only) */}
         <Sidebar
           activeTab={activeTab}
-          setActiveTab={setActiveTab}
+          setActiveTab={goToTab}
           onOpenReportModal={() => setIsReportModalOpen(true)}
           onToggleRoutePlanner={() => setIsRoutePlannerOpen(true)}
           onOpenAdminModal={() => setIsAdminModalOpen(true)}
-          onOpenSettings={() => setIsUserSettingsOpen(true)}
+          onOpenSettings={() => goToTab('settings')}
           onOpenReplay={openEventReplay}
-          onOpenAssistant={() => setIsFloodAssistantOpen(true)}
+          onOpenAssistant={() => goToTab('assistant')}
           rainAgeMin={rainAgeMin}
         />
 
@@ -436,8 +445,8 @@ export function App() {
             flex: 1,
             position: 'relative',
             height: '100%',
-            overflow: activeTab === 'map' || activeTab === 'replay' ? 'hidden' : 'auto',
-            paddingBottom: activeTab === 'map' || activeTab === 'replay' ? '0' : 'calc(58px + var(--sab, 0px))'
+            overflow: activeTab === 'map' || activeTab === 'replay' || activeTab === 'assistant' || activeTab === 'settings' ? 'hidden' : 'auto',
+            paddingBottom: activeTab === 'map' || activeTab === 'replay' || activeTab === 'assistant' || activeTab === 'settings' ? '0' : 'calc(58px + var(--sab, 0px))'
           }}
         >
           {(activeTab === 'map' || activeTab === 'replay') && (
@@ -548,19 +557,22 @@ export function App() {
             </>
           )}
 
+          {activeTab !== 'map' && activeTab !== 'replay' && <div aria-label="Breadcrumb" style={{ padding: '10px 20px', fontSize: 13, color: 'var(--text-muted)', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-card)' }}><button onClick={() => goToTab('home')} style={{ border: 0, padding: 0, background: 'none', color: 'inherit', cursor: 'pointer' }}>JalDrishti</button><span style={{ margin: '0 8px' }}>/</span>{activeTab === 'evaluate' ? 'Evaluation' : activeTab === 'limits' ? 'Limitations' : activeTab === 'assistant' ? 'AI Chat' : 'Settings'}</div>}
           {activeTab === 'evaluate' && <EvaluationPage />}
           {activeTab === 'limits' && <LimitationsPage />}
+          {activeTab === 'assistant' && <FloodAssistantModal isOpen onClose={() => goToTab('map')} />}
+          {activeTab === 'settings' && <UserSettingsModal isOpen onClose={() => goToTab('map')} theme={theme} setTheme={setTheme} />}
         </main>
       </div>
 
       {/* Fixed Mobile Bottom Navigation Bar (Visible on < 1024px) */}
       <MobileBottomNav
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={goToTab}
         onOpenReportModal={() => setIsReportModalOpen(true)}
         onToggleRoutePlanner={() => setIsRoutePlannerOpen(true)}
-        onOpenSettings={() => setIsUserSettingsOpen(true)}
-        onOpenAssistant={() => setIsFloodAssistantOpen(true)}
+        onOpenSettings={() => goToTab('settings')}
+        onOpenAssistant={() => goToTab('assistant')}
       />
     </div>
   );

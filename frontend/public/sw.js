@@ -122,7 +122,7 @@ self.addEventListener('fetch', (event) => {
             url.hostname.includes('arcgisonline.com')
           );
           if (networkRes && (networkRes.ok || opaqueBasemapTile)) {
-            void cache.put(request, networkRes.clone());
+            void cache.put(request, networkRes.clone()).catch(() => {});
             return networkRes;
           }
           throw new Error('Tile network error');

@@ -12,8 +12,8 @@ import {
 import { useAppLanguage } from '../language';
 
 interface SidebarProps {
-  activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay';
-  setActiveTab: (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay') => void;
+  activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay' | 'assistant' | 'settings';
+  setActiveTab: (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay' | 'assistant' | 'settings') => void;
   onOpenReportModal: () => void;
   onToggleRoutePlanner: () => void;
   onOpenAdminModal: () => void;
