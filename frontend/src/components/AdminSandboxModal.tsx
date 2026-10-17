@@ -319,7 +319,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
               {simulationData?.top_failing_corridors && (
                 <div>
                   <h4 style={{ fontSize: '13px', color: 'var(--text-main)', marginBottom: '8px', fontWeight: 600 }}>
-                    First Corridors to Inundate at {rainfallMm} mm:
+                    Highest-risk corridors for {rainfallMm} mm over {durationH} hours:
                   </h4>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                     {simulationData.top_failing_corridors.slice(0, 5).map((fc: any, idx: number) => (

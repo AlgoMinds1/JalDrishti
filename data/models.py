@@ -173,3 +173,12 @@ class Intervention(Base):
     after_period = Column(String(64), nullable=True)
     effectiveness_score = Column(Float, default=0.0)
 
+
+class PushSubscription(Base):
+    __tablename__ = "push_subscriptions"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    endpoint = Column(Text, nullable=False, unique=True, index=True)
+    subscription_json = Column(JSON, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+

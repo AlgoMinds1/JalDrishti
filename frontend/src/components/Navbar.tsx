@@ -12,13 +12,16 @@ import {
   Home,
   ShieldCheck,
   CalendarClock,
-  Settings
+  Settings,
+  Bell
 } from 'lucide-react';
+import { enableBrowserPush } from '../services/push';
 
 interface NavbarProps {
   activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay';
   setActiveTab: (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay') => void;
   onOpenAdminModal?: () => void;
+  onOpenAdminNotifications?: () => void;
   onOpenReplay?: () => void;
   scenario?: 'live' | 'storm_july2024';
   setScenario?: (scen: 'live' | 'storm_july2024') => void;
@@ -33,12 +36,23 @@ export const Navbar: FC<NavbarProps> = ({
   activeTab,
   setActiveTab,
   onOpenAdminModal,
+  onOpenAdminNotifications,
   onOpenReplay,
   theme = 'light',
   setTheme
 }) => {
   const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [pushStatus, setPushStatus] = useState('');
+
+  const enablePush = async () => {
+    try {
+      await enableBrowserPush();
+      setPushStatus('This device is subscribed to JalDrishti updates.');
+    } catch (error: any) {
+      setPushStatus(error?.response?.data?.detail || 'Could not enable notifications.');
+    }
+  };
 
   const handleNavigate = (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay') => {
     setActiveTab(tab);
@@ -261,6 +275,17 @@ export const Navbar: FC<NavbarProps> = ({
             </button>
           )}
 
+          <button onClick={onOpenAdminNotifications} title="Admin notification center" aria-label="Admin notification center" style={{
+            height: '32px', padding: '0 9px', borderRadius: '8px',
+            border: '1px solid var(--border-color, #E4DACA)',
+            background: 'var(--bg-widget, #FFFCF6)', color: 'var(--text-main, #25251F)',
+            display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '12px'
+          }}><Bell size={14} /> Notifications</button>
+          <button onClick={enablePush} title="Enable browser notifications" style={{
+            border: 'none', background: 'transparent', color: 'var(--text-muted, #706D62)',
+            cursor: 'pointer', fontSize: '11px', padding: '4px'
+          }}>Enable alerts</button>
+
           {/* User Profile Avatar */}
           <div
             style={{
@@ -283,6 +308,22 @@ export const Navbar: FC<NavbarProps> = ({
 
         {/* Mobile Right Action: Compact Menu Button */}
         <div className="mobile-only" style={{ alignItems: 'center', gap: '8px', marginLeft: 'auto' }}>
+          <button onClick={onOpenAdminNotifications} aria-label="Admin notification center" title="Admin notification center" style={{
+            width: '34px', height: '34px', borderRadius: '8px',
+            border: '1px solid var(--border-color, #E4DACA)', background: 'var(--bg-card, #FFFCF6)',
+            color: 'var(--text-main, #25251F)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
+          }}><Bell size={16} /></button>
+          <button
+            onClick={enablePush}
+            aria-label="Enable browser notifications"
+            title="Enable notifications"
+            style={{
+              width: '34px', height: '34px', borderRadius: '8px',
+              border: '1px solid var(--border-color, #E4DACA)',
+              background: 'var(--bg-card, #FFFCF6)', color: 'var(--text-main, #25251F)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
+            }}
+          ><AlertCircle size={16} /></button>
           {setTheme && (
             <button
               onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
@@ -324,6 +365,7 @@ export const Navbar: FC<NavbarProps> = ({
           </button>
         </div>
       </nav>
+      {pushStatus && <div role="status" style={{ padding: '5px 16px', fontSize: '12px', color: 'var(--text-muted)' }}>{pushStatus}</div>}
 
       {/* Slide-out Mobile Navigation Drawer */}
       {isMobileMenuOpen && (
