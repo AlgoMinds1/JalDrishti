@@ -113,8 +113,16 @@ self.addEventListener('fetch', (event) => {
 
         try {
           const networkRes = await quickFetch(request, 8000);
-          if (networkRes && networkRes.status === 200) {
-            cache.put(request, networkRes.clone());
+          // Cross-origin image requests commonly produce opaque responses in
+          // service workers. Their status is always 0, even when the tile is
+          // valid, so accept opaque responses only from our configured basemaps.
+          const opaqueBasemapTile = networkRes?.type === 'opaque' && (
+            url.hostname.includes('tile.openstreetmap.org') ||
+            url.hostname.includes('basemaps.cartocdn.com') ||
+            url.hostname.includes('arcgisonline.com')
+          );
+          if (networkRes && (networkRes.ok || opaqueBasemapTile)) {
+            void cache.put(request, networkRes.clone());
             return networkRes;
           }
           throw new Error('Tile network error');
