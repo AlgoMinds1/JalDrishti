@@ -6,7 +6,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://jaldrishti-api.onrender.com/api/$1"
+      "destination": "https://jaldrishti-rht6.onrender.com/api/$1"
     },
     {
       "source": "/(.*)",
