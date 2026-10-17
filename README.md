@@ -33,8 +33,11 @@ API stores subscriptions in the configured database; scheduled broadcasts are
 sent by the API worker, so the admin laptop can be closed after scheduling.
 The deployed site must use HTTPS and the API must have `VAPID_PUBLIC_KEY`,
 `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` (a `mailto:` contact), and a private
-`ADMIN_API_TOKEN` configured. Install the added `pywebpush` requirement. The
-admin modal's Push Notifications tab accepts the admin token and schedules a
-message; users without a subscription will not receive it. The current app's
-sign-in screen is a prototype rather than account authentication, so these
-notifications target opted-in browser installations, not verified user accounts.
+`ADMIN_API_TOKEN` configured. For local prototype use only, the default admin
+password is `123456`; set a strong private `ADMIN_API_TOKEN` before exposing the
+API publicly. Install the added `pywebpush` requirement. The top-bar shield
+button opens admin sign-in and the broadcast composer; users without a
+subscription will not receive the message. The current app's sign-in screen is
+a prototype rather than account authentication, so the admin view can count
+opted-in browser installations but cannot identify named or currently active
+users.

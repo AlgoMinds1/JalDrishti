@@ -10,6 +10,7 @@ import { SegmentModal, type SegmentPredictionData } from './components/SegmentMo
 import { ReportModal } from './components/ReportModal';
 import { RoutePlanner } from './components/RoutePlanner';
 import { AdminSandboxModal } from './components/AdminSandboxModal';
+import { AdminNotificationModal } from './components/AdminNotificationModal';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { EvaluationPage } from './pages/EvaluationPage';
 import { LimitationsPage } from './pages/LimitationsPage';
@@ -37,6 +38,7 @@ export function App() {
   const [isReportModalOpen, setIsReportModalOpen] = useState<boolean>(false);
   const [isRoutePlannerOpen, setIsRoutePlannerOpen] = useState<boolean>(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState<boolean>(false);
+  const [isAdminNotificationModalOpen, setIsAdminNotificationModalOpen] = useState(false);
   const [activeRouteGeojson, setActiveRouteGeojson] = useState<any>(null);
   const [selectedSegment, setSelectedSegment] = useState<SegmentPredictionData | null>(null);
 
@@ -229,6 +231,7 @@ export function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onOpenAdminModal={() => setIsAdminModalOpen(true)}
+        onOpenAdminNotifications={() => setIsAdminNotificationModalOpen(true)}
         onOpenReplay={openEventReplay}
         scenario={scenario}
         setScenario={setScenario}
@@ -237,6 +240,10 @@ export function App() {
         onRefresh={fetchPredictions}
         theme={theme}
         setTheme={setTheme}
+      />
+      <AdminNotificationModal
+        isOpen={isAdminNotificationModalOpen}
+        onClose={() => setIsAdminNotificationModalOpen(false)}
       />
 
       {/* Main Layout Area: Left Sidebar (Desktop only) + Center Map View (Full width on Mobile) */}

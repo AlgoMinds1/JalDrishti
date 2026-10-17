@@ -33,12 +33,31 @@ class BroadcastPayload(BaseModel):
 
 
 def _require_admin(authorization: str | None):
-    secret = os.getenv("ADMIN_API_TOKEN", "")
+    # Prototype access code requested for this deployment. Set ADMIN_API_TOKEN
+    # in hosted environments to replace the default before exposing publicly.
+    secret = os.getenv("ADMIN_API_TOKEN", "123456")
     if not secret:
         raise HTTPException(status_code=503, detail="Admin notification token is not configured")
     token = authorization.removeprefix("Bearer ") if authorization else ""
     if not hmac.compare_digest(token, secret):
         raise HTTPException(status_code=401, detail="Invalid admin token")
+
+
+@router.get("/admin-session")
+def admin_session(authorization: str | None = Header(default=None)):
+    _require_admin(authorization)
+    try:
+        from data.db import SessionLocal
+        from data.models import PushSubscription
+        db = SessionLocal()
+        try:
+            count = db.query(PushSubscription).count()
+        finally:
+            db.close()
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail="Subscription database is unavailable") from exc
+    return {"authenticated": True, "opted_in_devices": count,
+            "identity_note": "This prototype tracks opted-in browser devices, not named user accounts."}
 
 
 @router.get("/public-key")
