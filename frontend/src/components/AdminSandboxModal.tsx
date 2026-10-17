@@ -31,7 +31,6 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
     agency: 'PMC Stormwater Drainage Department'
   });
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
-  const [adminToken, setAdminToken] = useState(() => sessionStorage.getItem('jaldrishti_admin_token') || '');
   const [broadcastTitle, setBroadcastTitle] = useState('JalDrishti update');
   const [broadcastBody, setBroadcastBody] = useState('');
   const [broadcastDelayHours, setBroadcastDelayHours] = useState(2);
@@ -43,13 +42,12 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
     setIsSchedulingBroadcast(true);
     setBroadcastStatus('');
     try {
-      sessionStorage.setItem('jaldrishti_admin_token', adminToken);
       const dueAt = new Date(Date.now() + broadcastDelayHours * 60 * 60 * 1000).toISOString();
       const response = await axios.post('/api/notifications/broadcasts', {
         title: broadcastTitle,
         body: broadcastBody,
         due_at: dueAt
-      }, { headers: { Authorization: `Bearer ${adminToken}` } });
+      });
       setBroadcastStatus(`Broadcast scheduled for ${new Date(response.data.due_at).toLocaleString()}.`);
       setBroadcastBody('');
     } catch (error: any) {
@@ -388,9 +386,6 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
               <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: 12 }}>
                 Sends to browsers that opted in to notifications. Delivery requires push to be configured on the server.
               </p>
-              <label style={{ fontSize: 12, color: 'var(--text-muted)' }}>Admin token
-                <input type="password" autoComplete="current-password" required value={adminToken} onChange={e => setAdminToken(e.target.value)} placeholder="ADMIN_API_TOKEN" style={{ display: 'block', width: '100%', boxSizing: 'border-box', padding: 9, marginTop: 4, borderRadius: 6, border: '1px solid var(--border-color)', background: 'var(--bg-pill)', color: 'var(--text-main)' }} />
-              </label>
               <label style={{ fontSize: 12, color: 'var(--text-muted)' }}>Notification title
                 <input maxLength={120} required value={broadcastTitle} onChange={e => setBroadcastTitle(e.target.value)} style={{ display: 'block', width: '100%', boxSizing: 'border-box', padding: 9, marginTop: 4, borderRadius: 6, border: '1px solid var(--border-color)', background: 'var(--bg-pill)', color: 'var(--text-main)' }} />
               </label>

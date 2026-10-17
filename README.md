@@ -32,12 +32,11 @@ Users must opt in on each browser/device using the Notifications button. The
 API stores subscriptions in the configured database; scheduled broadcasts are
 sent by the API worker, so the admin laptop can be closed after scheduling.
 The deployed site must use HTTPS and the API must have `VAPID_PUBLIC_KEY`,
-`VAPID_PRIVATE_KEY`, `VAPID_SUBJECT` (a `mailto:` contact), and a private
-`ADMIN_API_TOKEN` configured. For local prototype use only, the default admin
-password is `123456`; set a strong private `ADMIN_API_TOKEN` before exposing the
-API publicly. Install the added `pywebpush` requirement. The top-bar shield
-button opens admin sign-in and the broadcast composer; users without a
-subscription will not receive the message. The current app's sign-in screen is
-a prototype rather than account authentication, so the admin view can count
-opted-in browser installations but cannot identify named or currently active
-users.
+`VAPID_PRIVATE_KEY`, and `VAPID_SUBJECT` (a `mailto:` contact) configured.
+Install the added `pywebpush` requirement. The top-bar Notifications button
+opens the demo admin sign-in (password `123456`) and broadcast composer; users
+without a subscription will not receive the message. The password gate is a
+frontend demo convenience and the broadcast API has no authentication. The
+current app's sign-in screen is a prototype rather than account authentication,
+so the admin view can count opted-in browser installations but cannot identify
+named or currently active users.

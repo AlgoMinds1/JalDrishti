@@ -5,7 +5,7 @@ import { Bell, X } from 'lucide-react';
 interface Props { isOpen: boolean; onClose: () => void }
 
 export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
-  const [password, setPassword] = useState(() => sessionStorage.getItem('jaldrishti_admin_token') || '');
+  const [password, setPassword] = useState('123456');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [deviceCount, setDeviceCount] = useState<number | null>(null);
   const [title, setTitle] = useState('JalDrishti update');
@@ -16,16 +16,15 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const authHeader = { Authorization: `Bearer ${password}` };
   const signIn = async (e: FormEvent) => {
-    e.preventDefault(); setBusy(true); setStatus('');
+    e.preventDefault(); setStatus(''); setBusy(true);
+    if (password !== '123456') { setStatus('Incorrect admin password.'); setBusy(false); return; }
+    setIsAuthenticated(true);
     try {
-      const response = await axios.get('/api/notifications/admin-session', { headers: authHeader });
-      sessionStorage.setItem('jaldrishti_admin_token', password);
+      const response = await axios.get('/api/notifications/subscriber-count');
       setDeviceCount(response.data.opted_in_devices);
-      setIsAuthenticated(true);
-    } catch (error: any) {
-      setStatus(error?.response?.data?.detail || 'Admin sign-in failed.');
+    } catch {
+      setStatus('Signed in. Subscriber count will appear when the updated API is running.');
     } finally { setBusy(false); }
   };
 
@@ -35,7 +34,7 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
       const dueAt = new Date(Date.now() + delayHours * 60 * 60 * 1000).toISOString();
       const response = await axios.post('/api/notifications/broadcasts', {
         title, body: message, due_at: dueAt
-      }, { headers: authHeader });
+      });
       setStatus(`Scheduled for ${new Date(response.data.due_at).toLocaleString()}.`);
       setMessage('');
     } catch (error: any) {

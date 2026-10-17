@@ -1,10 +1,8 @@
 """Opt-in browser push and admin-scheduled broadcasts."""
-import hmac
 import os
 from datetime import datetime, timezone
-from typing import Any
 
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field, field_validator
 
 from api.services import push_notifications
@@ -32,20 +30,8 @@ class BroadcastPayload(BaseModel):
         return value
 
 
-def _require_admin(authorization: str | None):
-    # Prototype access code requested for this deployment. Set ADMIN_API_TOKEN
-    # in hosted environments to replace the default before exposing publicly.
-    secret = os.getenv("ADMIN_API_TOKEN", "123456")
-    if not secret:
-        raise HTTPException(status_code=503, detail="Admin notification token is not configured")
-    token = authorization.removeprefix("Bearer ") if authorization else ""
-    if not hmac.compare_digest(token, secret):
-        raise HTTPException(status_code=401, detail="Invalid admin token")
-
-
-@router.get("/admin-session")
-def admin_session(authorization: str | None = Header(default=None)):
-    _require_admin(authorization)
+@router.get("/subscriber-count")
+def subscriber_count():
     try:
         from data.db import SessionLocal
         from data.models import PushSubscription
@@ -80,8 +66,7 @@ def subscribe(payload: SubscriptionPayload):
 
 
 @router.post("/broadcasts", status_code=201)
-def create_broadcast(payload: BroadcastPayload, authorization: str | None = Header(default=None)):
-    _require_admin(authorization)
+def create_broadcast(payload: BroadcastPayload):
     if not push_notifications.public_key() or not os.getenv("VAPID_PRIVATE_KEY"):
         raise HTTPException(status_code=503, detail="Browser push is not configured")
     try:
