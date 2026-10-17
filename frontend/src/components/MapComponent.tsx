@@ -19,7 +19,7 @@ interface MapComponentProps {
   onSelectSegment: (segment: SegmentPredictionData) => void;
 }
 
-export type BasemapKey = 'osm' | 'voyager' | 'esri_dark' | 'esri_streets';
+export type BasemapKey = 'osm' | 'voyager' | 'esri_dark' | 'esri_streets' | 'offline_vector';
 
 interface BasemapOption {
   id: BasemapKey;
@@ -61,6 +61,14 @@ const BASEMAP_OPTIONS: BasemapOption[] = [
     tag: 'Clean Topo',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
     attribution: 'Tiles &copy; Esri',
+    maxZoom: 19
+  },
+  {
+    id: 'offline_vector',
+    name: 'Offline Tactical Grid',
+    tag: '100% Offline · Zero Data',
+    url: '',
+    attribution: 'JalDrishti Pilot Road Network',
     maxZoom: 19
   }
 ];
@@ -365,6 +373,17 @@ export const MapComponent: FC<MapComponentProps> = ({
   const geojsonLayerRef = useRef<L.GeoJSON | null>(null);
   const [selectedBasemap, setSelectedBasemap] = useState<BasemapKey>('osm');
   const [isLayerMenuOpen, setIsLayerMenuOpen] = useState<boolean>(false);
+  const [baseRoads, setBaseRoads] = useState<any>(null);
+
+  // Load Pune foundational road network on mount so roads are always visible offline
+  useEffect(() => {
+    fetch('/data/pilot/road_segments.geojson')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data) setBaseRoads(data);
+      })
+      .catch(() => {});
+  }, []);
 
   const activeBasemap = BASEMAP_OPTIONS.find((b) => b.id === selectedBasemap) || BASEMAP_OPTIONS[0];
 
@@ -463,21 +482,32 @@ export const MapComponent: FC<MapComponentProps> = ({
           }}
         />
 
-        {/* Basemap Layer */}
-        <TileLayer
-          key={activeBasemap.id}
-          attribution={activeBasemap.attribution}
-          url={activeBasemap.url}
-          maxZoom={activeBasemap.maxZoom}
-        />
+        {/* Basemap Layer: raster tile layer when online, or clean tactical vector canvas when offline */}
+        {activeBasemap.url ? (
+          <TileLayer
+            key={activeBasemap.id}
+            attribution={activeBasemap.attribution}
+            url={activeBasemap.url}
+            maxZoom={activeBasemap.maxZoom}
+          />
+        ) : null}
 
-        {/* Live Rainfall Radar Simulation Layer (soft blue rain clouds) */}
-        <TileLayer
-          key="rain_layer"
-          opacity={0.18}
-          url="https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=439d4b804bc8187953eb36d2a8c26a02"
-          maxZoom={18}
-        />
+
+
+        {/* Foundational Offline Road Network (Ensures streets are ALWAYS rendered even with 0 internet) */}
+        {baseRoads && (
+          <GeoJSON
+            key="base_offline_road_grid"
+            data={baseRoads}
+            style={(feat) => ({
+              color: '#8b846f',
+              weight: feat?.properties?.road_class === 'primary' ? 3.5 : 1.8,
+              opacity: 0.35,
+              lineCap: 'round',
+              lineJoin: 'round'
+            })}
+          />
+        )}
 
         {/* Road Inundation Prediction Polylines */}
         {geojsonData && (

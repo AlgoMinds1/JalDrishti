@@ -1,15 +1,14 @@
 /**
- * JalDrishti Service Worker
- * Provides complete 100% offline functionality:
- * 1. App Shell & assets pre-caching
- * 2. Basemap tile caching (OSM, CartoDB, Esri) for offline map rendering
- * 3. Predictions API fallback to local pilot GeoJSONs
- * 4. Transparent offline fallback for network drops
+ * JalDrishti Service Worker — Resilient Offline Engine
+ * 1. Fast-fail network timeout (max 1.2s) so offline/flaky connections never freeze the UI.
+ * 2. Instant Map Tile Caching & graceful SVG grid fallback for all unvisited tiles.
+ * 3. 100% offline fallback for Predictions API to local pilot GeoJSONs.
+ * 4. Full App Shell caching with offline SPA routing fallback.
  */
 
-const STATIC_CACHE = 'jaldrishti-static-v1';
-const TILES_CACHE = 'jaldrishti-tiles-v1';
-const API_CACHE = 'jaldrishti-api-v1';
+const STATIC_CACHE = 'jaldrishti-static-v2';
+const TILES_CACHE = 'jaldrishti-tiles-v2';
+const API_CACHE = 'jaldrishti-api-v2';
 
 const STATIC_ASSETS = [
   '/',
@@ -26,12 +25,27 @@ const STATIC_ASSETS = [
   '/data/pilot/predictions_h6.geojson'
 ];
 
+// Helper: Fast-fail fetch with AbortController
+function quickFetch(request, timeoutMs = 1200) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+  return fetch(request, { signal: controller.signal })
+    .then((res) => {
+      clearTimeout(timer);
+      return res;
+    })
+    .catch((err) => {
+      clearTimeout(timer);
+      throw err;
+    });
+}
+
 // 1. Install & Pre-cache
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(STATIC_CACHE).then((cache) => {
-      // Use map + Promise.allSettled so individual missing assets don't fail registration
       return Promise.allSettled(
         STATIC_ASSETS.map((url) =>
           cache.add(url).catch((err) => {
@@ -59,26 +73,38 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Helper: Match map tile request
+// Helper: Match map tile requests across all basemaps & weather layers
 function isMapTile(url) {
+  const host = url.hostname;
   return (
-    url.hostname.includes('tile.openstreetmap.org') ||
-    url.hostname.includes('basemaps.cartocdn.com') ||
-    url.hostname.includes('arcgisonline.com')
+    host.includes('tile.openstreetmap.org') ||
+    host.includes('basemaps.cartocdn.com') ||
+    host.includes('arcgisonline.com') ||
+    host.includes('openweathermap.org') ||
+    url.pathname.match(/\/\d+\/\d+\/\d+(\.png|\.jpg|\/tile)/)
   );
 }
+
+// Sleek fallback SVG tile for unvisited offline areas (clean tactical grid)
+const OFFLINE_TILE_SVG = `
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <rect width="256" height="256" fill="#181816"/>
+  <path d="M0 64 H256 M0 128 H256 M0 192 H256 M64 0 V256 M128 0 V256 M192 0 V256" stroke="#262622" stroke-width="0.8"/>
+  <circle cx="128" cy="128" r="1.5" fill="#444238"/>
+</svg>
+`.trim();
 
 // 3. Fetch interceptor
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   const url = new URL(request.url);
 
-  // Ignore non-GET requests (e.g. POST /api/reports handled by IndexedDB in app)
+  // Non-GET requests (e.g. POST /api/reports) are handled by app-level IndexedDB
   if (request.method !== 'GET') {
     return;
   }
 
-  // A. MAP TILE REQUESTS: CacheFirst with transparent fallback
+  // A. MAP TILE REQUESTS: CacheFirst with fast 1s network attempt & SVG fallback
   if (isMapTile(url)) {
     event.respondWith(
       caches.open(TILES_CACHE).then(async (cache) => {
@@ -86,42 +112,42 @@ self.addEventListener('fetch', (event) => {
         if (cached) return cached;
 
         try {
-          const networkResponse = await fetch(request);
-          if (networkResponse && networkResponse.status === 200) {
-            cache.put(request, networkResponse.clone());
+          const networkRes = await quickFetch(request, 1000);
+          if (networkRes && networkRes.status === 200) {
+            cache.put(request, networkRes.clone());
+            return networkRes;
           }
-          return networkResponse;
+          throw new Error('Tile network error');
         } catch {
-          // In offline mode with unvisited tile: return transparent 256x256 pixel
-          return new Response(
-            '<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><rect width="256" height="256" fill="rgba(240, 240, 235, 0.4)" stroke="rgba(200, 200, 190, 0.15)" stroke-width="1"/></svg>',
-            { headers: { 'Content-Type': 'image/svg+xml' } }
-          );
+          // Deliver offline tactical tile immediately
+          return new Response(OFFLINE_TILE_SVG, {
+            headers: { 'Content-Type': 'image/svg+xml', 'Cache-Control': 'public, max-age=86400' }
+          });
         }
       })
     );
     return;
   }
 
-  // B. PREDICTIONS API REQUESTS: NetworkFirst with Local Pilot GeoJSON Fallback
+  // B. PREDICTIONS API: Fast-fail network (1.2s) -> Cache -> Local Static Pilot GeoJSON
   if (url.pathname.includes('/api/predictions')) {
     event.respondWith(
       (async () => {
         try {
-          const networkRes = await fetch(request);
+          const networkRes = await quickFetch(request, 1200);
           if (networkRes && networkRes.ok) {
             const cache = await caches.open(API_CACHE);
             cache.put(request, networkRes.clone());
             return networkRes;
           }
-          throw new Error('API request failed');
+          throw new Error('API request failed or timed out');
         } catch {
-          // Offline: first check cached API response
+          // Fast offline fallback: check cached API response
           const cache = await caches.open(API_CACHE);
           const cached = await cache.match(request);
           if (cached) return cached;
 
-          // If not in cache, fallback to bundled static horizon GeoJSON
+          // If not in API cache, deliver bundled static horizon GeoJSON
           const hourParam = url.searchParams.get('hour') || '1';
           const fallbackStatic = await caches.match(`/data/pilot/predictions_h${hourParam}.geojson`);
           if (fallbackStatic) return fallbackStatic;
@@ -135,12 +161,12 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // C. APP SHELL & STATIC ASSETS: StaleWhileRevalidate / CacheFirst
+  // C. APP SHELL & ASSETS: Cache-First / Stale-While-Revalidate with fast-fail
   event.respondWith(
     caches.match(request).then(async (cached) => {
       if (cached) {
-        // Background revalidation
-        fetch(request)
+        // Background revalidation without blocking UI
+        quickFetch(request, 2000)
           .then((networkRes) => {
             if (networkRes && networkRes.ok) {
               caches.open(STATIC_CACHE).then((cache) => cache.put(request, networkRes));
@@ -151,23 +177,25 @@ self.addEventListener('fetch', (event) => {
       }
 
       try {
-        const networkRes = await fetch(request);
-        if (networkRes && networkRes.ok && (request.destination === 'script' || request.destination === 'style' || request.destination === 'image')) {
+        const networkRes = await quickFetch(request, 1500);
+        if (networkRes && networkRes.ok) {
           const cache = await caches.open(STATIC_CACHE);
           cache.put(request, networkRes.clone());
         }
         return networkRes;
       } catch {
-        // If navigation request (e.g. reload on deep link), return cached index.html
+        // If navigation request (e.g. reload or route change), deliver cached index.html
         if (request.mode === 'navigate') {
-          return caches.match('/index.html');
+          const indexHtml = await caches.match('/index.html');
+          if (indexHtml) return indexHtml;
         }
-        return new Response('Network unavailable', { status: 503, statusText: 'Offline' });
+        return new Response('Offline', { status: 503, statusText: 'Offline' });
       }
     })
   );
 });
 
+// Push notification listeners
 self.addEventListener('push', (event) => {
   let message = { title: 'JalDrishti', body: 'There is an update.' };
   try { message = { ...message, ...event.data.json() }; } catch { /* use default */ }

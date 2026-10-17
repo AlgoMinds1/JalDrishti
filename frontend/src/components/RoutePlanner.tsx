@@ -49,14 +49,18 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
         throw new Error('Device is offline');
       }
 
-      const res = await axios.post('/api/routes', {
-        start_lat,
-        start_lon,
-        end_lat,
-        end_lon,
-        mode,
-        horizon_h: currentHour
-      });
+      const res = await axios.post(
+        '/api/routes',
+        {
+          start_lat,
+          start_lon,
+          end_lat,
+          end_lon,
+          mode,
+          horizon_h: currentHour
+        },
+        { timeout: 1500 }
+      );
 
       setRouteInfo(res.data);
       onRouteCalculated(

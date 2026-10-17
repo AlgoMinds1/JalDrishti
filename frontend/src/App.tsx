@@ -78,6 +78,56 @@ export function App() {
     }
   }, []);
 
+  // Helper to compute risk stats and age from GeoJSON
+  const updateStatsFromData = useCallback((data: any) => {
+    if (!data || !data.features) return;
+    const counts = { low: 0, moderate: 0, high: 0, severe: 0 };
+    data.features.forEach((f: any) => {
+      const r = (f.properties?.risk_class || 'low') as keyof typeof counts;
+      if (counts[r] !== undefined) {
+        counts[r]++;
+      } else {
+        counts.low++;
+      }
+    });
+    setStats(counts);
+
+    const rainTimestamp = data.features?.[0]?.properties?.rain_data_timestamp;
+    if (rainTimestamp) {
+      const ageMin = Math.max(0, (Date.now() - new Date(rainTimestamp).getTime()) / 60000);
+      setRainAgeMin(Math.round(ageMin));
+    } else if (data.features?.[0]?.properties?.rain_data_age_min !== undefined) {
+      setRainAgeMin(data.features[0].properties.rain_data_age_min);
+    }
+  }, []);
+
+  // Instant bootstrap: immediately populate predictions so map is NEVER empty
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const cached = await getCachedPredictions(1);
+        if (cached && active) {
+          setGeojsonData(cached);
+          updateStatsFromData(cached);
+          return;
+        }
+        const res = await fetch('/data/pilot/predictions_h1.geojson');
+        if (res.ok && active) {
+          const data = await res.json();
+          setGeojsonData(data);
+          updateStatsFromData(data);
+          cachePredictions(1, data);
+        }
+      } catch {
+        // Handled in fetchPredictions
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [updateStatsFromData]);
+
   // Pre-cache all 6 forecast horizons into IndexedDB on initial load
   useEffect(() => {
     [1, 2, 3, 4, 5, 6].forEach(async (h) => {
@@ -91,32 +141,26 @@ export function App() {
         // Silently skip if background prefetch has issues
       }
     });
+
+    // Also pre-cache primary Pune pilot raster tiles for seamless offline zoom
+    if (typeof navigator !== 'undefined' && navigator.onLine) {
+      const sampleTiles = [
+        'https://tile.openstreetmap.org/13/5776/3624.png',
+        'https://tile.openstreetmap.org/13/5776/3625.png',
+        'https://tile.openstreetmap.org/13/5777/3624.png',
+        'https://tile.openstreetmap.org/13/5777/3625.png',
+        'https://a.basemaps.cartocdn.com/rastertiles/voyager/13/5776/3624.png',
+        'https://a.basemaps.cartocdn.com/rastertiles/voyager/13/5776/3625.png',
+        'https://a.basemaps.cartocdn.com/rastertiles/voyager/13/5777/3624.png',
+        'https://a.basemaps.cartocdn.com/rastertiles/voyager/13/5777/3625.png'
+      ];
+      sampleTiles.forEach((url) => fetch(url, { mode: 'no-cors' }).catch(() => {}));
+    }
   }, []);
 
-  // Load predictions for the active horizon and scenario
+  // Load predictions for the active horizon and scenario with fast 1.2s timeout
   const fetchPredictions = useCallback(async () => {
     setIsLoading(true);
-
-    const updateStatsFromData = (data: any) => {
-      const counts = { low: 0, moderate: 0, high: 0, severe: 0 };
-      data.features?.forEach((f: any) => {
-        const r = (f.properties?.risk_class || 'low') as keyof typeof counts;
-        if (counts[r] !== undefined) {
-          counts[r]++;
-        } else {
-          counts.low++;
-        }
-      });
-      setStats(counts);
-
-      const rainTimestamp = data.features?.[0]?.properties?.rain_data_timestamp;
-      if (rainTimestamp) {
-        const ageMin = Math.max(0, (Date.now() - new Date(rainTimestamp).getTime()) / 60000);
-        setRainAgeMin(Math.round(ageMin));
-      } else if (data.features?.[0]?.properties?.rain_data_age_min !== undefined) {
-        setRainAgeMin(data.features[0].properties.rain_data_age_min);
-      }
-    };
 
     try {
       if (!navigator.onLine || apiUnavailable.current) {
@@ -124,14 +168,14 @@ export function App() {
       }
 
       const url = `/api/predictions?hour=${currentHour}${scenario === 'storm_july2024' ? '&scenario=storm_july2024' : ''}`;
-      const res = await axios.get(url);
+      const res = await axios.get(url, { timeout: 1200 });
       setGeojsonData(res.data);
       updateStatsFromData(res.data);
       cachePredictions(currentHour, res.data);
     } catch {
       apiUnavailable.current = true;
 
-      // 1. Try local IndexedDB cache first
+      // 1. Try local IndexedDB cache first (instant 0ms response)
       try {
         const cachedHourData = await getCachedPredictions(currentHour);
         if (cachedHourData && cachedHourData.features?.length > 0) {
@@ -146,27 +190,28 @@ export function App() {
 
       // 2. Fallback to bundled static horizon GeoJSON
       try {
-        const fallbackRes = await fetch(`/data/pilot/predictions_h${currentHour}.geojson`, { cache: 'no-store' });
-        if (!fallbackRes.ok) throw new Error(`Static fallback returned ${fallbackRes.status}`);
-        const hourData = await fallbackRes.json();
-        setGeojsonData(hourData);
-        updateStatsFromData(hourData);
-        cachePredictions(currentHour, hourData);
+        const fallbackRes = await fetch(`/data/pilot/predictions_h${currentHour}.geojson`);
+        if (fallbackRes.ok) {
+          const hourData = await fallbackRes.json();
+          setGeojsonData(hourData);
+          updateStatsFromData(hourData);
+          cachePredictions(currentHour, hourData);
+        }
       } catch (errFallback) {
         console.error('Failed to load predictions fallback:', errFallback);
       }
     } finally {
       setIsLoading(false);
     }
-  }, [currentHour, scenario]);
+  }, [currentHour, scenario, updateStatsFromData]);
 
   // Fetch citizen reports feed + merge offline pending reports
   const fetchReports = useCallback(async () => {
     let combinedReports: any = { type: 'FeatureCollection', features: [] };
 
     try {
-      if (navigator.onLine) {
-        const res = await axios.get('/api/reports?hours=24');
+      if (navigator.onLine && !apiUnavailable.current) {
+        const res = await axios.get('/api/reports?hours=24', { timeout: 1200 });
         if (res.data?.features) {
           combinedReports = res.data;
         }
@@ -203,11 +248,11 @@ export function App() {
     setReportsData(combinedReports);
   }, []);
 
-  // Fetch health data for freshness
+  // Fetch health data for freshness with fast timeout
   const fetchHealth = useCallback(async () => {
-    if (!navigator.onLine) return;
+    if (!navigator.onLine || apiUnavailable.current) return;
     try {
-      const res = await axios.get('/api/health');
+      const res = await axios.get('/api/health', { timeout: 1000 });
       if (res.data?.rain_data_age_min !== undefined) {
         setRainAgeMin(res.data.rain_data_age_min);
       }
