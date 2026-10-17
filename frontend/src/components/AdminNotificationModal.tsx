@@ -61,14 +61,25 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
     if (photoUrls[reportId]) return;
     setLoadingPhotoId(reportId);
     try {
-      const response = await axios.get(`/api/notifications/admin/reports/${encodeURIComponent(reportId)}/photo`, {
-        responseType: 'blob', headers: { 'X-Admin-Password': password },
-      });
-      const url = URL.createObjectURL(response.data);
+      let response;
+      try {
+        response = await axios.get(`/api/notifications/admin/reports/${encodeURIComponent(reportId)}/photo`, {
+          responseType: 'blob', headers: { 'X-Admin-Password': password },
+        });
+      } catch {
+        // Older API deployments expose the same stored image through the report resource route.
+        response = await axios.get(`/api/reports/${encodeURIComponent(reportId)}/photo`, { responseType: 'blob' });
+      }
+      const imageBlob = response.data as Blob;
+      const contentType = response.headers['content-type'] || imageBlob.type;
+      if (typeof contentType !== 'string' || !contentType.startsWith('image/')) {
+        throw new Error('The report photo endpoint returned a non-image response.');
+      }
+      const url = URL.createObjectURL(imageBlob);
       photoUrlsToRevoke.current.add(url);
       setPhotoUrls(current => ({ ...current, [reportId]: url }));
     } catch (error: any) {
-      setReportStatus(error?.response?.data?.detail || 'Could not load this report photo.');
+      setReportStatus(error?.message || error?.response?.data?.detail || 'Could not load this report photo.');
     } finally { setLoadingPhotoId(null); }
   };
 
