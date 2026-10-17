@@ -83,9 +83,27 @@ export const Navbar: FC<NavbarProps> = ({
   }, [speakNotice]);
 
   const fetchNotifications = useCallback(async () => {
+    // If offline, read cached notifications from localStorage immediately
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      try {
+        const cached = JSON.parse(localStorage.getItem('jaldrishti_cached_notifications') || '[]');
+        setNotifications(cached);
+        return cached;
+      } catch {
+        return [];
+      }
+    }
+
     try {
-      const { data } = await axios.get('/api/notifications/feed?limit=30');
+      const { data } = await axios.get('/api/notifications/feed?limit=30', { timeout: 1200 });
       const rows = data as AppNotice[];
+      if (Array.isArray(rows)) {
+        try {
+          localStorage.setItem('jaldrishti_cached_notifications', JSON.stringify(rows));
+        } catch {
+          // Ignore local storage quota limits
+        }
+      }
       if (!hasNotificationBaseline.current) {
         rows.forEach(row => knownNotificationIds.current.add(row.id));
         hasNotificationBaseline.current = true;
@@ -100,7 +118,13 @@ export const Navbar: FC<NavbarProps> = ({
       setUnreadCount(rows.filter(row => !readIds.includes(row.id)).length);
       return rows;
     } catch {
-      return [];
+      try {
+        const cached = JSON.parse(localStorage.getItem('jaldrishti_cached_notifications') || '[]');
+        setNotifications(cached);
+        return cached;
+      } catch {
+        return [];
+      }
     }
   }, [announceNewNotice]);
 
@@ -151,7 +175,7 @@ export const Navbar: FC<NavbarProps> = ({
     const latest = await fetchNotifications();
     let readIds: number[] = [];
     try { readIds = JSON.parse(localStorage.getItem('jaldrishti_read_notifications') || '[]'); } catch { /* reset malformed local state */ }
-    const updated = Array.from(new Set([...readIds, ...latest.map(row => row.id)])).slice(-100);
+    const updated = Array.from(new Set([...readIds, ...latest.map((row: AppNotice) => row.id)])).slice(-100);
     localStorage.setItem('jaldrishti_read_notifications', JSON.stringify(updated));
     setUnreadCount(0);
   };
