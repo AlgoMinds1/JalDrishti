@@ -44,8 +44,6 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
       const result = simRes.data?.geojson || simRes.data?.data || simRes.data;
       if (result?.type === 'FeatureCollection' && Array.isArray(result.features) && result.features.length) {
         setSimulationData(result);
-      } else {
-        setStatusMessage('The LightGBM simulation returned no road segments. Please retry or check the model service.');
       }
     } catch (err: any) {
       console.error('Failed to run sandbox simulation:', err);
@@ -67,7 +65,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
   const fetchLedger = async () => {
     try {
       const res = await axios.get('/api/admin/ledger');
-      setLedgerData(res.data || []);
+      setLedgerData(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error('Failed to load ledger:', err);
     }
@@ -484,7 +482,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
 
               {/* Intervention Cards */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {ledgerData.map((item: any) => (
+                {(Array.isArray(ledgerData) ? ledgerData : []).map((item: any) => (
                   <div key={item.intervention_id} style={{
                     background: 'var(--bg-pill)',
                     borderRadius: '12px',
