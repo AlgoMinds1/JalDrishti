@@ -15,7 +15,7 @@ import {
   Settings,
   Bell
 } from 'lucide-react';
-import axios from 'axios';
+import { enableBrowserPush } from '../services/push';
 
 interface NavbarProps {
   activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay';
@@ -47,28 +47,7 @@ export const Navbar: FC<NavbarProps> = ({
 
   const enablePush = async () => {
     try {
-      if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
-        setPushStatus('Push notifications are not supported in this browser.');
-        return;
-      }
-      const permission = await Notification.requestPermission();
-      if (permission !== 'granted') {
-        setPushStatus('Allow notifications in your browser to receive updates.');
-        return;
-      }
-      const { data } = await axios.get('/api/notifications/public-key');
-      await navigator.serviceWorker.register('/sw.js');
-      const ready = await navigator.serviceWorker.ready;
-      const decodeKey = (value: string) => {
-        const padding = '='.repeat((4 - value.length % 4) % 4);
-        const raw = atob((value + padding).replace(/-/g, '+').replace(/_/g, '/'));
-        return Uint8Array.from(raw, (char) => char.charCodeAt(0));
-      };
-      const subscription = await ready.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: decodeKey(data.public_key)
-      });
-      await axios.post('/api/notifications/subscribe', subscription.toJSON());
+      await enableBrowserPush();
       setPushStatus('This device is subscribed to JalDrishti updates.');
     } catch (error: any) {
       setPushStatus(error?.response?.data?.detail || 'Could not enable notifications.');

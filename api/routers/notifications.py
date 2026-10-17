@@ -1,9 +1,8 @@
-"""Opt-in browser push and admin-scheduled broadcasts."""
+"""Opt-in browser push and immediate admin broadcasts."""
 import os
-from datetime import datetime, timezone
 
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field
 
 from api.services import push_notifications
 
@@ -15,19 +14,9 @@ class SubscriptionPayload(BaseModel):
     keys: dict[str, str]
 
 
-class BroadcastPayload(BaseModel):
+class ImmediateBroadcastPayload(BaseModel):
     title: str = Field(min_length=1, max_length=120)
     body: str = Field(min_length=1, max_length=500)
-    due_at: datetime
-
-    @field_validator("due_at")
-    @classmethod
-    def require_timezone(cls, value):
-        if value.tzinfo is None:
-            raise ValueError("due_at must include a timezone")
-        if value <= datetime.now(timezone.utc):
-            raise ValueError("due_at must be in the future")
-        return value
 
 
 @router.get("/subscriber-count")
@@ -42,7 +31,7 @@ def subscriber_count():
             db.close()
     except Exception as exc:
         raise HTTPException(status_code=503, detail="Subscription database is unavailable") from exc
-    return {"authenticated": True, "opted_in_devices": count,
+    return {"opted_in_devices": count,
             "identity_note": "This prototype tracks opted-in browser devices, not named user accounts."}
 
 
@@ -65,16 +54,11 @@ def subscribe(payload: SubscriptionPayload):
     return {"status": "subscribed"}
 
 
-@router.post("/broadcasts", status_code=201)
-def create_broadcast(payload: BroadcastPayload):
+@router.post("/broadcasts/send-now")
+def send_broadcast_now(payload: ImmediateBroadcastPayload):
     if not push_notifications.public_key() or not os.getenv("VAPID_PRIVATE_KEY"):
         raise HTTPException(status_code=503, detail="Browser push is not configured")
     try:
-        result = push_notifications.schedule_broadcast(
-            payload.title,
-            payload.body,
-            payload.due_at.astimezone(timezone.utc).replace(tzinfo=None),
-        )
-        return result
+        return push_notifications.send_broadcast_now(payload.title, payload.body)
     except Exception as exc:
-        raise HTTPException(status_code=503, detail="Broadcast storage is unavailable") from exc
+        raise HTTPException(status_code=503, detail="Immediate push delivery failed") from exc

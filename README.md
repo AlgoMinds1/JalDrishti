@@ -28,9 +28,9 @@ See [results.md](results.md) and [data/SOURCES.md](data/SOURCES.md) for the audi
 
 ## Browser push notifications
 
-Users must opt in on each browser/device using the Notifications button. The
-API stores subscriptions in the configured database; scheduled broadcasts are
-sent by the API worker, so the admin laptop can be closed after scheduling.
+Users must opt in on each browser/device using Enable alerts. The API stores
+subscriptions in the configured database; broadcasts are sent immediately when
+the admin presses Send notification now.
 The deployed site must use HTTPS and the API must have `VAPID_PUBLIC_KEY`,
 `VAPID_PRIVATE_KEY`, and `VAPID_SUBJECT` (a `mailto:` contact) configured.
 Install the added `pywebpush` requirement. The top-bar Notifications button
