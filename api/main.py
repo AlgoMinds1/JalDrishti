@@ -13,7 +13,7 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
-from api.routers import predictions, reports, routes, admin, notifications
+from api.routers import predictions, reports, routes, admin, notifications, assistant
 from pipeline.refresh import refresh_predictions
 
 limiter = Limiter(key_func=get_remote_address, default_limits=["120/minute"])
@@ -64,6 +64,9 @@ app.include_router(admin.sandbox_router, prefix="/api")
 
 app.include_router(notifications.router)
 app.include_router(notifications.router, prefix="/api")
+
+app.include_router(assistant.router)
+app.include_router(assistant.router, prefix="/api")
 
 DATA_DIR = ROOT_DIR / "data" / "processed"
 FIXTURES_DIR = ROOT_DIR / "fixtures"

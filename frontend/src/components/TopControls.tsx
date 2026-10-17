@@ -1,10 +1,8 @@
 import { useState, type FC } from 'react';
-import { Search, X, CloudRain } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import { useAppLanguage } from '../language';
 
 interface TopControlsProps {
-  showRainfall: boolean;
-  setShowRainfall: (show: boolean) => void;
   onSelectLocation: (lat: number, lon: number, name: string) => void;
 }
 
@@ -24,8 +22,6 @@ const PUNE_PRESET_LOCATIONS = [
 ];
 
 export const TopControls: FC<TopControlsProps> = ({
-  showRainfall,
-  setShowRainfall,
   onSelectLocation
 }) => {
   const { t } = useAppLanguage();
@@ -169,56 +165,6 @@ export const TopControls: FC<TopControlsProps> = ({
         )}
       </div>
 
-      {/* Desktop Rainfall Quick Toggle (Visible on Desktop) */}
-      <div className="desktop-only" style={{ pointerEvents: 'auto' }}>
-        <button
-          onClick={() => setShowRainfall(!showRainfall)}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '7px 14px',
-            borderRadius: '9999px',
-            border: '1px solid var(--border-color, #E4DACA)',
-            background: 'var(--bg-card, #FFFCF6)',
-            boxShadow: '0 3px 12px rgba(37, 37, 31, 0.06)',
-            cursor: 'pointer',
-            transition: 'all 0.15s ease'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <CloudRain size={16} color="var(--accent-cyan, #77745B)" />
-            <span style={{ fontSize: '12.5px', fontWeight: 600, color: 'var(--text-main, #25251F)' }}>
-              {t('rainfall')}
-            </span>
-          </div>
-
-          <div
-            style={{
-              width: '34px',
-              height: '20px',
-              borderRadius: '10px',
-              background: showRainfall ? 'var(--accent-beige, #77745B)' : 'var(--border-color, #E4DACA)',
-              position: 'relative',
-              transition: 'background 0.2s ease'
-            }}
-          >
-            <div
-              style={{
-                width: '16px',
-                height: '16px',
-                borderRadius: '50%',
-                background: '#ffffff',
-                position: 'absolute',
-                top: '2px',
-                left: showRainfall ? '16px' : '2px',
-                transition: 'left 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.2)'
-              }}
-            />
-          </div>
-        </button>
-      </div>
     </div>
   );
 };

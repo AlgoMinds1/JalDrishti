@@ -15,7 +15,6 @@ interface MapComponentProps {
   reportsData?: any;
   showReports?: boolean;
   routeGeojson?: any;
-  showRainfall?: boolean;
   targetCoords?: { lat: number; lon: number; name: string } | null;
   onSelectSegment: (segment: SegmentPredictionData) => void;
 }
@@ -360,7 +359,6 @@ export const MapComponent: FC<MapComponentProps> = ({
   reportsData,
   showReports = true,
   routeGeojson,
-  showRainfall = true,
   targetCoords,
   onSelectSegment
 }) => {
@@ -474,14 +472,12 @@ export const MapComponent: FC<MapComponentProps> = ({
         />
 
         {/* Live Rainfall Radar Simulation Layer (soft blue rain clouds) */}
-        {showRainfall && (
-          <TileLayer
-            key="rain_layer"
-            opacity={0.18}
-            url="https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=439d4b804bc8187953eb36d2a8c26a02"
-            maxZoom={18}
-          />
-        )}
+        <TileLayer
+          key="rain_layer"
+          opacity={0.18}
+          url="https://tile.openweathermap.org/map/precipitation_new/{z}/{x}/{y}.png?appid=439d4b804bc8187953eb36d2a8c26a02"
+          maxZoom={18}
+        />
 
         {/* Road Inundation Prediction Polylines */}
         {geojsonData && (

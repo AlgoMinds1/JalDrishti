@@ -3,7 +3,7 @@ import {
   Map,
   Megaphone,
   Navigation,
-  CloudRain,
+  MessageCircle,
   Settings
 } from 'lucide-react';
 import { useAppLanguage } from '../language';
@@ -14,8 +14,7 @@ interface MobileBottomNavProps {
   onOpenReportModal: () => void;
   onToggleRoutePlanner: () => void;
   onOpenSettings: () => void;
-  onToggleRainfall: () => void;
-  showRainfall: boolean;
+  onOpenAssistant: () => void;
 }
 
 export const MobileBottomNav: FC<MobileBottomNavProps> = ({
@@ -24,8 +23,7 @@ export const MobileBottomNav: FC<MobileBottomNavProps> = ({
   onOpenReportModal,
   onToggleRoutePlanner,
   onOpenSettings,
-  onToggleRainfall,
-  showRainfall
+  onOpenAssistant
 }) => {
   const { t } = useAppLanguage();
   return (
@@ -170,10 +168,10 @@ export const MobileBottomNav: FC<MobileBottomNavProps> = ({
         </span>
       </button>
 
-      {/* 4. Rain */}
+      {/* 4. Flood assistant */}
       <button
-        onClick={onToggleRainfall}
-        title={showRainfall ? 'Hide Live Rainfall Overlay' : 'Show Live Rainfall Overlay'}
+        onClick={onOpenAssistant}
+        title="Flood Assistant"
         style={{
           flex: 1,
           display: 'flex',
@@ -185,7 +183,7 @@ export const MobileBottomNav: FC<MobileBottomNavProps> = ({
           border: 'none',
           cursor: 'pointer',
           padding: '4px 2px',
-          color: showRainfall ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)',
+          color: 'var(--text-muted, #706D62)',
           transition: 'all 0.15s ease'
         }}
       >
@@ -197,33 +195,20 @@ export const MobileBottomNav: FC<MobileBottomNavProps> = ({
             width: '36px',
             height: '26px',
             borderRadius: '13px',
-            background: showRainfall ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
+            background: 'transparent',
             position: 'relative'
           }}
         >
-          <CloudRain size={18} strokeWidth={showRainfall ? 2.4 : 1.9} />
-          {showRainfall && (
-            <span
-              style={{
-                position: 'absolute',
-                top: '4px',
-                right: '6px',
-                width: '6px',
-                height: '6px',
-                borderRadius: '50%',
-                background: 'var(--status-green, #16866A)'
-              }}
-            />
-          )}
+          <MessageCircle size={18} strokeWidth={1.9} />
         </div>
         <span
           style={{
             fontSize: '11px',
-            fontWeight: showRainfall ? 700 : 500,
+            fontWeight: 500,
             letterSpacing: '-0.1px'
           }}
         >
-          {t('rain')}
+          {t('assistant')}
         </span>
       </button>
 

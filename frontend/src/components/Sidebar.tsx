@@ -3,7 +3,7 @@ import {
   Map,
   Megaphone,
   Navigation,
-  CloudRain,
+  MessageCircle,
   Settings,
   BarChart3,
   CalendarClock,
@@ -19,8 +19,7 @@ interface SidebarProps {
   onOpenAdminModal: () => void;
   onOpenSettings: () => void;
   onOpenReplay: () => void;
-  onToggleRainfall: () => void;
-  showRainfall: boolean;
+  onOpenAssistant: () => void;
   rainAgeMin?: number;
 }
 
@@ -32,10 +31,10 @@ export const Sidebar: FC<SidebarProps> = ({
   onOpenAdminModal,
   onOpenSettings,
   onOpenReplay,
-  onToggleRainfall,
+  onOpenAssistant,
   rainAgeMin = 0
 }) => {
-  const [selectedItem, setSelectedItem] = useState<'map' | 'report' | 'route' | 'admin' | null>(
+  const [selectedItem, setSelectedItem] = useState<'map' | 'report' | 'route' | 'admin' | 'settings' | null>(
     activeTab === 'map' ? 'map' : null
   );
 
@@ -164,9 +163,9 @@ export const Sidebar: FC<SidebarProps> = ({
           </div>
         </button>
 
-        {/* Live Rainfall Toggle */}
+        {/* Flood Assistant */}
         <button
-          onClick={() => { setSelectedItem(null); onToggleRainfall(); }}
+          onClick={() => { setSelectedItem(null); onOpenAssistant(); }}
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -182,14 +181,14 @@ export const Sidebar: FC<SidebarProps> = ({
           }}
         >
           <div style={{ color: 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <CloudRain size={19} />
+            <MessageCircle size={19} />
           </div>
           <div>
             <div style={{ fontSize: '13.5px', fontWeight: 600 }}>
-              Rainfall & Radar
+              {t('assistantTitle')}
             </div>
             <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>
-              Toggle radar layer
+              {t('assistantDescription')}
             </div>
           </div>
         </button>

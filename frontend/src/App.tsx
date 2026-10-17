@@ -14,6 +14,7 @@ import { AdminNotificationModal } from './components/AdminNotificationModal';
 import { NotificationPermissionPrompt } from './components/NotificationPermissionPrompt';
 import { UserSettingsModal } from './components/UserSettingsModal';
 import { MobileBottomNav } from './components/MobileBottomNav';
+import { FloodAssistantModal } from './components/FloodAssistantModal';
 import { EvaluationPage } from './pages/EvaluationPage';
 import { LimitationsPage } from './pages/LimitationsPage';
 import { LandingPage } from './pages/LandingPage';
@@ -40,7 +41,6 @@ export function App() {
   const apiUnavailable = useRef(false);
   const [reportsData, setReportsData] = useState<any>(null);
   const [showReportsLayer, setShowReportsLayer] = useState<boolean>(true);
-  const [showRainfall, setShowRainfall] = useState<boolean>(false);
   const [targetCoords, setTargetCoords] = useState<{ lat: number; lon: number; name: string } | null>(null);
 
   // Modals
@@ -49,6 +49,7 @@ export function App() {
   const [isAdminModalOpen, setIsAdminModalOpen] = useState<boolean>(false);
   const [isAdminNotificationModalOpen, setIsAdminNotificationModalOpen] = useState(false);
   const [isUserSettingsOpen, setIsUserSettingsOpen] = useState(false);
+  const [isFloodAssistantOpen, setIsFloodAssistantOpen] = useState(false);
   const [isPushPromptOpen, setIsPushPromptOpen] = useState(false);
   const closePushPrompt = useCallback(() => setIsPushPromptOpen(false), []);
   const [activeRouteGeojson, setActiveRouteGeojson] = useState<any>(null);
@@ -358,6 +359,7 @@ export function App() {
         onClose={() => setIsAdminNotificationModalOpen(false)}
       />
       <UserSettingsModal isOpen={isUserSettingsOpen} onClose={() => setIsUserSettingsOpen(false)} theme={theme} setTheme={setTheme} />
+      <FloodAssistantModal isOpen={isFloodAssistantOpen} onClose={() => setIsFloodAssistantOpen(false)} />
       <NotificationPermissionPrompt isOpen={isPushPromptOpen} onClose={closePushPrompt} />
 
       {/* Main Layout Area: Left Sidebar (Desktop only) + Center Map View (Full width on Mobile) */}
@@ -379,8 +381,7 @@ export function App() {
           onOpenAdminModal={() => setIsAdminModalOpen(true)}
           onOpenSettings={() => setIsUserSettingsOpen(true)}
           onOpenReplay={openEventReplay}
-          onToggleRainfall={() => setShowRainfall(!showRainfall)}
-          showRainfall={showRainfall}
+          onOpenAssistant={() => setIsFloodAssistantOpen(true)}
           rainAgeMin={rainAgeMin}
         />
 
@@ -425,10 +426,8 @@ export function App() {
                 </div>
               )}
 
-              {/* Floating Top Controls (Location search, Live Rainfall toggle) */}
+              {/* Floating Top Controls (Location search) */}
               <TopControls
-                showRainfall={showRainfall}
-                setShowRainfall={setShowRainfall}
                 onSelectLocation={(lat, lon, name) => setTargetCoords({ lat, lon, name })}
               />
 
@@ -450,7 +449,6 @@ export function App() {
                 reportsData={reportsData}
                 showReports={showReportsLayer}
                 routeGeojson={activeRouteGeojson}
-                showRainfall={showRainfall}
                 targetCoords={targetCoords}
                 onSelectSegment={(seg) => setSelectedSegment(seg)}
               />
@@ -517,8 +515,7 @@ export function App() {
         onOpenReportModal={() => setIsReportModalOpen(true)}
         onToggleRoutePlanner={() => setIsRoutePlannerOpen(true)}
         onOpenSettings={() => setIsUserSettingsOpen(true)}
-        onToggleRainfall={() => setShowRainfall(!showRainfall)}
-        showRainfall={showRainfall}
+        onOpenAssistant={() => setIsFloodAssistantOpen(true)}
       />
     </div>
   );
