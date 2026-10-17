@@ -3,6 +3,98 @@ import axios from 'axios';
 import { Sliders, AlertTriangle, Wrench, X, RefreshCw, PlusCircle } from 'lucide-react';
 import { MapComponent } from './MapComponent';
 
+type SimulatedFeatureCollection = {
+  type: 'FeatureCollection';
+  name: string;
+  is_simulation: true;
+  features: any[];
+  summary: { total_segments: number; counts: Record<string, number> };
+  execution_time_ms?: number;
+  top_failing_corridors: any[];
+  local_fallback?: boolean;
+};
+
+function geometryCenter(geometry: any): [number, number] | null {
+  const positions: number[][] = [];
+  const visit = (value: any) => {
+    if (!Array.isArray(value)) return;
+    if (typeof value[0] === 'number' && typeof value[1] === 'number') {
+      if (Number.isFinite(value[0]) && Number.isFinite(value[1])) positions.push(value);
+      return;
+    }
+    value.forEach(visit);
+  };
+  visit(geometry?.coordinates);
+  if (!positions.length) return null;
+  const [lon, lat] = positions.reduce(
+    ([sumLon, sumLat], position) => [sumLon + position[0] / positions.length, sumLat + position[1] / positions.length],
+    [0, 0]
+  );
+  return Number.isFinite(lon) && Number.isFinite(lat) ? [lon, lat] : null;
+}
+
+function buildLocalScenario(geojson: any, rainfallMm: number, durationH: number): SimulatedFeatureCollection | null {
+  if (geojson?.type !== 'FeatureCollection' || !Array.isArray(geojson.features) || !geojson.features.length) return null;
+  const counts = { severe: 0, high: 0, moderate: 0, low: 0 };
+  const rate = rainfallMm / durationH;
+  const features = geojson.features.filter((feature: any) => feature?.type === 'Feature' && feature.geometry).map((feature: any) => {
+    const props = feature.properties || {};
+    const center = geometryCenter(feature.geometry);
+    const base = Number.isFinite(Number(props.probability))
+      ? Number(props.probability) * 100
+      : ({ severe: 80, high: 60, moderate: 35, low: 12 }[props.risk_class as 'severe' | 'high' | 'moderate' | 'low'] || 12);
+    const hand = Number(props.hand_mean);
+    const waterDistance = Number(props.dist_to_waterway_m);
+    const underpassBoost = props.is_underpass || props.is_tunnel ? 16 : 0;
+    const lowTerrainBoost = Number.isFinite(hand) && hand < 2.5 ? 10 : 0;
+    const waterwayBoost = Number.isFinite(waterDistance) ? Math.max(0, 10 - waterDistance / 100) : 0;
+    const spatialBoost = center
+      ? Math.max(0, 12 - Math.hypot((center[0] - 73.86) * 92, (center[1] - 18.52) * 111) * 4)
+      : 0;
+    const score = Math.max(0, Math.min(100, base * 0.25 + rainfallMm * 0.38 + rate * 0.45 + underpassBoost + lowTerrainBoost + waterwayBoost + spatialBoost));
+    const riskClass = score >= 65 ? 'severe' : score >= 40 ? 'high' : score >= 20 ? 'moderate' : 'low';
+    counts[riskClass] += 1;
+    return {
+      ...feature,
+      properties: {
+        ...props,
+        probability: Number((score / 100).toFixed(3)),
+        risk_class: riskClass,
+        simulated: true,
+        is_simulation: true,
+        confidence_level: 'Illustrative',
+        top_reasons: [
+          `Hypothetical rainfall: ${rainfallMm} mm over ${durationH} hours (${rate.toFixed(1)} mm/h)`,
+          props.is_underpass ? 'Underpass vulnerability increases local stress' : 'Rainfall intensity and existing segment risk drive this estimate',
+          Number.isFinite(waterDistance) && waterDistance < 300 ? 'Near a mapped waterway' : 'Scenario estimate, not a measured flood observation'
+        ]
+      }
+    };
+  });
+  if (!features.length) return null;
+  const topFailing = features
+    .filter((feature: any) => ['severe', 'high'].includes(feature.properties.risk_class))
+    .sort((a: any, b: any) => b.properties.probability - a.properties.probability)
+    .slice(0, 15)
+    .map((feature: any) => ({
+      segment_id: feature.properties.id,
+      name: feature.properties.name || feature.properties.id || 'Road segment',
+      risk_class: feature.properties.risk_class,
+      probability: feature.properties.probability,
+      road_class: feature.properties.road_class || 'unknown',
+      is_underpass: Boolean(feature.properties.is_underpass)
+    }));
+  return {
+    type: 'FeatureCollection',
+    name: `local_scenario_${rainfallMm}mm_${durationH}h`,
+    is_simulation: true,
+    local_fallback: true,
+    features,
+    summary: { total_segments: features.length, counts },
+    top_failing_corridors: topFailing
+  };
+}
+
 interface AdminSandboxModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -19,6 +111,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
   const [durationH, setDurationH] = useState<number>(2);
   const [isSimulating, setIsSimulating] = useState<boolean>(false);
   const [simulationData, setSimulationData] = useState<any>(null);
+  const [localRoads, setLocalRoads] = useState<any>(null);
   const [queueData, setQueueData] = useState<any[]>([]);
   const [ledgerData, setLedgerData] = useState<any[]>([]);
   const [showLogModal, setShowLogModal] = useState<boolean>(false);
@@ -37,17 +130,49 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
   const runSimulation = async () => {
     setIsSimulating(true);
     setStatusMessage(null);
+    setSimulationData(null);
+    let simSucceeded = false;
     try {
       // 1. Fetch simulation GeoJSON
       const simRes = await axios.get(`/api/sandbox/simulate?mm=${rainfallMm}&duration_h=${durationH}`);
-      setSimulationData(simRes.data);
-
-      // 2. Fetch ranked inspection queue for this scenario
-      const qRes = await axios.get(`/api/admin/queue?mm=${rainfallMm}&duration_h=${durationH}&top_n=10`);
-      setQueueData(qRes.data?.queue || []);
+      const result = simRes.data?.geojson || simRes.data?.data || simRes.data;
+      if (result?.type === 'FeatureCollection' && Array.isArray(result.features) && result.features.length) {
+        setSimulationData(result);
+        simSucceeded = true;
+      }
     } catch (err: any) {
       console.error('Failed to run sandbox simulation:', err);
-      setStatusMessage('Simulation failed to execute.');
+    }
+
+    if (!simSucceeded) {
+      let fallbackGeometry = liveGeojsonData || localRoads;
+      let localResult = buildLocalScenario(fallbackGeometry, rainfallMm, durationH);
+      if (!localResult && !localRoads) {
+        try {
+          const roadsResponse = await fetch(`${import.meta.env.BASE_URL}data/pilot/road_segments.geojson`);
+          if (roadsResponse.ok) {
+            fallbackGeometry = await roadsResponse.json();
+            setLocalRoads(fallbackGeometry);
+          }
+        } catch (err) {
+          console.error('Failed to load local road geometry for simulation:', err);
+        }
+      }
+      localResult = buildLocalScenario(fallbackGeometry, rainfallMm, durationH);
+      if (localResult) {
+        setSimulationData(localResult);
+        setStatusMessage('Showing an illustrative local stress estimate because the server simulation is unavailable.');
+      } else {
+        setStatusMessage('Simulation could not load road data. Please retry when online.');
+      }
+    }
+
+    try {
+      const qRes = await axios.get(`/api/admin/queue?mm=${rainfallMm}&duration_h=${durationH}&top_n=10`);
+      setQueueData(qRes.data?.queue || []);
+    } catch (err) {
+      console.error('Failed to load the inspection queue:', err);
+      setQueueData([]);
     } finally {
       setIsSimulating(false);
     }
@@ -304,12 +429,13 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
 
               {/* Simulation Result Counters */}
               {simulationData && (
+                <>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
                   {[
                     { label: 'Severe Risk Segments', val: simulationData.summary?.counts?.severe || 0, color: 'var(--risk-severe)' },
                     { label: 'High Risk Segments', val: simulationData.summary?.counts?.high || 0, color: 'var(--risk-high)' },
                     { label: 'Moderate Risk Segments', val: simulationData.summary?.counts?.moderate || 0, color: 'var(--risk-moderate)' },
-                    { label: 'Inference Speed', val: `${simulationData.execution_time_ms} ms`, color: 'var(--accent-beige-dark)' }
+                    { label: 'Road Segments', val: simulationData.summary?.total_segments ?? simulationData.features?.length ?? 0, color: 'var(--accent-beige-dark)' }
                   ].map((c, i) => (
                     <div key={i} style={{
                       background: 'var(--bg-pill)',
@@ -322,6 +448,23 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
                     </div>
                   ))}
                 </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px 16px', padding: '10px 12px', borderRadius: '8px', background: 'var(--bg-primary, #F5F0E7)', fontSize: '11px', color: 'var(--text-muted)' }}>
+                  <strong style={{ color: 'var(--text-main)' }}>Map key</strong>
+                  {[
+                    { label: 'Severe', color: 'var(--risk-severe, #dc2626)' },
+                    { label: 'High', color: 'var(--risk-high, #f97316)' },
+                    { label: 'Moderate', color: 'var(--risk-moderate, #f59e0b)' },
+                    { label: 'Low', color: 'var(--risk-low, #10b981)' }
+                  ].map((item) => (
+                    <span key={item.label} style={{ display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                      <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: item.color }} />{item.label}
+                    </span>
+                  ))}
+                  <span style={{ marginLeft: 'auto' }}>
+                    {simulationData.local_fallback ? 'Illustrative local estimate' : `Server simulation · ${Number.isFinite(simulationData.execution_time_ms) ? `${simulationData.execution_time_ms} ms` : 'timing unavailable'}`}
+                  </span>
+                </div>
+                </>
               )}
 
               {/* Top Failing Corridors List */}
