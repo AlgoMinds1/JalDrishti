@@ -371,7 +371,7 @@ export const MapComponent: FC<MapComponentProps> = ({
   onSelectSegment
 }) => {
   const geojsonLayerRef = useRef<L.GeoJSON | null>(null);
-  const [selectedBasemap, setSelectedBasemap] = useState<BasemapKey>('voyager');
+  const [selectedBasemap, setSelectedBasemap] = useState<BasemapKey>('osm');
   const [isLayerMenuOpen, setIsLayerMenuOpen] = useState<boolean>(false);
   const [baseRoads, setBaseRoads] = useState<any>(null);
 
