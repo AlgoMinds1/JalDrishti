@@ -1,15 +1,17 @@
 import { useState, type FC } from 'react';
 import { Info, X, ShieldAlert } from 'lucide-react';
+import { useAppLanguage } from '../language';
 
 export const RiskLegend: FC<{ hideMobile?: boolean }> = ({ hideMobile = false }) => {
+  const { t } = useAppLanguage();
   const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   const items = [
-    { label: 'Severe', desc: 'Likely road inundation >15cm', color: 'var(--risk-severe, #dc2626)' },
-    { label: 'High', desc: 'Significant water accumulation risk', color: 'var(--risk-high, #ea580c)' },
-    { label: 'Moderate', desc: 'Partial waterlogging / slow traffic', color: 'var(--risk-moderate, #d97706)' },
-    { label: 'Low', desc: 'Passable, minimal predicted pooling', color: 'var(--risk-low, #16866A)' },
-    { label: 'No significant risk', desc: 'Dry / normal road conditions', color: 'var(--risk-none, #9e8870)' }
+    { label: t('severe'), desc: t('severeDesc'), color: 'var(--risk-severe, #dc2626)' },
+    { label: t('high'), desc: t('highDesc'), color: 'var(--risk-high, #ea580c)' },
+    { label: t('moderate'), desc: t('moderateDesc'), color: 'var(--risk-moderate, #d97706)' },
+    { label: t('low'), desc: t('lowDesc'), color: 'var(--risk-low, #16866A)' },
+    { label: t('noRisk'), desc: t('dryDesc'), color: 'var(--risk-none, #9e8870)' }
   ];
 
   return (
@@ -42,7 +44,7 @@ export const RiskLegend: FC<{ hideMobile?: boolean }> = ({ hideMobile = false })
           }}
         >
           <span style={{ fontSize: '12.5px', fontWeight: 700, color: 'var(--text-main, #25251F)' }}>
-            Waterlogging Risk
+            {t('risk')}
           </span>
           <div title="Conformal calibrated prediction classes">
             <Info size={14} color="var(--accent-cyan, #77745B)" style={{ cursor: 'help' }} />
@@ -104,7 +106,7 @@ export const RiskLegend: FC<{ hideMobile?: boolean }> = ({ hideMobile = false })
             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--risk-moderate, #d97706)' }} />
             <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--risk-low, #16866A)' }} />
           </div>
-          <span>Risk legend</span>
+          <span>{t('riskLegend')}</span>
         </button>
       </div>
 
@@ -158,7 +160,7 @@ export const RiskLegend: FC<{ hideMobile?: boolean }> = ({ hideMobile = false })
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <ShieldAlert size={18} color="var(--accent-cyan, #77745B)" />
                 <h4 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main, #25251F)' }}>
-                  Waterlogging Risk Levels
+                  {t('riskLevels')}
                 </h4>
               </div>
               <button

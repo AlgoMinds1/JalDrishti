@@ -1,5 +1,6 @@
 import { useState, type FC } from 'react';
 import { Search, X, CloudRain } from 'lucide-react';
+import { useAppLanguage } from '../language';
 
 interface TopControlsProps {
   showRainfall: boolean;
@@ -27,6 +28,7 @@ export const TopControls: FC<TopControlsProps> = ({
   setShowRainfall,
   onSelectLocation
 }) => {
+  const { t } = useAppLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -78,7 +80,7 @@ export const TopControls: FC<TopControlsProps> = ({
           <Search size={16} color="var(--accent-cyan, #77745B)" style={{ flexShrink: 0 }} />
           <input
             type="text"
-            placeholder="Search roads or locations in Pune"
+            placeholder={t('search')}
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
@@ -160,7 +162,7 @@ export const TopControls: FC<TopControlsProps> = ({
               ))
             ) : (
               <div style={{ padding: '12px 14px', fontSize: '12.5px', color: 'var(--text-muted, #706D62)' }}>
-                No matching road or location found in pilot corridor
+                {t('noMatches')}
               </div>
             )}
           </div>
@@ -187,7 +189,7 @@ export const TopControls: FC<TopControlsProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <CloudRain size={16} color="var(--accent-cyan, #77745B)" />
             <span style={{ fontSize: '12.5px', fontWeight: 600, color: 'var(--text-main, #25251F)' }}>
-              Live Rainfall
+              {t('rainfall')}
             </span>
           </div>
 

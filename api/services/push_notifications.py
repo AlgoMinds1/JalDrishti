@@ -31,13 +31,17 @@ def save_subscription(payload):
         db.close()
 
 
-def send_broadcast_now(title, body):
+def send_broadcast_now(title, body, translations=None):
     """Send a demo broadcast synchronously to every opted-in browser."""
     db = _session_factory()()
     sent = failed = 0
     push_configured = bool(_private_key() and public_key())
     try:
-        notice = AppNotification(title=title, body=body)
+        clean_translations = {
+            lang: {key: value.strip() for key, value in content.items() if key in ("title", "body") and isinstance(value, str) and value.strip()}
+            for lang, content in (translations or {}).items() if lang in ("en", "hi", "mr") and isinstance(content, dict)
+        }
+        notice = AppNotification(title=title, body=body, translations=clean_translations or None)
         db.add(notice)
         db.commit()
         db.refresh(notice)

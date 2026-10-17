@@ -11,6 +11,10 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
   const [deviceCount, setDeviceCount] = useState<number | null>(null);
   const [title, setTitle] = useState('JalDrishti update');
   const [message, setMessage] = useState('');
+  const [hindiTitle, setHindiTitle] = useState('');
+  const [hindiMessage, setHindiMessage] = useState('');
+  const [marathiTitle, setMarathiTitle] = useState('');
+  const [marathiMessage, setMarathiMessage] = useState('');
   const [status, setStatus] = useState('');
   const [busy, setBusy] = useState(false);
 
@@ -44,7 +48,11 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
     e.preventDefault(); setBusy(true); setStatus('');
     try {
       const response = await axios.post('/api/notifications/broadcasts/send-now', {
-        title, body: message
+        title, body: message,
+        translations: {
+          hi: { title: hindiTitle, body: hindiMessage },
+          mr: { title: marathiTitle, body: marathiMessage },
+        },
       });
       const delivery = response.data;
       setStatus(delivery.sent_count > 0
@@ -55,6 +63,7 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
             ? 'Added to the app inbox immediately. No devices currently have push enabled; users can still read it from the notification bell.'
             : `Added to the app inbox. Push delivery failed for ${delivery.failed_count} device${delivery.failed_count === 1 ? '' : 's'}.`);
       setMessage('');
+      setHindiMessage(''); setMarathiMessage('');
     } catch (error: any) {
       setStatus(error?.response?.data?.detail || 'Could not schedule the notification.');
     } finally { setBusy(false); }
@@ -88,6 +97,14 @@ export const AdminNotificationModal: FC<Props> = ({ isOpen, onClose }) => {
               </button>
               <label style={{ color: 'var(--text-muted)', fontSize: 12 }}>Title<input maxLength={120} required value={title} onChange={e => setTitle(e.target.value)} style={fieldStyle} /></label>
               <label style={{ color: 'var(--text-muted)', fontSize: 12 }}>Message<textarea maxLength={500} required rows={3} value={message} onChange={e => setMessage(e.target.value)} style={fieldStyle} placeholder="Write your message for app users" /></label>
+              <details style={{ color: 'var(--text-muted)', fontSize: 12 }}>
+                <summary style={{ cursor: 'pointer', padding: '3px 0 8px' }}>Optional Hindi and Marathi versions for users</summary>
+                <label>Hindi title<input maxLength={120} value={hindiTitle} onChange={e => setHindiTitle(e.target.value)} style={fieldStyle} /></label>
+                <label style={{ display: 'block', marginTop: 8 }}>Hindi message<textarea maxLength={500} rows={2} value={hindiMessage} onChange={e => setHindiMessage(e.target.value)} style={fieldStyle} /></label>
+                <label style={{ display: 'block', marginTop: 8 }}>Marathi title<input maxLength={120} value={marathiTitle} onChange={e => setMarathiTitle(e.target.value)} style={fieldStyle} /></label>
+                <label style={{ display: 'block', marginTop: 8 }}>Marathi message<textarea maxLength={500} rows={2} value={marathiMessage} onChange={e => setMarathiMessage(e.target.value)} style={fieldStyle} /></label>
+                <small>When a translation is left blank, that part uses the English version.</small>
+              </details>
               <button disabled={busy || !message.trim()} style={{ border: 0, borderRadius: 7, padding: 11, color: '#fff', background: 'var(--accent-beige-gradient)', fontWeight: 700, cursor: 'pointer' }}>{busy ? 'Sending…' : 'Send notification now'}</button>
             </form>
           )}

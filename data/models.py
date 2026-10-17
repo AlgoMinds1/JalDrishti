@@ -189,5 +189,6 @@ class AppNotification(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(120), nullable=False)
     body = Column(Text, nullable=False)
+    translations = Column(JSON, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
 

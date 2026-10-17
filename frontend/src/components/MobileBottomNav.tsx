@@ -6,6 +6,7 @@ import {
   CloudRain,
   Settings
 } from 'lucide-react';
+import { useAppLanguage } from '../language';
 
 interface MobileBottomNavProps {
   activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay';
@@ -26,6 +27,7 @@ export const MobileBottomNav: FC<MobileBottomNavProps> = ({
   onToggleRainfall,
   showRainfall
 }) => {
+  const { t } = useAppLanguage();
   return (
     <nav
       className="mobile-only"
@@ -90,7 +92,7 @@ export const MobileBottomNav: FC<MobileBottomNavProps> = ({
             letterSpacing: '-0.1px'
           }}
         >
-          Map
+          {t('mapTab')}
         </span>
       </button>
 
@@ -127,7 +129,7 @@ export const MobileBottomNav: FC<MobileBottomNavProps> = ({
           <Megaphone size={18} strokeWidth={1.9} />
         </div>
         <span style={{ fontSize: '11px', fontWeight: 500, letterSpacing: '-0.1px' }}>
-          Report
+          {t('report')}
         </span>
       </button>
 
@@ -164,7 +166,7 @@ export const MobileBottomNav: FC<MobileBottomNavProps> = ({
           <Navigation size={18} strokeWidth={1.9} />
         </div>
         <span style={{ fontSize: '11px', fontWeight: 500, letterSpacing: '-0.1px' }}>
-          Routes
+          {t('routes')}
         </span>
       </button>
 
@@ -221,7 +223,7 @@ export const MobileBottomNav: FC<MobileBottomNavProps> = ({
             letterSpacing: '-0.1px'
           }}
         >
-          Rain
+          {t('rain')}
         </span>
       </button>
 
@@ -258,7 +260,7 @@ export const MobileBottomNav: FC<MobileBottomNavProps> = ({
           <Settings size={18} strokeWidth={1.9} />
         </div>
         <span style={{ fontSize: '11px', fontWeight: 500, letterSpacing: '-0.1px' }}>
-          Admin
+          {t('admin')}
         </span>
       </button>
     </nav>

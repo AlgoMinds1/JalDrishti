@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css'
 import './index.css'
 import axios from 'axios'
 import App from './App.tsx'
+import { LanguageProvider } from './language'
 
 // Use Vite's /api proxy during local development. Production can use the
 // configured remote API URL; static map fallbacks are fetched from this origin.
@@ -19,6 +20,6 @@ if (apiBase) {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <LanguageProvider><App /></LanguageProvider>
   </StrictMode>,
 )

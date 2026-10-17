@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.orm import sessionmaker
 from data.models import Base
 
@@ -32,6 +32,11 @@ def init_db():
     """Create all tables and spatial indices in the database."""
     print("Creating all tables in Neon PostGIS database...")
     Base.metadata.create_all(bind=engine)
+    # create_all does not add columns to tables that already exist.
+    columns = {column["name"] for column in inspect(engine).get_columns("app_notifications")}
+    if "translations" not in columns:
+        with engine.begin() as connection:
+            connection.execute(text("ALTER TABLE app_notifications ADD COLUMN translations JSON"))
     print("Database tables initialized successfully.")
 
 def get_db():

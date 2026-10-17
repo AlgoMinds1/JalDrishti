@@ -1,6 +1,7 @@
 """Opt-in browser push and immediate admin broadcasts."""
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
+from typing import Optional
 
 from api.services import push_notifications
 
@@ -15,6 +16,7 @@ class SubscriptionPayload(BaseModel):
 class ImmediateBroadcastPayload(BaseModel):
     title: str = Field(min_length=1, max_length=120)
     body: str = Field(min_length=1, max_length=500)
+    translations: Optional[dict[str, dict[str, str]]] = None
 
 
 @router.get("/subscriber-count")
@@ -44,6 +46,7 @@ def get_notification_feed(limit: int = Query(20, ge=1, le=50)):
                     .order_by(AppNotification.created_at.desc(), AppNotification.id.desc())
                     .limit(limit).all())
             return [{"id": row.id, "title": row.title, "body": row.body,
+                     "translations": row.translations,
                      "created_at": row.created_at.isoformat() + "Z"}
                     for row in rows]
         finally:
@@ -74,6 +77,6 @@ def subscribe(payload: SubscriptionPayload):
 @router.post("/broadcasts/send-now")
 def send_broadcast_now(payload: ImmediateBroadcastPayload):
     try:
-        return push_notifications.send_broadcast_now(payload.title, payload.body)
+        return push_notifications.send_broadcast_now(payload.title, payload.body, payload.translations)
     except Exception as exc:
         raise HTTPException(status_code=503, detail="Immediate push delivery failed") from exc

@@ -2,6 +2,7 @@ import { useEffect, useState, type FC } from 'react';
 import axios from 'axios';
 import { X, MapPin, Mic, Send, AlertCircle, CheckCircle2, Camera, ImagePlus, Trash2, WifiOff } from 'lucide-react';
 import { saveOfflineReport } from '../utils/offlineStorage';
+import { useAppLanguage } from '../language';
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -16,16 +17,19 @@ export const ReportModal: FC<ReportModalProps> = ({
   onReportSubmitted,
   defaultCoords
 }) => {
+  const { language: preferredLanguage } = useAppLanguage();
   const [lat] = useState<number>(defaultCoords.lat || 18.574);
   const [lon] = useState<number>(defaultCoords.lon || 73.806);
   const [text, setText] = useState<string>('');
-  const [language, setLanguage] = useState<string>('mr');
+  const [language, setLanguage] = useState<string>(preferredLanguage);
   const [isListening, setIsListening] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submissionResult, setSubmissionResult] = useState<any>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [photo, setPhoto] = useState<File | null>(null);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+
+  useEffect(() => setLanguage(preferredLanguage), [preferredLanguage]);
 
   const selectPhoto = (file?: File) => {
     setErrorMessage(null);

@@ -1,5 +1,6 @@
 import { useState, useEffect, type FC, type Dispatch, type SetStateAction } from 'react';
 import { CalendarClock, CloudRain, Play, Pause, ChevronUp, ChevronDown } from 'lucide-react';
+import { useAppLanguage } from '../language';
 
 interface TimeSliderProps {
   currentHour: number;
@@ -23,6 +24,7 @@ export const TimeSlider: FC<TimeSliderProps> = ({
   disabled = false,
   onOpenReplay
 }) => {
+  const { t, language } = useAppLanguage();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isOverviewExpanded, setIsOverviewExpanded] = useState(false);
 
@@ -54,10 +56,10 @@ export const TimeSlider: FC<TimeSliderProps> = ({
 
   const totalAtRisk = stats.high + stats.severe;
   const overallRiskLabel = totalAtRisk > 25
-    ? 'High Risk Corridor'
+    ? t('highRiskCorridor')
     : totalAtRisk > 5
-    ? 'Localized Waterlogging'
-    : 'Minimal Inundation';
+    ? t('localizedWaterlogging')
+    : t('minimalInundation');
   const overallRiskColor = totalAtRisk > 25
     ? 'var(--risk-severe, #dc2626)'
     : totalAtRisk > 5
@@ -115,7 +117,7 @@ export const TimeSlider: FC<TimeSliderProps> = ({
               }}
             />
             <span style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-main, #25251F)' }}>
-              Forecast Overview (+{currentHour}h)
+              {t('forecast')} (+{currentHour}h)
             </span>
             <span
               style={{
@@ -144,9 +146,9 @@ export const TimeSlider: FC<TimeSliderProps> = ({
                   padding: '4px 8px', background: 'var(--bg-card, #FFFCF6)',
                   color: 'var(--text-muted, #706D62)', fontSize: 10, cursor: 'pointer'
                 }}
-              ><CalendarClock size={13} /><span>Events</span></button>
+              ><CalendarClock size={13} /><span>{t('events')}</span></button>
             )}
-            <span style={{ fontSize: '11px' }}>{isOverviewExpanded ? 'Hide' : 'Details'}</span>
+            <span style={{ fontSize: '11px' }}>{isOverviewExpanded ? t('hide') : t('details')}</span>
             {isOverviewExpanded ? <ChevronDown size={14} /> : <ChevronUp size={14} />}
           </div>
         </div>
@@ -166,30 +168,30 @@ export const TimeSlider: FC<TimeSliderProps> = ({
             {/* Metric 1: Risk Segments */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
               <span style={{ fontSize: '10.5px', color: 'var(--text-muted, #706D62)' }}>
-                Severe / High
+                {t('severeHigh')}
               </span>
               <span style={{ fontSize: '13px', fontWeight: 700, color: totalAtRisk > 0 ? 'var(--risk-severe, #dc2626)' : 'var(--text-main, #25251F)' }}>
-                {totalAtRisk} segments
+                {totalAtRisk} {t('segments')}
               </span>
             </div>
 
             {/* Metric 2: Moderate */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
               <span style={{ fontSize: '10.5px', color: 'var(--text-muted, #706D62)' }}>
-                Moderate Risk
+                {t('moderateRisk')}
               </span>
               <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--risk-moderate, #d97706)' }}>
-                {stats.moderate} segments
+                {stats.moderate} {t('segments')}
               </span>
             </div>
 
             {/* Metric 3: Rain Data Age */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
               <span style={{ fontSize: '10.5px', color: 'var(--text-muted, #706D62)' }}>
-                IMD Radar Age
+                {t('radarAge')}
               </span>
               <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--status-green, #16866A)' }}>
-                {rainAgeMin}m ago
+                {new Intl.NumberFormat(language === 'hi' ? 'hi-IN' : language === 'mr' ? 'mr-IN' : 'en-IN').format(rainAgeMin)}m {t('ago')}
               </span>
             </div>
           </div>

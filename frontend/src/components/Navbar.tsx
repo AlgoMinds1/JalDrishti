@@ -14,9 +14,12 @@ import {
   ShieldCheck,
   CalendarClock,
   Settings,
-  Bell
+  Bell,
+  Volume2,
+  Square
 } from 'lucide-react';
 import { enableBrowserPush } from '../services/push';
+import { languageOptions, speechLocale, useAppLanguage } from '../language';
 
 interface NavbarProps {
   activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay';
@@ -33,7 +36,7 @@ interface NavbarProps {
   setTheme?: (theme: 'light' | 'dark') => void;
 }
 
-interface AppNotice { id: number; title: string; body: string; created_at: string }
+interface AppNotice { id: number; title: string; body: string; translations?: Partial<Record<'en' | 'hi' | 'mr', { title?: string; body?: string }>>; created_at: string }
 
 export const Navbar: FC<NavbarProps> = ({
   activeTab,
@@ -44,12 +47,14 @@ export const Navbar: FC<NavbarProps> = ({
   theme = 'light',
   setTheme
 }) => {
+  const { language, setLanguage, t } = useAppLanguage();
   const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [pushStatus, setPushStatus] = useState('');
   const [notifications, setNotifications] = useState<AppNotice[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isInboxOpen, setIsInboxOpen] = useState(false);
+  const [speakingId, setSpeakingId] = useState<number | null>(null);
 
   const fetchNotifications = useCallback(async () => {
     try {
@@ -71,6 +76,8 @@ export const Navbar: FC<NavbarProps> = ({
     return () => window.clearInterval(interval);
   }, [fetchNotifications]);
 
+  useEffect(() => () => window.speechSynthesis?.cancel(), []);
+
   const toggleInbox = async () => {
     if (isInboxOpen) { setIsInboxOpen(false); return; }
     setIsInboxOpen(true);
@@ -85,11 +92,39 @@ export const Navbar: FC<NavbarProps> = ({
   const enablePush = async () => {
     try {
       await enableBrowserPush();
-      setPushStatus('This device is subscribed to JalDrishti updates.');
+      setPushStatus(t('subscribed'));
     } catch (error: any) {
-      setPushStatus(error?.response?.data?.detail || 'Could not enable notifications.');
+      setPushStatus(error?.response?.data?.detail || t('pushError'));
     }
   };
+
+  const speakNotice = (notice: AppNotice) => {
+    if (!('speechSynthesis' in window)) { setPushStatus(t('speechUnsupported')); return; }
+    if (speakingId === notice.id) { window.speechSynthesis.cancel(); setSpeakingId(null); return; }
+    const localized = notice.translations?.[language];
+    const parts = [
+      { text: localized?.title?.trim() || notice.title, lang: localized?.title?.trim() ? speechLocale(language) : 'en-IN' },
+      { text: localized?.body?.trim() || notice.body, lang: localized?.body?.trim() ? speechLocale(language) : 'en-IN' },
+    ].filter(part => part.text);
+    window.speechSynthesis.cancel();
+    setSpeakingId(notice.id);
+    parts.forEach((part, index) => {
+      const utterance = new SpeechSynthesisUtterance(part.text);
+      utterance.lang = part.lang;
+      if (index === parts.length - 1) {
+        utterance.onend = () => setSpeakingId(null);
+        utterance.onerror = () => setSpeakingId(null);
+      }
+      window.speechSynthesis.speak(utterance);
+    });
+  };
+
+  const languageSelect = (compact = false) => <label style={{ display: 'flex', alignItems: 'center', gap: 5, color: 'var(--text-muted)', fontSize: compact ? 10 : 11 }} title={t('language')}>
+    <span className="desktop-only">{t('language')}</span>
+    <select aria-label={t('language')} value={language} onChange={e => setLanguage(e.target.value as 'en' | 'hi' | 'mr')} style={{ height: compact ? 32 : 30, maxWidth: compact ? 74 : 100, border: '1px solid var(--border-color)', borderRadius: 7, background: 'var(--bg-card)', color: 'var(--text-main)', padding: '0 5px', fontSize: 11 }}>
+      {languageOptions.map(([code, label]) => <option key={code} value={code}>{label}</option>)}
+    </select>
+  </label>;
 
   const handleNavigate = (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay') => {
     setActiveTab(tab);
@@ -133,14 +168,14 @@ export const Navbar: FC<NavbarProps> = ({
                 fontWeight: 500
               }}
             >
-              Decision-support prototype, not an official emergency service. In emergencies, contact official emergency services.
+              {t('safety')}
             </span>
           </div>
 
           <button
             onClick={() => setShowDisclaimer(false)}
-            aria-label="Dismiss safety notice"
-            title="Dismiss notice"
+            aria-label={t('dismiss')}
+            title={t('dismiss')}
             style={{
               background: 'transparent',
               border: 'none',
@@ -245,7 +280,7 @@ export const Navbar: FC<NavbarProps> = ({
             }}
           >
             <Map size={15} />
-            <span>Early-Warning Map</span>
+            <span>{t('map')}</span>
           </button>
 
           <button
@@ -266,7 +301,7 @@ export const Navbar: FC<NavbarProps> = ({
             }}
           >
             <BarChart3 size={15} />
-            <span>Model Accuracy</span>
+            <span>{t('accuracy')}</span>
           </button>
 
           <button
@@ -287,7 +322,7 @@ export const Navbar: FC<NavbarProps> = ({
             }}
           >
             <Info size={15} />
-            <span>Data & Limitations</span>
+            <span>{t('data')}</span>
           </button>
 
           {/* Theme Switcher */}
@@ -312,17 +347,18 @@ export const Navbar: FC<NavbarProps> = ({
             </button>
           )}
 
-          <button onClick={toggleInbox} title="Notifications" aria-label={`Notifications${unreadCount ? `, ${unreadCount} unread` : ''}`} style={{
+          {languageSelect()}
+          <button onClick={toggleInbox} title={t('notifications')} aria-label={`${t('notifications')}${unreadCount ? `, ${unreadCount}` : ''}`} style={{
             height: '32px', padding: '0 9px', borderRadius: '8px',
             border: '1px solid var(--border-color, #E4DACA)',
             background: 'var(--bg-widget, #FFFCF6)', color: 'var(--text-main, #25251F)',
             display: 'flex', alignItems: 'center', gap: '5px', cursor: 'pointer', fontSize: '12px', position: 'relative'
-          }}><Bell size={14} /> Notifications{unreadCount > 0 && <span aria-label="Unread notifications" style={{ position: 'absolute', top: -3, right: -3, width: 9, height: 9, borderRadius: '50%', background: '#dc2626', border: '2px solid var(--bg-card, #FFFCF6)' }} />}</button>
-          <button onClick={onOpenAdminNotifications} title="Admin notification center" aria-label="Admin notification center" style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid var(--border-color, #E4DACA)', background: 'var(--bg-widget, #FFFCF6)', color: 'var(--text-main, #25251F)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><ShieldCheck size={15} /></button>
+          }}><Bell size={14} /> {t('notifications')}{unreadCount > 0 && <span aria-label="Unread notifications" style={{ position: 'absolute', top: -3, right: -3, width: 9, height: 9, borderRadius: '50%', background: '#dc2626', border: '2px solid var(--bg-card, #FFFCF6)' }} />}</button>
+          <button onClick={onOpenAdminNotifications} title={t('adminNotifications')} aria-label={t('adminNotifications')} style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid var(--border-color, #E4DACA)', background: 'var(--bg-widget, #FFFCF6)', color: 'var(--text-main, #25251F)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><ShieldCheck size={15} /></button>
           <button onClick={enablePush} title="Enable browser notifications" style={{
             border: 'none', background: 'transparent', color: 'var(--text-muted, #706D62)',
             cursor: 'pointer', fontSize: '11px', padding: '4px'
-          }}>Enable alerts</button>
+          }}>{t('enableAlerts')}</button>
 
           {/* User Profile Avatar */}
           <div
@@ -405,9 +441,9 @@ export const Navbar: FC<NavbarProps> = ({
         </div>
       </nav>
       {pushStatus && <div role="status" style={{ padding: '5px 16px', fontSize: '12px', color: 'var(--text-muted)' }}>{pushStatus}</div>}
-      {isInboxOpen && <section role="dialog" aria-label="Notifications" style={{ position: 'fixed', top: 'calc(var(--sat, 0px) + 72px)', right: 12, zIndex: 2600, width: 'min(380px, calc(100vw - 24px))', maxHeight: 'min(70vh, 520px)', overflowY: 'auto', background: 'var(--bg-card, #FFFCF6)', color: 'var(--text-main)', border: '1px solid var(--border-color)', borderRadius: 12, boxShadow: '0 12px 32px rgba(0,0,0,.22)' }}>
-        <div style={{ padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)' }}><strong>Notifications</strong><button onClick={() => setIsInboxOpen(false)} aria-label="Close notifications" style={{ border: 0, background: 'transparent', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={17} /></button></div>
-        {notifications.length === 0 ? <p style={{ padding: 16, margin: 0, color: 'var(--text-muted)', fontSize: 13 }}>No notifications yet.</p> : notifications.map(item => <article key={item.id} style={{ padding: '12px 14px', borderBottom: '1px solid var(--border-color)' }}><div style={{ fontWeight: 700, fontSize: 13 }}>{item.title}</div><div style={{ marginTop: 4, fontSize: 12, lineHeight: 1.45 }}>{item.body}</div><time style={{ display: 'block', marginTop: 6, color: 'var(--text-muted)', fontSize: 10 }}>{new Date(item.created_at).toLocaleString()}</time></article>)}
+      {isInboxOpen && <section role="dialog" aria-label={t('notifications')} style={{ position: 'fixed', top: 'calc(var(--sat, 0px) + 72px)', right: 12, zIndex: 2600, width: 'min(380px, calc(100vw - 24px))', maxHeight: 'min(70vh, 520px)', overflowY: 'auto', background: 'var(--bg-card, #FFFCF6)', color: 'var(--text-main)', border: '1px solid var(--border-color)', borderRadius: 12, boxShadow: '0 12px 32px rgba(0,0,0,.22)' }}>
+        <div style={{ padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid var(--border-color)' }}><strong>{t('notifications')}</strong><button onClick={() => setIsInboxOpen(false)} aria-label={t('closeNotifications')} style={{ border: 0, background: 'transparent', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={17} /></button></div>
+        {notifications.length === 0 ? <p style={{ padding: 16, margin: 0, color: 'var(--text-muted)', fontSize: 13 }}>{t('inboxEmpty')}</p> : notifications.map(item => { const localized = item.translations?.[language]; const title = localized?.title ?? item.title; const body = localized?.body ?? item.body; return <article key={item.id} style={{ padding: '12px 14px', borderBottom: '1px solid var(--border-color)' }}><div style={{ display: 'flex', alignItems: 'start', gap: 8 }}><div style={{ flex: 1 }}><div style={{ fontWeight: 700, fontSize: 13 }}>{title}</div><div style={{ marginTop: 4, fontSize: 12, lineHeight: 1.45 }}>{body}</div></div><button onClick={() => speakNotice(item)} aria-label={speakingId === item.id ? t('stop') : t('speak')} title={speakingId === item.id ? t('stop') : t('speak')} style={{ flexShrink: 0, border: '1px solid var(--border-color)', borderRadius: 7, padding: 6, background: 'var(--bg-pill)', color: 'var(--text-main)', cursor: 'pointer' }}>{speakingId === item.id ? <Square size={14} /> : <Volume2 size={16} />}</button></div><time style={{ display: 'block', marginTop: 6, color: 'var(--text-muted)', fontSize: 10 }}>{new Date(item.created_at).toLocaleString(language === 'hi' ? 'hi-IN' : language === 'mr' ? 'mr-IN' : 'en-IN')}</time></article>; })}
       </section>}
 
       {/* Slide-out Mobile Navigation Drawer */}
@@ -455,7 +491,7 @@ export const Navbar: FC<NavbarProps> = ({
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <ShieldCheck size={20} color="var(--accent-cyan, #77745B)" />
                 <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-main, #25251F)' }}>
-                  Navigation
+                  {t('navigation')}
                 </span>
               </div>
               <button
@@ -494,7 +530,7 @@ export const Navbar: FC<NavbarProps> = ({
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <Home size={18} color="var(--accent-cyan, #77745B)" />
-                  <span>Home / Overview</span>
+                  <span>{t('home')}</span>
                 </div>
                 <ChevronRight size={16} color="var(--text-muted, #706D62)" />
               </button>
@@ -518,7 +554,7 @@ export const Navbar: FC<NavbarProps> = ({
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <Map size={18} color="var(--accent-cyan, #77745B)" />
-                  <span>Early-Warning Map</span>
+                  <span>{t('map')}</span>
                 </div>
                 <ChevronRight size={16} color="var(--text-muted, #706D62)" />
               </button>
@@ -542,7 +578,7 @@ export const Navbar: FC<NavbarProps> = ({
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <BarChart3 size={18} color="var(--accent-cyan, #77745B)" />
-                  <span>Model Accuracy & Trust</span>
+                  <span>{t('accuracyTrust')}</span>
                 </div>
                 <ChevronRight size={16} color="var(--text-muted, #706D62)" />
               </button>
@@ -566,7 +602,7 @@ export const Navbar: FC<NavbarProps> = ({
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <Info size={18} color="var(--accent-cyan, #77745B)" />
-                  <span>Data & Limitations</span>
+                  <span>{t('data')}</span>
                 </div>
                 <ChevronRight size={16} color="var(--text-muted, #706D62)" />
               </button>
@@ -579,7 +615,7 @@ export const Navbar: FC<NavbarProps> = ({
                   cursor: 'pointer', fontSize: '14px', fontWeight: 500, textAlign: 'left'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><Settings size={18} color="var(--accent-cyan, #77745B)" /><span>Admin &amp; Sandbox</span></div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><Settings size={18} color="var(--accent-cyan, #77745B)" /><span>{t('adminSandbox')}</span></div>
                 <ChevronRight size={16} color="var(--text-muted, #706D62)" />
               </button>
 
@@ -592,7 +628,7 @@ export const Navbar: FC<NavbarProps> = ({
                   fontWeight: activeTab === 'replay' ? 700 : 500, textAlign: 'left'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CalendarClock size={18} color="var(--accent-cyan, #77745B)" /><span>Historical Replay</span></div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><CalendarClock size={18} color="var(--accent-cyan, #77745B)" /><span>{t('replay')}</span></div>
                 <ChevronRight size={16} color="var(--text-muted, #706D62)" />
               </button>
             </div>
@@ -607,8 +643,12 @@ export const Navbar: FC<NavbarProps> = ({
                 gap: '12px'
               }}
             >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 5, color: 'var(--text-muted)', fontSize: 12 }}>
+                <span>{t('language')}</span>
+                {languageSelect(true)}
+              </div>
               <div style={{ fontSize: '11.5px', color: 'var(--text-muted, #706D62)' }}>
-                Pune Municipal Corridor Pilot <br />
+                {t('pilot')} <br />
                 Aundh – Baner Road Network
               </div>
 
@@ -633,12 +673,12 @@ export const Navbar: FC<NavbarProps> = ({
                   {theme === 'light' ? (
                     <>
                       <Moon size={15} />
-                      <span>Switch to Dark Theme</span>
+                      <span>{t('darkTheme')}</span>
                     </>
                   ) : (
                     <>
                       <Sun size={15} color="#d97706" />
-                      <span>Switch to Light Theme</span>
+                      <span>{t('lightTheme')}</span>
                     </>
                   )}
                 </button>
