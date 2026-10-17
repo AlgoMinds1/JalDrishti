@@ -4,8 +4,6 @@ import {
   Map,
   BarChart3,
   Info,
-  Moon,
-  Sun,
   AlertCircle,
   X,
   Menu,
@@ -19,21 +17,20 @@ import {
   Square
 } from 'lucide-react';
 import { enableBrowserPush } from '../services/push';
-import { languageOptions, speechLocale, useAppLanguage } from '../language';
+import { speechLocale, useAppLanguage } from '../language';
 
 interface NavbarProps {
   activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay';
   setActiveTab: (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay') => void;
   onOpenAdminModal?: () => void;
   onOpenAdminNotifications?: () => void;
+  onOpenSettings?: () => void;
   onOpenReplay?: () => void;
   scenario?: 'live' | 'storm_july2024';
   setScenario?: (scen: 'live' | 'storm_july2024') => void;
   rainAgeMin?: number;
   isLoading?: boolean;
   onRefresh?: () => void;
-  theme?: 'light' | 'dark';
-  setTheme?: (theme: 'light' | 'dark') => void;
 }
 
 interface AppNotice { id: number; title: string; body: string; translations?: Partial<Record<'en' | 'hi' | 'mr', { title?: string; body?: string }>>; created_at: string }
@@ -43,11 +40,10 @@ export const Navbar: FC<NavbarProps> = ({
   setActiveTab,
   onOpenAdminModal,
   onOpenAdminNotifications,
+  onOpenSettings,
   onOpenReplay,
-  theme = 'light',
-  setTheme
 }) => {
-  const { language, setLanguage, t } = useAppLanguage();
+  const { language, t } = useAppLanguage();
   const [showDisclaimer, setShowDisclaimer] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [pushStatus, setPushStatus] = useState('');
@@ -118,13 +114,6 @@ export const Navbar: FC<NavbarProps> = ({
       window.speechSynthesis.speak(utterance);
     });
   };
-
-  const languageSelect = (compact = false) => <label style={{ display: 'flex', alignItems: 'center', gap: 5, color: 'var(--text-muted)', fontSize: compact ? 10 : 11 }} title={t('language')}>
-    <span className="desktop-only">{t('language')}</span>
-    <select aria-label={t('language')} value={language} onChange={e => setLanguage(e.target.value as 'en' | 'hi' | 'mr')} style={{ height: compact ? 32 : 30, maxWidth: compact ? 74 : 100, border: '1px solid var(--border-color)', borderRadius: 7, background: 'var(--bg-card)', color: 'var(--text-main)', padding: '0 5px', fontSize: 11 }}>
-      {languageOptions.map(([code, label]) => <option key={code} value={code}>{label}</option>)}
-    </select>
-  </label>;
 
   const handleNavigate = (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay') => {
     setActiveTab(tab);
@@ -242,21 +231,6 @@ export const Navbar: FC<NavbarProps> = ({
               JalDrishti
             </span>
 
-            {/* Pune Pilot Label */}
-            <span
-              style={{
-                fontSize: '10.5px',
-                fontWeight: 600,
-                color: 'var(--accent-beige-dark, #4b4836)',
-                background: 'var(--accent-beige-light, #E7DDCC)',
-                padding: '1px 7px',
-                borderRadius: '9999px',
-                border: '1px solid var(--border-color, #E4DACA)',
-                letterSpacing: '0.1px'
-              }}
-            >
-              Pune Pilot
-            </span>
           </div>
         </div>
 
@@ -325,29 +299,7 @@ export const Navbar: FC<NavbarProps> = ({
             <span>{t('data')}</span>
           </button>
 
-          {/* Theme Switcher */}
-          {setTheme && (
-            <button
-              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-              title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '8px',
-                border: '1px solid var(--border-color, #E4DACA)',
-                background: 'var(--bg-widget, #FFFCF6)',
-                color: 'var(--text-main, #25251F)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer'
-              }}
-            >
-              {theme === 'light' ? <Moon size={15} /> : <Sun size={15} color="#d97706" />}
-            </button>
-          )}
-
-          {languageSelect()}
+          <button onClick={onOpenSettings} title={t('settings')} aria-label={t('settings')} style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid var(--border-color, #E4DACA)', background: 'var(--bg-widget, #FFFCF6)', color: 'var(--text-main, #25251F)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Settings size={15} /></button>
           <button onClick={toggleInbox} title={t('notifications')} aria-label={`${t('notifications')}${unreadCount ? `, ${unreadCount}` : ''}`} style={{
             height: '32px', padding: '0 9px', borderRadius: '8px',
             border: '1px solid var(--border-color, #E4DACA)',
@@ -387,39 +339,6 @@ export const Navbar: FC<NavbarProps> = ({
             border: '1px solid var(--border-color, #E4DACA)', background: 'var(--bg-card, #FFFCF6)',
             color: 'var(--text-main, #25251F)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', position: 'relative'
           }}><Bell size={16} />{unreadCount > 0 && <span aria-label="Unread notifications" style={{ position: 'absolute', top: 3, right: 3, width: 8, height: 8, borderRadius: '50%', background: '#dc2626', border: '1px solid var(--bg-card, #FFFCF6)' }} />}</button>
-          <button onClick={onOpenAdminNotifications} aria-label="Admin notification center" title="Admin notification center" style={{ width: 34, height: 34, borderRadius: 8, border: '1px solid var(--border-color, #E4DACA)', background: 'var(--bg-card, #FFFCF6)', color: 'var(--text-main, #25251F)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><ShieldCheck size={16} /></button>
-          <button
-            onClick={enablePush}
-            aria-label="Enable browser notifications"
-            title="Enable notifications"
-            style={{
-              width: '34px', height: '34px', borderRadius: '8px',
-              border: '1px solid var(--border-color, #E4DACA)',
-              background: 'var(--bg-card, #FFFCF6)', color: 'var(--text-main, #25251F)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer'
-            }}
-          ><AlertCircle size={16} /></button>
-          {setTheme && (
-            <button
-              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-              aria-label="Toggle dark mode"
-              style={{
-                width: '34px',
-                height: '34px',
-                borderRadius: '8px',
-                border: '1px solid var(--border-color, #E4DACA)',
-                background: 'var(--bg-card, #FFFCF6)',
-                color: 'var(--text-main, #25251F)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                cursor: 'pointer'
-              }}
-            >
-              {theme === 'light' ? <Moon size={16} /> : <Sun size={16} color="#d97706" />}
-            </button>
-          )}
-
           <button
             onClick={() => setIsMobileMenuOpen(true)}
             aria-label="Open Navigation Menu"
@@ -608,14 +527,14 @@ export const Navbar: FC<NavbarProps> = ({
               </button>
 
               <button
-                onClick={() => { setIsMobileMenuOpen(false); onOpenAdminModal?.(); }}
+                onClick={() => { setIsMobileMenuOpen(false); onOpenSettings?.(); }}
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 14px',
                   borderRadius: '10px', border: 'none', background: 'transparent', color: 'var(--text-main, #25251F)',
                   cursor: 'pointer', fontSize: '14px', fontWeight: 500, textAlign: 'left'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><Settings size={18} color="var(--accent-cyan, #77745B)" /><span>{t('adminSandbox')}</span></div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}><Settings size={18} color="var(--accent-cyan, #77745B)" /><span>{t('settings')}</span></div>
                 <ChevronRight size={16} color="var(--text-muted, #706D62)" />
               </button>
 
@@ -643,46 +562,12 @@ export const Navbar: FC<NavbarProps> = ({
                 gap: '12px'
               }}
             >
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 5, color: 'var(--text-muted)', fontSize: 12 }}>
-                <span>{t('language')}</span>
-                {languageSelect(true)}
-              </div>
+              <button onClick={() => { setIsMobileMenuOpen(false); onOpenAdminModal?.(); }} style={{ border: '1px solid var(--border-color)', borderRadius: 8, padding: '9px 12px', background: 'var(--bg-widget)', color: 'var(--text-main)', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>{t('adminSandbox')}</button>
               <div style={{ fontSize: '11.5px', color: 'var(--text-muted, #706D62)' }}>
                 {t('pilot')} <br />
                 Aundh – Baner Road Network
               </div>
 
-              {setTheme && (
-                <button
-                  onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '8px',
-                    padding: '9px 14px',
-                    borderRadius: '8px',
-                    border: '1px solid var(--border-color, #E4DACA)',
-                    background: 'var(--bg-widget, #FFFCF6)',
-                    color: 'var(--text-main, #25251F)',
-                    fontSize: '12.5px',
-                    fontWeight: 600,
-                    cursor: 'pointer'
-                  }}
-                >
-                  {theme === 'light' ? (
-                    <>
-                      <Moon size={15} />
-                      <span>{t('darkTheme')}</span>
-                    </>
-                  ) : (
-                    <>
-                      <Sun size={15} color="#d97706" />
-                      <span>{t('lightTheme')}</span>
-                    </>
-                  )}
-                </button>
-              )}
             </div>
           </div>
         </div>

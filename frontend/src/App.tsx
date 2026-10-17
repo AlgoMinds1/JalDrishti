@@ -12,6 +12,7 @@ import { RoutePlanner } from './components/RoutePlanner';
 import { AdminSandboxModal } from './components/AdminSandboxModal';
 import { AdminNotificationModal } from './components/AdminNotificationModal';
 import { NotificationPermissionPrompt } from './components/NotificationPermissionPrompt';
+import { UserSettingsModal } from './components/UserSettingsModal';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { EvaluationPage } from './pages/EvaluationPage';
 import { LimitationsPage } from './pages/LimitationsPage';
@@ -47,6 +48,7 @@ export function App() {
   const [isRoutePlannerOpen, setIsRoutePlannerOpen] = useState<boolean>(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState<boolean>(false);
   const [isAdminNotificationModalOpen, setIsAdminNotificationModalOpen] = useState(false);
+  const [isUserSettingsOpen, setIsUserSettingsOpen] = useState(false);
   const [isPushPromptOpen, setIsPushPromptOpen] = useState(false);
   const closePushPrompt = useCallback(() => setIsPushPromptOpen(false), []);
   const [activeRouteGeojson, setActiveRouteGeojson] = useState<any>(null);
@@ -343,19 +345,19 @@ export function App() {
         setActiveTab={setActiveTab}
         onOpenAdminModal={() => setIsAdminModalOpen(true)}
         onOpenAdminNotifications={() => setIsAdminNotificationModalOpen(true)}
+        onOpenSettings={() => setIsUserSettingsOpen(true)}
         onOpenReplay={openEventReplay}
         scenario={scenario}
         setScenario={setScenario}
         rainAgeMin={rainAgeMin}
         isLoading={isLoading}
         onRefresh={fetchPredictions}
-        theme={theme}
-        setTheme={setTheme}
       />
       <AdminNotificationModal
         isOpen={isAdminNotificationModalOpen}
         onClose={() => setIsAdminNotificationModalOpen(false)}
       />
+      <UserSettingsModal isOpen={isUserSettingsOpen} onClose={() => setIsUserSettingsOpen(false)} theme={theme} setTheme={setTheme} />
       <NotificationPermissionPrompt isOpen={isPushPromptOpen} onClose={closePushPrompt} />
 
       {/* Main Layout Area: Left Sidebar (Desktop only) + Center Map View (Full width on Mobile) */}
@@ -513,7 +515,7 @@ export function App() {
         setActiveTab={setActiveTab}
         onOpenReportModal={() => setIsReportModalOpen(true)}
         onToggleRoutePlanner={() => setIsRoutePlannerOpen(true)}
-        onOpenAdminModal={() => setIsAdminModalOpen(true)}
+        onOpenSettings={() => setIsUserSettingsOpen(true)}
         onToggleRainfall={() => setShowRainfall(!showRainfall)}
         showRainfall={showRainfall}
       />

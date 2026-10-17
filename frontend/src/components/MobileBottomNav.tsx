@@ -13,7 +13,7 @@ interface MobileBottomNavProps {
   setActiveTab: (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay') => void;
   onOpenReportModal: () => void;
   onToggleRoutePlanner: () => void;
-  onOpenAdminModal: () => void;
+  onOpenSettings: () => void;
   onToggleRainfall: () => void;
   showRainfall: boolean;
 }
@@ -23,7 +23,7 @@ export const MobileBottomNav: FC<MobileBottomNavProps> = ({
   setActiveTab,
   onOpenReportModal,
   onToggleRoutePlanner,
-  onOpenAdminModal,
+  onOpenSettings,
   onToggleRainfall,
   showRainfall
 }) => {
@@ -227,10 +227,10 @@ export const MobileBottomNav: FC<MobileBottomNavProps> = ({
         </span>
       </button>
 
-      {/* 5. Admin */}
+      {/* 5. User settings */}
       <button
-        onClick={onOpenAdminModal}
-        title="Admin Tools & What-If Storm Sandbox"
+        onClick={onOpenSettings}
+        title={t('settings')}
         style={{
           flex: 1,
           display: 'flex',
@@ -260,7 +260,7 @@ export const MobileBottomNav: FC<MobileBottomNavProps> = ({
           <Settings size={18} strokeWidth={1.9} />
         </div>
         <span style={{ fontSize: '11px', fontWeight: 500, letterSpacing: '-0.1px' }}>
-          {t('admin')}
+          {t('settings')}
         </span>
       </button>
     </nav>
