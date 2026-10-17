@@ -1,17 +1,18 @@
 import { useState, useEffect, type FC } from 'react';
 import axios from 'axios';
 import { Sliders, AlertTriangle, Wrench, X, RefreshCw, PlusCircle } from 'lucide-react';
+import { MapComponent } from './MapComponent';
 
 interface AdminSandboxModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onApplySimulationToMap?: (simGeojson: any) => void;
+  liveGeojsonData: any;
 }
 
 export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
   isOpen,
   onClose,
-  onApplySimulationToMap
+  liveGeojsonData
 }) => {
   const [activeSubTab, setActiveSubTab] = useState<'sandbox' | 'queue' | 'ledger'>('sandbox');
   const [rainfallMm, setRainfallMm] = useState<number>(60);
@@ -40,9 +41,6 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
       // 1. Fetch simulation GeoJSON
       const simRes = await axios.get(`/api/sandbox/simulate?mm=${rainfallMm}&duration_h=${durationH}`);
       setSimulationData(simRes.data);
-      if (onApplySimulationToMap) {
-        onApplySimulationToMap(simRes.data);
-      }
 
       // 2. Fetch ranked inspection queue for this scenario
       const qRes = await axios.get(`/api/admin/queue?mm=${rainfallMm}&duration_h=${durationH}&top_n=10`);
@@ -86,6 +84,13 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
 
   if (!isOpen) return null;
 
+  const closeSandbox = () => {
+    setSimulationData(null);
+    setQueueData([]);
+    setStatusMessage(null);
+    onClose();
+  };
+
   return (
     <div style={{
       position: 'fixed',
@@ -93,24 +98,28 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
       left: 0,
       width: '100vw',
       height: '100vh',
-      background: 'rgba(37, 37, 31, 0.58)',
-      backdropFilter: 'blur(8px)',
+      background: 'transparent',
       zIndex: 2500,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '20px'
+      overflow: 'hidden',
+      pointerEvents: 'none'
     }}>
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'auto' }}>
+        <MapComponent geojsonData={simulationData || liveGeojsonData} showReports={false} onSelectSegment={() => {}} />
+      </div>
       <div className="glass" style={{
-        width: '1000px',
-        maxWidth: '96vw',
-        maxHeight: '90vh',
+        position: 'absolute',
+        top: '14px',
+        right: '14px',
+        width: 'min(460px, calc(100vw - 28px))',
+        height: 'min(760px, calc(100dvh - 28px))',
         borderRadius: '16px',
         display: 'flex',
         flexDirection: 'column',
         overflow: 'hidden',
         boxShadow: 'var(--shadow-widget)',
-        border: '1px solid var(--border-color)'
+        border: '1px solid var(--border-color)',
+        pointerEvents: 'auto',
+        zIndex: 2
       }}>
         {/* Prominent Simulation Watermark Banner */}
         <div style={{
@@ -149,7 +158,7 @@ export const AdminSandboxModal: FC<AdminSandboxModalProps> = ({
             </p>
           </div>
           <button
-            onClick={onClose}
+            onClick={closeSandbox}
             style={{ background: 'transparent', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}
           >
             <X size={20} />

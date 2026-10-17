@@ -39,6 +39,10 @@ export function App() {
     const path = pathForTab[tab];
     if (window.location.pathname !== path) window.history.pushState({ tab }, '', path);
   }, []);
+  const openMapPanel = useCallback((open: () => void) => {
+    goToTab('map');
+    open();
+  }, [goToTab]);
   useEffect(() => {
     const onPopState = () => setActiveTab(tabForPath(window.location.pathname));
     window.addEventListener('popstate', onPopState);
@@ -400,7 +404,7 @@ export function App() {
       <Navbar
         activeTab={activeTab}
         setActiveTab={goToTab}
-        onOpenAdminModal={() => setIsAdminModalOpen(true)}
+        onOpenAdminModal={() => openMapPanel(() => setIsAdminModalOpen(true))}
         onOpenAdminNotifications={() => setIsAdminNotificationModalOpen(true)}
         onOpenSettings={() => goToTab('settings')}
         onOpenReplay={openEventReplay}
@@ -430,9 +434,9 @@ export function App() {
         <Sidebar
           activeTab={activeTab}
           setActiveTab={goToTab}
-          onOpenReportModal={() => setIsReportModalOpen(true)}
-          onToggleRoutePlanner={() => setIsRoutePlannerOpen(true)}
-          onOpenAdminModal={() => setIsAdminModalOpen(true)}
+          onOpenReportModal={() => openMapPanel(() => setIsReportModalOpen(true))}
+          onToggleRoutePlanner={() => openMapPanel(() => setIsRoutePlannerOpen(true))}
+          onOpenAdminModal={() => openMapPanel(() => setIsAdminModalOpen(true))}
           onOpenSettings={() => goToTab('settings')}
           onOpenReplay={openEventReplay}
           onOpenAssistant={() => goToTab('assistant')}
@@ -541,7 +545,7 @@ export function App() {
               <AdminSandboxModal
                 isOpen={isAdminModalOpen}
                 onClose={() => setIsAdminModalOpen(false)}
-                onApplySimulationToMap={(simGeo) => setGeojsonData(simGeo)}
+                liveGeojsonData={geojsonData}
               />
 
               {/* Citizen Flood Ground Truth Report Modal */}
@@ -569,8 +573,8 @@ export function App() {
       <MobileBottomNav
         activeTab={activeTab}
         setActiveTab={goToTab}
-        onOpenReportModal={() => setIsReportModalOpen(true)}
-        onToggleRoutePlanner={() => setIsRoutePlannerOpen(true)}
+        onOpenReportModal={() => openMapPanel(() => setIsReportModalOpen(true))}
+        onToggleRoutePlanner={() => openMapPanel(() => setIsRoutePlannerOpen(true))}
         onOpenSettings={() => goToTab('settings')}
         onOpenAssistant={() => goToTab('assistant')}
       />

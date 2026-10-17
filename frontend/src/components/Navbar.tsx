@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type FC } from 'react';
+import { useCallback, useEffect, useRef, useState, type FC } from 'react';
 import axios from 'axios';
 import {
   Map,
@@ -49,13 +49,51 @@ export const Navbar: FC<NavbarProps> = ({
   const [unreadCount, setUnreadCount] = useState(0);
   const [isInboxOpen, setIsInboxOpen] = useState(false);
   const [speakingId, setSpeakingId] = useState<number | null>(null);
+  const knownNotificationIds = useRef(new Set<number>());
+  const hasNotificationBaseline = useRef(false);
   const [adminUnreadCount, setAdminUnreadCount] = useState(0);
   const [adminReportIds, setAdminReportIds] = useState<string[]>([]);
+
+  const speakNotice = useCallback((notice: AppNotice, automatic = false) => {
+    if (!('speechSynthesis' in window)) { setPushStatus(t('speechUnsupported')); return; }
+    if (!automatic && speakingId === notice.id) { window.speechSynthesis.cancel(); setSpeakingId(null); return; }
+    const localized = notice.translations?.[language];
+    const parts = [
+      { text: localized?.title?.trim() || notice.title, lang: localized?.title?.trim() ? speechLocale(language) : 'en-IN' },
+      { text: localized?.body?.trim() || notice.body, lang: localized?.body?.trim() ? speechLocale(language) : 'en-IN' },
+    ].filter(part => part.text);
+    window.speechSynthesis.cancel();
+    setSpeakingId(notice.id);
+    parts.forEach((part, index) => {
+      const utterance = new SpeechSynthesisUtterance(part.text);
+      utterance.lang = part.lang;
+      if (index === parts.length - 1) {
+        utterance.onend = () => setSpeakingId(null);
+        utterance.onerror = () => setSpeakingId(null);
+      }
+      window.speechSynthesis.speak(utterance);
+    });
+  }, [language, speakingId, t]);
+
+  const announceNewNotice = useCallback((notice: AppNotice) => {
+    if (!knownNotificationIds.current.has(notice.id)) {
+      knownNotificationIds.current.add(notice.id);
+      speakNotice(notice, true);
+    }
+  }, [speakNotice]);
 
   const fetchNotifications = useCallback(async () => {
     try {
       const { data } = await axios.get('/api/notifications/feed?limit=30');
       const rows = data as AppNotice[];
+      if (!hasNotificationBaseline.current) {
+        rows.forEach(row => knownNotificationIds.current.add(row.id));
+        hasNotificationBaseline.current = true;
+      } else {
+        const newRows = rows.filter(row => !knownNotificationIds.current.has(row.id));
+        if (newRows.length) announceNewNotice(newRows[0]);
+        rows.forEach(row => knownNotificationIds.current.add(row.id));
+      }
       setNotifications(rows);
       let readIds: number[] = [];
       try { readIds = JSON.parse(localStorage.getItem('jaldrishti_read_notifications') || '[]'); } catch { /* reset malformed local state */ }
@@ -64,7 +102,7 @@ export const Navbar: FC<NavbarProps> = ({
     } catch {
       return [];
     }
-  }, []);
+  }, [announceNewNotice]);
 
   useEffect(() => {
     void fetchNotifications();
@@ -73,6 +111,17 @@ export const Navbar: FC<NavbarProps> = ({
   }, [fetchNotifications]);
 
   useEffect(() => () => window.speechSynthesis?.cancel(), []);
+
+  useEffect(() => {
+    const onServiceWorkerMessage = (event: MessageEvent) => {
+      if (event.data?.type !== 'JALDRISHTI_PUSH_NOTICE') return;
+      const notice = event.data.notice as AppNotice;
+      if (!notice || typeof notice.id !== 'number' || !notice.title || !notice.body) return;
+      announceNewNotice(notice);
+    };
+    navigator.serviceWorker?.addEventListener('message', onServiceWorkerMessage);
+    return () => navigator.serviceWorker?.removeEventListener('message', onServiceWorkerMessage);
+  }, [announceNewNotice]);
 
   useEffect(() => {
     const refreshAdminReports = async () => {
@@ -114,27 +163,6 @@ export const Navbar: FC<NavbarProps> = ({
     } catch (error: any) {
       setPushStatus(error?.response?.data?.detail || t('pushError'));
     }
-  };
-
-  const speakNotice = (notice: AppNotice) => {
-    if (!('speechSynthesis' in window)) { setPushStatus(t('speechUnsupported')); return; }
-    if (speakingId === notice.id) { window.speechSynthesis.cancel(); setSpeakingId(null); return; }
-    const localized = notice.translations?.[language];
-    const parts = [
-      { text: localized?.title?.trim() || notice.title, lang: localized?.title?.trim() ? speechLocale(language) : 'en-IN' },
-      { text: localized?.body?.trim() || notice.body, lang: localized?.body?.trim() ? speechLocale(language) : 'en-IN' },
-    ].filter(part => part.text);
-    window.speechSynthesis.cancel();
-    setSpeakingId(notice.id);
-    parts.forEach((part, index) => {
-      const utterance = new SpeechSynthesisUtterance(part.text);
-      utterance.lang = part.lang;
-      if (index === parts.length - 1) {
-        utterance.onend = () => setSpeakingId(null);
-        utterance.onerror = () => setSpeakingId(null);
-      }
-      window.speechSynthesis.speak(utterance);
-    });
   };
 
   const handleNavigate = (tab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay' | 'assistant' | 'settings') => {

@@ -207,7 +207,7 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('push', (event) => {
   let message = { title: 'JalDrishti', body: 'There is an update.', id: Date.now() };
   try { message = { ...message, ...event.data.json() }; } catch { /* use default */ }
-  event.waitUntil(self.registration.showNotification(message.title, {
+  event.waitUntil(Promise.all([self.registration.showNotification(message.title, {
     body: message.body,
     icon: '/favicon.svg',
     badge: '/favicon.svg',
@@ -215,7 +215,9 @@ self.addEventListener('push', (event) => {
     renotify: true,
     requireInteraction: true,
     data: { url: '/', notificationId: message.id }
-  }));
+  }), self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windows) => {
+    windows.forEach((client) => client.postMessage({ type: 'JALDRISHTI_PUSH_NOTICE', notice: message }));
+  })]));
 });
 
 self.addEventListener('notificationclick', (event) => {
