@@ -2,8 +2,6 @@ import { useCallback, useEffect, useState, type FC } from 'react';
 import axios from 'axios';
 import {
   Map,
-  BarChart3,
-  Info,
   AlertCircle,
   X,
   Menu,
@@ -290,48 +288,6 @@ export const Navbar: FC<NavbarProps> = ({
             <span>{t('map')}</span>
           </button>
 
-          <button
-            onClick={() => handleNavigate('evaluate')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 14px',
-              borderRadius: '8px',
-              border: activeTab === 'evaluate' ? '1px solid var(--accent-cyan, #77745B)' : '1px solid transparent',
-              background: activeTab === 'evaluate' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
-              color: activeTab === 'evaluate' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)',
-              fontSize: '13px',
-              fontWeight: activeTab === 'evaluate' ? 700 : 500,
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <BarChart3 size={15} />
-            <span>{t('accuracy')}</span>
-          </button>
-
-          <button
-            onClick={() => handleNavigate('limits')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 14px',
-              borderRadius: '8px',
-              border: activeTab === 'limits' ? '1px solid var(--accent-cyan, #77745B)' : '1px solid transparent',
-              background: activeTab === 'limits' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
-              color: activeTab === 'limits' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)',
-              fontSize: '13px',
-              fontWeight: activeTab === 'limits' ? 700 : 500,
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <Info size={15} />
-            <span>{t('data')}</span>
-          </button>
-
           <button onClick={onOpenSettings} title={t('settings')} aria-label={t('settings')} style={{ width: 32, height: 32, borderRadius: 8, border: '1px solid var(--border-color, #E4DACA)', background: 'var(--bg-widget, #FFFCF6)', color: 'var(--text-main, #25251F)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}><Settings size={15} /></button>
           <button onClick={toggleInbox} title={t('notifications')} aria-label={`${t('notifications')}${unreadCount ? `, ${unreadCount}` : ''}`} style={{
             height: '32px', padding: '0 9px', borderRadius: '8px',
@@ -507,54 +463,6 @@ export const Navbar: FC<NavbarProps> = ({
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <Map size={18} color="var(--accent-cyan, #77745B)" />
                   <span>{t('map')}</span>
-                </div>
-                <ChevronRight size={16} color="var(--text-muted, #706D62)" />
-              </button>
-
-              <button
-                onClick={() => handleNavigate('evaluate')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '12px 14px',
-                  borderRadius: '10px',
-                  border: 'none',
-                  background: activeTab === 'evaluate' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
-                  color: 'var(--text-main, #25251F)',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: activeTab === 'evaluate' ? 700 : 500,
-                  textAlign: 'left'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <BarChart3 size={18} color="var(--accent-cyan, #77745B)" />
-                  <span>{t('accuracyTrust')}</span>
-                </div>
-                <ChevronRight size={16} color="var(--text-muted, #706D62)" />
-              </button>
-
-              <button
-                onClick={() => handleNavigate('limits')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '12px 14px',
-                  borderRadius: '10px',
-                  border: 'none',
-                  background: activeTab === 'limits' ? 'var(--accent-beige-light, #E7DDCC)' : 'transparent',
-                  color: 'var(--text-main, #25251F)',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: activeTab === 'limits' ? 700 : 500,
-                  textAlign: 'left'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <Info size={18} color="var(--accent-cyan, #77745B)" />
-                  <span>{t('data')}</span>
                 </div>
                 <ChevronRight size={16} color="var(--text-muted, #706D62)" />
               </button>
