@@ -7,7 +7,17 @@ services:
     envVars:
       - key: PORT
         value: 10000
+      - key: DATABASE_URL
+        sync: false
+      - key: VAPID_PUBLIC_KEY
+        sync: false
+      - key: VAPID_PRIVATE_KEY
+        sync: false
+      - key: VAPID_SUBJECT
+        sync: false
+      - key: CORS_ORIGINS
+        value: "https://jal-drishti-sepia.vercel.app"
       - key: CORS_ORIGIN_REGEX
-        value: "https?://.*"
+        value: "https://.*\\.vercel\\.app|https?://localhost(:[0-9]+)?|https?://127\\.0\\.0\\.1(:[0-9]+)?"
       - key: PYTHON_VERSION
         value: "3.12.8"
