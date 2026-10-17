@@ -197,13 +197,16 @@ self.addEventListener('fetch', (event) => {
 
 // Push notification listeners
 self.addEventListener('push', (event) => {
-  let message = { title: 'JalDrishti', body: 'There is an update.' };
+  let message = { title: 'JalDrishti', body: 'There is an update.', id: Date.now() };
   try { message = { ...message, ...event.data.json() }; } catch { /* use default */ }
   event.waitUntil(self.registration.showNotification(message.title, {
     body: message.body,
-    icon: '/favicon.ico',
-    badge: '/favicon.ico',
-    data: { url: '/' }
+    icon: '/favicon.svg',
+    badge: '/favicon.svg',
+    tag: `jaldrishti-${message.id}`,
+    renotify: true,
+    requireInteraction: true,
+    data: { url: '/', notificationId: message.id }
   }));
 });
 
