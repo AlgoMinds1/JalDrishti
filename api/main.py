@@ -79,8 +79,44 @@ EVAL_RESULTS_PATH = ML_DIR / "evaluation_results.json"
 def startup_event():
     """Attempt database schema initialization on startup if DATABASE_URL is configured."""
     try:
-        from data.db import init_db
+        from data.db import SessionLocal, init_db
+        from data.models import Segment
+        from geoalchemy2.shape import from_shape
+        from shapely.geometry import shape
+
         init_db()
+
+        # Report snapping uses the checked-in GeoJSON, while reports have a
+        # foreign key to the PostGIS segments table. Seed any missing segment
+        # rows so a fresh/partially initialized database can accept reports.
+        segments_path = DATA_DIR / "pilot_segments.geojson"
+        if segments_path.exists():
+            with open(segments_path, "r", encoding="utf-8") as f:
+                features = json.load(f).get("features", [])
+
+            with SessionLocal() as db:
+                existing_ids = {row[0] for row in db.query(Segment.id).all()}
+                added = 0
+                for feature in features:
+                    properties = feature.get("properties", {})
+                    segment_id = properties.get("id")
+                    if not segment_id or segment_id in existing_ids:
+                        continue
+                    db.add(Segment(
+                        id=segment_id,
+                        name=properties.get("name", "Arterial Road"),
+                        road_class=properties.get("road_class", "unclassified"),
+                        length_m=properties.get("length_m", 0.0),
+                        is_underpass=bool(properties.get("is_underpass", False)),
+                        is_bridge=bool(properties.get("is_bridge", False)),
+                        is_tunnel=bool(properties.get("is_tunnel", False)),
+                        geometry=from_shape(shape(feature["geometry"]), srid=4326),
+                    ))
+                    existing_ids.add(segment_id)
+                    added += 1
+                if added:
+                    db.commit()
+                    print(f"Seeded {added} missing pilot road segments into the database.")
     except Exception as e:
         print(f"Database startup check note: {e}")
 
