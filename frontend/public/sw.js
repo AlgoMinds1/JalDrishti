@@ -1,6 +1,6 @@
 /**
  * JalDrishti Service Worker — Resilient Offline Engine
- * 1. Fast-fail network timeout (max 1.2s) so offline/flaky connections never freeze the UI.
+ * 1. Fast-fail network timeout so offline/flaky connections never freeze the UI.
  * 2. Instant Map Tile Caching & graceful SVG grid fallback for all unvisited tiles.
  * 3. 100% offline fallback for Predictions API to local pilot GeoJSONs.
  * 4. Full App Shell caching with offline SPA routing fallback.
@@ -88,9 +88,9 @@ function isMapTile(url) {
 // Sleek fallback SVG tile for unvisited offline areas (clean tactical grid)
 const OFFLINE_TILE_SVG = `
 <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
-  <rect width="256" height="256" fill="#181816"/>
-  <path d="M0 64 H256 M0 128 H256 M0 192 H256 M64 0 V256 M128 0 V256 M192 0 V256" stroke="#262622" stroke-width="0.8"/>
-  <circle cx="128" cy="128" r="1.5" fill="#444238"/>
+  <rect width="256" height="256" fill="#f5f0e7"/>
+  <path d="M0 64 H256 M0 128 H256 M0 192 H256 M64 0 V256 M128 0 V256 M192 0 V256" stroke="#e7ddcc" stroke-width="0.8"/>
+  <circle cx="128" cy="128" r="1.5" fill="#c9bea9"/>
 </svg>
 `.trim();
 
@@ -104,7 +104,7 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // A. MAP TILE REQUESTS: CacheFirst with fast 1s network attempt & SVG fallback
+  // A. MAP TILE REQUESTS: CacheFirst with a reasonable network window & SVG fallback
   if (isMapTile(url)) {
     event.respondWith(
       caches.open(TILES_CACHE).then(async (cache) => {
@@ -112,7 +112,7 @@ self.addEventListener('fetch', (event) => {
         if (cached) return cached;
 
         try {
-          const networkRes = await quickFetch(request, 1000);
+          const networkRes = await quickFetch(request, 8000);
           if (networkRes && networkRes.status === 200) {
             cache.put(request, networkRes.clone());
             return networkRes;
