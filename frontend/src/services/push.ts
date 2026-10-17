@@ -7,7 +7,19 @@ export async function hasBrowserPushSubscription() {
 }
 
 export async function enableBrowserPush() {
+  const userAgent = navigator.userAgent;
+  const isAppleMobile = /iPhone|iPad|iPod/i.test(userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+    Boolean((navigator as Navigator & { standalone?: boolean }).standalone);
+
+  if (isAppleMobile && !isStandalone) {
+    throw new Error('On iPhone or iPad, tap Share → Add to Home Screen, then open JalDrishti from its Home Screen icon. Push notifications work from the installed web app on iOS/iPadOS 16.4 or later.');
+  }
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    if (isAppleMobile) {
+      throw new Error('This iPhone/iPad needs iOS or iPadOS 16.4 or later. Add JalDrishti to the Home Screen and open it from the new icon.');
+    }
     throw new Error('Push notifications are not supported in this browser.');
   }
   const permission = await Notification.requestPermission();
