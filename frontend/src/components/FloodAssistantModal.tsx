@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type FC, type FormEvent } from 'react';
 import { Bot, LoaderCircle, MessageCircle, Send, Volume2, X } from 'lucide-react';
+import axios from 'axios';
 import { useAppLanguage, speechLocale, type AppLanguage } from '../language';
 
 interface ChatMessage { role: 'user' | 'assistant'; text: string }
@@ -93,15 +94,13 @@ export const FloodAssistantModal: FC<Props> = ({ isOpen, onClose }) => {
           setForecastUnavailable(true);
         }
       }
-      const response = await fetch('/api/assistant/chat', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: question, language, history: messages.slice(-12), forecast_summary: context }),
+      const { data } = await axios.post('/api/assistant/chat', {
+        message: question, language, history: messages.slice(-12), forecast_summary: context,
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(typeof data.detail === 'string' ? data.detail : labels.error);
       setMessages((current) => [...current, { role: 'assistant', text: String(data.answer) }]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : labels.error);
+      const detail = axios.isAxiosError(err) ? err.response?.data?.detail : undefined;
+      setError(typeof detail === 'string' ? detail : labels.error);
     } finally {
       setLoading(false);
       inputRef.current?.focus();
