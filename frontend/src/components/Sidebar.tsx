@@ -94,11 +94,11 @@ export const Sidebar: FC<SidebarProps> = ({
             <Map size={19} />
           </div>
           <div>
-            <div style={{ fontSize: '13.5px', fontWeight: isMapSelected ? 700 : 600 }}>
-              Live Map
+            <div style={{ fontSize: '15px', lineHeight: 1.35, fontWeight: isMapSelected ? 700 : 600 }}>
+              {t('liveMap')}
             </div>
-            <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>
-              Forecast & risk view
+            <div style={{ fontSize: '12.5px', lineHeight: 1.45, color: 'var(--text-muted, #706D62)', marginTop: '2px' }}>
+              {t('forecastRiskView')}
             </div>
           </div>
         </button>
@@ -124,11 +124,11 @@ export const Sidebar: FC<SidebarProps> = ({
             <Megaphone size={19} />
           </div>
           <div>
-            <div style={{ fontSize: '13.5px', fontWeight: selectedItem === 'report' ? 700 : 600 }}>
-              Report Flooding
+            <div style={{ fontSize: '15px', lineHeight: 1.35, fontWeight: selectedItem === 'report' ? 700 : 600 }}>
+              {t('reportFlooding')}
             </div>
-            <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>
-              Crowd ground truth
+            <div style={{ fontSize: '12.5px', lineHeight: 1.45, color: 'var(--text-muted, #706D62)', marginTop: '2px' }}>
+              {t('crowdGroundTruth')}
             </div>
           </div>
         </button>
@@ -154,11 +154,11 @@ export const Sidebar: FC<SidebarProps> = ({
             <Navigation size={19} />
           </div>
           <div>
-            <div style={{ fontSize: '13.5px', fontWeight: selectedItem === 'route' ? 700 : 600 }}>
-              Plan Dry Route
+            <div style={{ fontSize: '15px', lineHeight: 1.35, fontWeight: selectedItem === 'route' ? 700 : 600 }}>
+              {t('planDryRoute')}
             </div>
-            <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>
-              Safer alternative paths
+            <div style={{ fontSize: '12.5px', lineHeight: 1.45, color: 'var(--text-muted, #706D62)', marginTop: '2px' }}>
+              {t('saferAlternativePaths')}
             </div>
           </div>
         </button>
@@ -184,10 +184,10 @@ export const Sidebar: FC<SidebarProps> = ({
             <MessageCircle size={19} />
           </div>
           <div>
-            <div style={{ fontSize: '13.5px', fontWeight: 600 }}>
+            <div style={{ fontSize: '15px', lineHeight: 1.35, fontWeight: 600 }}>
               {t('assistantTitle')}
             </div>
-            <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>
+            <div style={{ fontSize: '12.5px', lineHeight: 1.45, color: 'var(--text-muted, #706D62)', marginTop: '2px' }}>
               {t('assistantDescription')}
             </div>
           </div>
@@ -214,11 +214,11 @@ export const Sidebar: FC<SidebarProps> = ({
             <ShieldCheck size={19} />
           </div>
           <div>
-            <div style={{ fontSize: '13.5px', fontWeight: selectedItem === 'admin' ? 700 : 600 }}>
-              Admin & Sandbox
+            <div style={{ fontSize: '15px', lineHeight: 1.35, fontWeight: selectedItem === 'admin' ? 700 : 600 }}>
+              {t('adminSandboxTitle')}
             </div>
-            <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>
-              Model tools & inspection
+            <div style={{ fontSize: '12.5px', lineHeight: 1.45, color: 'var(--text-muted, #706D62)', marginTop: '2px' }}>
+              {t('modelToolsInspection')}
             </div>
           </div>
         </button>
@@ -236,8 +236,8 @@ export const Sidebar: FC<SidebarProps> = ({
         >
           <div style={{ color: selectedItem === 'settings' ? 'var(--accent-beige-dark, #4b4836)' : 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Settings size={19} /></div>
           <div>
-            <div style={{ fontSize: '13.5px', fontWeight: selectedItem === 'settings' ? 700 : 600 }}>{t('settings')}</div>
-            <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>{t('settingsDescription')}</div>
+            <div style={{ fontSize: '15px', lineHeight: 1.35, fontWeight: selectedItem === 'settings' ? 700 : 600 }}>{t('settings')}</div>
+            <div style={{ fontSize: '12.5px', lineHeight: 1.45, color: 'var(--text-muted, #706D62)', marginTop: '2px' }}>{t('settingsDescription')}</div>
           </div>
         </button>
 
@@ -256,8 +256,8 @@ export const Sidebar: FC<SidebarProps> = ({
         >
           <div style={{ color: 'var(--text-muted, #706D62)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><CalendarClock size={19} /></div>
           <div>
-            <div style={{ fontSize: '13.5px', fontWeight: activeTab === 'replay' ? 700 : 600 }}>Historical Replay</div>
-            <div style={{ fontSize: '11px', color: 'var(--text-muted, #706D62)', marginTop: '1px' }}>Explore past flood scenarios</div>
+            <div style={{ fontSize: '15px', lineHeight: 1.35, fontWeight: activeTab === 'replay' ? 700 : 600 }}>{t('historicalReplay')}</div>
+            <div style={{ fontSize: '12.5px', lineHeight: 1.45, color: 'var(--text-muted, #706D62)', marginTop: '2px' }}>{t('explorePastScenarios')}</div>
           </div>
         </button>
       </div>
@@ -288,10 +288,10 @@ export const Sidebar: FC<SidebarProps> = ({
             />
             <div>
               <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-main, #25251F)' }}>
-                Rain data (IMD)
+                {t('rainData')}
               </div>
               <div style={{ fontSize: '10.5px', color: 'var(--text-muted, #706D62)' }}>
-                Updated {rainAgeMin} min ago
+                {t('updated')} {rainAgeMin} {t('minAgo')}
               </div>
             </div>
           </div>
