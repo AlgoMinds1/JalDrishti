@@ -57,7 +57,8 @@ def send_broadcast_now(title, body, translations=None):
                     try:
                         webpush(
                             subscription_info=subscription.subscription_json,
-                            data=json.dumps({"id": notice.id, "title": title, "body": body}),
+                            data=json.dumps({"id": notice.id, "title": title, "body": body,
+                                             "translations": clean_translations}),
                             vapid_private_key=_private_key(),
                             vapid_claims={"sub": os.getenv("VAPID_SUBJECT", "mailto:admin@jaldrishti.local")},
                         )

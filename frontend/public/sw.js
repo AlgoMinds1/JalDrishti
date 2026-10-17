@@ -216,7 +216,9 @@ self.addEventListener('push', (event) => {
     requireInteraction: true,
     data: { url: '/', notificationId: message.id }
   }), self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windows) => {
-    windows.forEach((client) => client.postMessage({ type: 'JALDRISHTI_PUSH_NOTICE', notice: message }));
+    const visibleClient = windows.find((client) => client.visibilityState === 'visible');
+    const target = visibleClient || windows[0];
+    target?.postMessage({ type: 'JALDRISHTI_PUSH_NOTICE', notice: message });
   })]));
 });
 
