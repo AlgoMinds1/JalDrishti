@@ -17,6 +17,13 @@ import { LandingPage } from './pages/LandingPage';
 import { SignInPage } from './pages/SignInPage';
 import { ScenarioReplayBar, type ScenarioId } from './components/ScenarioReplayBar';
 import { simulateEventScenario, type SegmentCollection } from './data/scenarioSimulation';
+import { WifiOff } from 'lucide-react';
+import {
+  cachePredictions,
+  getCachedPredictions,
+  getPendingReports,
+  syncPendingReports
+} from './utils/offlineStorage';
 
 export function App() {
   const [activeTab, setActiveTab] = useState<'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay'>('home');
@@ -42,6 +49,7 @@ export function App() {
 
   const [rainAgeMin, setRainAgeMin] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isOnline, setIsOnline] = useState<boolean>(typeof navigator !== 'undefined' ? navigator.onLine : true);
   const [stats, setStats] = useState({ low: 0, moderate: 0, high: 0, severe: 0 });
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     return (localStorage.getItem('jaldrishti_theme') as 'light' | 'dark') || 'light';
@@ -52,17 +60,38 @@ export function App() {
     localStorage.setItem('jaldrishti_theme', theme);
   }, [theme]);
 
+  // Register offline Service Worker
+  useEffect(() => {
+    if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((reg) => console.log('[SW] JalDrishti Service Worker registered:', reg.scope))
+        .catch((err) => console.warn('[SW] Registration failed:', err));
+    }
+  }, []);
+
+  // Pre-cache all 6 forecast horizons into IndexedDB on initial load
+  useEffect(() => {
+    [1, 2, 3, 4, 5, 6].forEach(async (h) => {
+      try {
+        const res = await fetch(`/data/pilot/predictions_h${h}.geojson`);
+        if (res.ok) {
+          const data = await res.json();
+          await cachePredictions(h, data);
+        }
+      } catch {
+        // Silently skip if background prefetch has issues
+      }
+    });
+  }, []);
+
   // Load predictions for the active horizon and scenario
   const fetchPredictions = useCallback(async () => {
     setIsLoading(true);
-    try {
-      if (apiUnavailable.current) throw new Error('API unavailable; use local baseline');
-      const url = `/api/predictions?hour=${currentHour}${scenario === 'storm_july2024' ? '&scenario=storm_july2024' : ''}`;
-      const res = await axios.get(url);
-      setGeojsonData(res.data);
 
+    const updateStatsFromData = (data: any) => {
       const counts = { low: 0, moderate: 0, high: 0, severe: 0 };
-      res.data.features?.forEach((f: any) => {
+      data.features?.forEach((f: any) => {
         const r = (f.properties?.risk_class || 'low') as keyof typeof counts;
         if (counts[r] !== undefined) {
           counts[r]++;
@@ -72,34 +101,49 @@ export function App() {
       });
       setStats(counts);
 
-      if (res.data.features?.[0]?.properties?.rain_data_age_min !== undefined) {
-        setRainAgeMin(res.data.features[0].properties.rain_data_age_min);
+      const rainTimestamp = data.features?.[0]?.properties?.rain_data_timestamp;
+      if (rainTimestamp) {
+        const ageMin = Math.max(0, (Date.now() - new Date(rainTimestamp).getTime()) / 60000);
+        setRainAgeMin(Math.round(ageMin));
+      } else if (data.features?.[0]?.properties?.rain_data_age_min !== undefined) {
+        setRainAgeMin(data.features[0].properties.rain_data_age_min);
       }
+    };
+
+    try {
+      if (!navigator.onLine || apiUnavailable.current) {
+        throw new Error('Device offline or API unavailable; using local cache');
+      }
+
+      const url = `/api/predictions?hour=${currentHour}${scenario === 'storm_july2024' ? '&scenario=storm_july2024' : ''}`;
+      const res = await axios.get(url);
+      setGeojsonData(res.data);
+      updateStatsFromData(res.data);
+      cachePredictions(currentHour, res.data);
     } catch {
       apiUnavailable.current = true;
-      // Load the current low-confidence baseline from this origin. Using
-      // native fetch avoids accidentally applying the remote API base URL.
+
+      // 1. Try local IndexedDB cache first
+      try {
+        const cachedHourData = await getCachedPredictions(currentHour);
+        if (cachedHourData && cachedHourData.features?.length > 0) {
+          setGeojsonData(cachedHourData);
+          updateStatsFromData(cachedHourData);
+          setIsLoading(false);
+          return;
+        }
+      } catch {
+        // Fallback to static asset
+      }
+
+      // 2. Fallback to bundled static horizon GeoJSON
       try {
         const fallbackRes = await fetch(`/data/pilot/predictions_h${currentHour}.geojson`, { cache: 'no-store' });
         if (!fallbackRes.ok) throw new Error(`Static fallback returned ${fallbackRes.status}`);
         const hourData = await fallbackRes.json();
         setGeojsonData(hourData);
-
-        const counts = { low: 0, moderate: 0, high: 0, severe: 0 };
-        hourData.features?.forEach((f: any) => {
-          const r = (f.properties?.risk_class || 'low') as keyof typeof counts;
-          if (counts[r] !== undefined) {
-            counts[r]++;
-          } else {
-            counts.low++;
-          }
-        });
-        setStats(counts);
-        const rainTimestamp = hourData.features?.[0]?.properties?.rain_data_timestamp;
-        if (rainTimestamp) {
-          const ageMin = Math.max(0, (Date.now() - new Date(rainTimestamp).getTime()) / 60000);
-          setRainAgeMin(Math.round(ageMin));
-        }
+        updateStatsFromData(hourData);
+        cachePredictions(currentHour, hourData);
       } catch (errFallback) {
         console.error('Failed to load predictions fallback:', errFallback);
       }
@@ -108,19 +152,52 @@ export function App() {
     }
   }, [currentHour, scenario]);
 
-  // Fetch citizen reports feed
+  // Fetch citizen reports feed + merge offline pending reports
   const fetchReports = useCallback(async () => {
+    let combinedReports: any = { type: 'FeatureCollection', features: [] };
+
     try {
-      const res = await axios.get('/api/reports?hours=24');
-      setReportsData(res.data);
+      if (navigator.onLine) {
+        const res = await axios.get('/api/reports?hours=24');
+        if (res.data?.features) {
+          combinedReports = res.data;
+        }
+      }
     } catch {
       apiUnavailable.current = true;
-      // Backend offline or no reports
     }
+
+    // Append offline queued reports
+    try {
+      const pending = await getPendingReports();
+      if (pending && pending.length > 0) {
+        const pendingFeatures = pending.map((p) => ({
+          type: 'Feature',
+          geometry: { type: 'Point', coordinates: [p.lon, p.lat] },
+          properties: {
+            id: p.id,
+            description: p.text,
+            is_offline_pending: true,
+            status: 'Offline Queue (Pending Sync)',
+            created_at: p.timestamp,
+            confidence_score: 0.9,
+          },
+        }));
+        combinedReports = {
+          ...combinedReports,
+          features: [...(combinedReports.features || []), ...pendingFeatures],
+        };
+      }
+    } catch (err) {
+      console.warn('[OfflineStorage] Error reading pending reports:', err);
+    }
+
+    setReportsData(combinedReports);
   }, []);
 
   // Fetch health data for freshness
   const fetchHealth = useCallback(async () => {
+    if (!navigator.onLine) return;
     try {
       const res = await axios.get('/api/health');
       if (res.data?.rain_data_age_min !== undefined) {
@@ -128,9 +205,37 @@ export function App() {
       }
     } catch {
       apiUnavailable.current = true;
-      // Backend offline
     }
   }, []);
+
+  // Network connectivity listener & automatic background sync
+  useEffect(() => {
+    const handleOnline = async () => {
+      setIsOnline(true);
+      apiUnavailable.current = false;
+      fetchPredictions();
+      fetchHealth();
+
+      const syncResult = await syncPendingReports();
+      if (syncResult.syncedCount > 0) {
+        console.log(`[OfflineSync] Synced ${syncResult.syncedCount} queued reports`);
+      }
+      fetchReports();
+    };
+
+    const handleOffline = () => {
+      setIsOnline(false);
+      apiUnavailable.current = true;
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [fetchPredictions, fetchReports, fetchHealth]);
 
   useEffect(() => {
     fetchHealth();
@@ -274,6 +379,35 @@ export function App() {
         >
           {(activeTab === 'map' || activeTab === 'replay') && (
             <>
+              {/* Offline Notification Pill */}
+              {!isOnline && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '12px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: 1050,
+                    background: 'rgba(37, 37, 31, 0.94)',
+                    color: '#F5F0E7',
+                    backdropFilter: 'blur(8px)',
+                    padding: '6px 14px',
+                    borderRadius: '20px',
+                    fontSize: '12px',
+                    fontWeight: 650,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    boxShadow: '0 4px 16px rgba(0,0,0,0.3)',
+                    border: '1px solid rgba(245, 240, 231, 0.2)',
+                    pointerEvents: 'none'
+                  }}
+                >
+                  <WifiOff size={13} color="#f59e0b" />
+                  <span>Offline Mode • Using cached Pune forecast & local router</span>
+                </div>
+              )}
+
               {/* Floating Top Controls (Location search, Live Rainfall toggle) */}
               <TopControls
                 showRainfall={showRainfall}
@@ -331,6 +465,7 @@ export function App() {
                 }}
                 onClearRoute={() => setActiveRouteGeojson(null)}
                 currentHour={currentHour}
+                currentPredictions={geojsonData}
               />
 
               {/* What-If Storm Sandbox Admin Modal */}

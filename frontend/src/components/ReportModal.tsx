@@ -1,6 +1,7 @@
 import { useEffect, useState, type FC } from 'react';
 import axios from 'axios';
-import { X, MapPin, Mic, Send, AlertCircle, CheckCircle2, Camera, ImagePlus, Trash2 } from 'lucide-react';
+import { X, MapPin, Mic, Send, AlertCircle, CheckCircle2, Camera, ImagePlus, Trash2, WifiOff } from 'lucide-react';
+import { saveOfflineReport } from '../utils/offlineStorage';
 
 interface ReportModalProps {
   isOpen: boolean;
@@ -70,6 +71,14 @@ export const ReportModal: FC<ReportModalProps> = ({
     recognition.start();
   };
 
+  const fileToBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!text.trim()) {
@@ -80,8 +89,13 @@ export const ReportModal: FC<ReportModalProps> = ({
     setIsSubmitting(true);
     setErrorMessage(null);
 
+    const reporterId = 'citizen_' + Math.random().toString(36).substring(2, 9);
+
     try {
-      const reporterId = 'citizen_' + Math.random().toString(36).substring(2, 9);
+      if (!navigator.onLine) {
+        throw new Error('Device is offline');
+      }
+
       let res;
       if (photo) {
         const payload = new FormData();
@@ -99,8 +113,32 @@ export const ReportModal: FC<ReportModalProps> = ({
       }
       setSubmissionResult(res.data);
       onReportSubmitted();
-    } catch (err: any) {
-      setErrorMessage(err.response?.data?.detail || 'Failed to submit report. Please verify coordinates are on a road.');
+    } catch {
+      // Offline fallback: save report locally in IndexedDB
+      try {
+        let photoBase64: string | undefined;
+        if (photo) {
+          photoBase64 = await fileToBase64(photo);
+        }
+        await saveOfflineReport({
+          lat,
+          lon,
+          text,
+          language,
+          photoBase64
+        });
+
+        setSubmissionResult({
+          offline_saved: true,
+          trust_score: 85,
+          state: 'Pending Sync',
+          message: 'Saved offline to your device storage. It will automatically synchronize when network is restored.',
+          report_id: `offline_${Date.now()}`
+        });
+        onReportSubmitted();
+      } catch (offlineErr: any) {
+        setErrorMessage(offlineErr.message || 'Failed to save report offline.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -213,21 +251,27 @@ export const ReportModal: FC<ReportModalProps> = ({
                 width: '56px',
                 height: '56px',
                 borderRadius: '50%',
-                background: 'rgba(22, 134, 106, 0.12)',
+                background: submissionResult.offline_saved ? 'rgba(245, 158, 11, 0.15)' : 'rgba(22, 134, 106, 0.12)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
               }}
             >
-              <CheckCircle2 size={34} color="var(--status-green, #16866A)" />
+              {submissionResult.offline_saved ? (
+                <WifiOff size={30} color="#f59e0b" />
+              ) : (
+                <CheckCircle2 size={34} color="var(--status-green, #16866A)" />
+              )}
             </div>
 
             <div>
               <h4 style={{ fontSize: '18px', fontWeight: 800, color: 'var(--text-main, #25251F)', margin: '0 0 6px 0' }}>
-                Report Ingested by Trust Engine
+                {submissionResult.offline_saved ? 'Report Saved to Offline Queue' : 'Report Ingested by Trust Engine'}
               </h4>
               <p style={{ fontSize: '13px', color: 'var(--text-muted, #706D62)', margin: 0 }}>
-                Thank you for contributing to Pune's real-time safety network.
+                {submissionResult.offline_saved
+                  ? 'Stored safely on your device. It will automatically upload to Pune Flood Center once internet restores.'
+                  : 'Thank you for contributing to Pune\'s real-time safety network.'}
               </p>
             </div>
 

@@ -55,5 +55,17 @@
     "cost_inr": 350000,
     "agency": "PMC Ward 8 Drainage Div",
     "logged_at": "2026-10-13T17:32:04.467820+00:00"
+  },
+  {
+    "intervention_id": "INT-PUNE-20261017001042",
+    "name": "Pashan-Sus Road Storm Culvert Desilting Drill",
+    "segment_id": "way/24819203",
+    "segment_name": "Pashan-Sus Road Culvert",
+    "type": "desilting",
+    "completion_date": "2024-06-10",
+    "description": "Pre-monsoon emergency silt desilting by Ward 8 emergency squad",
+    "cost_inr": 350000,
+    "agency": "PMC Ward 8 Drainage Div",
+    "logged_at": "2026-10-17T00:10:42.354384+00:00"
   }
 ]

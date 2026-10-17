@@ -1,6 +1,7 @@
 import { useState, type FC } from 'react';
 import axios from 'axios';
-import { Navigation, X, ShieldAlert, CheckCircle, ArrowRight } from 'lucide-react';
+import { Navigation, X, ShieldAlert, CheckCircle, ArrowRight, WifiOff } from 'lucide-react';
+import { offlineRouter } from '../utils/offlineRouter';
 
 interface RoutePlannerProps {
   isOpen: boolean;
@@ -8,6 +9,7 @@ interface RoutePlannerProps {
   onRouteCalculated: (routeGeojson: any, riskiestSegment: any, wording: string) => void;
   onClearRoute?: () => void;
   currentHour: number;
+  currentPredictions?: any;
 }
 
 export const RoutePlanner: FC<RoutePlannerProps> = ({
@@ -15,7 +17,8 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
   onClose,
   onRouteCalculated,
   onClearRoute,
-  currentHour
+  currentHour,
+  currentPredictions
 }) => {
   const [mode, setMode] = useState<'walk' | 'two_wheeler' | 'car'>('car');
   const [origin, setOrigin] = useState<string>('baner');
@@ -38,9 +41,13 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
   const handleCalculateRoute = async () => {
     setIsLoading(true);
     setErrorMessage(null);
+    const [start_lat, start_lon] = PRESET_COORDS[origin];
+    const [end_lat, end_lon] = PRESET_COORDS[destination];
+
     try {
-      const [start_lat, start_lon] = PRESET_COORDS[origin];
-      const [end_lat, end_lon] = PRESET_COORDS[destination];
+      if (!navigator.onLine) {
+        throw new Error('Device is offline');
+      }
 
       const res = await axios.post('/api/routes', {
         start_lat,
@@ -57,8 +64,26 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
         res.data.riskiest_segment,
         res.data.wording_disclaimer
       );
-    } catch (err: any) {
-      setErrorMessage(err.response?.data?.detail || 'Failed to calculate route across pilot network.');
+    } catch {
+      // Automatic fallback to 100% offline client-side Dijkstra router
+      try {
+        const offlineResult = await offlineRouter.findRoute(
+          start_lat,
+          start_lon,
+          end_lat,
+          end_lon,
+          mode,
+          currentPredictions
+        );
+        setRouteInfo({ ...offlineResult, isOfflineCalculated: true });
+        onRouteCalculated(
+          offlineResult.route_geojson,
+          offlineResult.riskiest_segment,
+          offlineResult.wording_disclaimer
+        );
+      } catch (offlineErr: any) {
+        setErrorMessage(offlineErr.message || 'Failed to calculate route across pilot network.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -248,15 +273,32 @@ export const RoutePlanner: FC<RoutePlannerProps> = ({
                 border: '1px solid var(--border-color, #E4DACA)'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--status-green, #16866A)' }}>
-                <CheckCircle size={16} />
-                <span style={{ fontSize: '13px', fontWeight: 700 }}>
-                  Route Calculated Successfully
-                </span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--status-green, #16866A)' }}>
+                  <CheckCircle size={16} />
+                  <span style={{ fontSize: '13px', fontWeight: 700 }}>
+                    Route Calculated Successfully
+                  </span>
+                </div>
+                {routeInfo.isOfflineCalculated && (
+                  <span style={{
+                    fontSize: '10px',
+                    fontWeight: 700,
+                    padding: '2px 6px',
+                    borderRadius: '4px',
+                    background: '#ECE8DF',
+                    color: '#77745B',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}>
+                    <WifiOff size={11} /> Offline Engine
+                  </span>
+                )}
               </div>
 
               <div style={{ fontSize: '12px', color: 'var(--text-sub, #444238)' }}>
-                <strong>Distance:</strong> {Math.round(routeInfo.total_distance_m || 2400)} m
+                <strong>Distance:</strong> {Math.round(routeInfo.total_distance_m || routeInfo.distance_m || 2400)} m
               </div>
 
               {routeInfo.riskiest_segment && (
