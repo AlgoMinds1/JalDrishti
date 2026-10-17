@@ -1,5 +1,11 @@
 import axios from 'axios';
 
+export async function hasBrowserPushSubscription() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return false;
+  const registration = await navigator.serviceWorker.getRegistration();
+  return Boolean(await registration?.pushManager.getSubscription());
+}
+
 export async function enableBrowserPush() {
   if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
     throw new Error('Push notifications are not supported in this browser.');

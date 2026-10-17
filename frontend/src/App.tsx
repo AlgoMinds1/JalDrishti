@@ -11,6 +11,7 @@ import { ReportModal } from './components/ReportModal';
 import { RoutePlanner } from './components/RoutePlanner';
 import { AdminSandboxModal } from './components/AdminSandboxModal';
 import { AdminNotificationModal } from './components/AdminNotificationModal';
+import { NotificationPermissionPrompt } from './components/NotificationPermissionPrompt';
 import { MobileBottomNav } from './components/MobileBottomNav';
 import { EvaluationPage } from './pages/EvaluationPage';
 import { LimitationsPage } from './pages/LimitationsPage';
@@ -46,6 +47,8 @@ export function App() {
   const [isRoutePlannerOpen, setIsRoutePlannerOpen] = useState<boolean>(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState<boolean>(false);
   const [isAdminNotificationModalOpen, setIsAdminNotificationModalOpen] = useState(false);
+  const [isPushPromptOpen, setIsPushPromptOpen] = useState(false);
+  const closePushPrompt = useCallback(() => setIsPushPromptOpen(false), []);
   const [activeRouteGeojson, setActiveRouteGeojson] = useState<any>(null);
   const [selectedSegment, setSelectedSegment] = useState<SegmentPredictionData | null>(null);
 
@@ -313,7 +316,10 @@ export function App() {
   if (activeTab === 'signin') {
     return (
       <SignInPage
-        onSignInSuccess={() => setActiveTab('map')}
+        onSignInSuccess={() => {
+          setActiveTab('map');
+          setIsPushPromptOpen(localStorage.getItem('jaldrishti_push_prompt_dismissed') !== 'true');
+        }}
         onBackHome={() => setActiveTab('home')}
       />
     );
@@ -350,6 +356,7 @@ export function App() {
         isOpen={isAdminNotificationModalOpen}
         onClose={() => setIsAdminNotificationModalOpen(false)}
       />
+      <NotificationPermissionPrompt isOpen={isPushPromptOpen} onClose={closePushPrompt} />
 
       {/* Main Layout Area: Left Sidebar (Desktop only) + Center Map View (Full width on Mobile) */}
       <div
