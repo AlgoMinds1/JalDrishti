@@ -279,6 +279,45 @@ export const ReportModal: FC<ReportModalProps> = ({
               </p>
             </div>
 
+            {photoPreview && (
+              <section aria-label="Uploaded photo review" style={{ display: 'grid', gap: 12, padding: 14, borderRadius: 14, background: 'var(--bg-primary, #F5F0E7)', border: '1px solid var(--border-color, #E4DACA)', textAlign: 'left' }}>
+                <h4 style={{ margin: 0, fontSize: 14, color: 'var(--text-main)' }}>Uploaded photo</h4>
+                <img src={photoPreview} alt="Photo attached to this waterlogging report" style={{ display: 'block', width: '100%', maxHeight: 260, objectFit: 'contain', borderRadius: 10, background: 'var(--bg-card)' }} />
+
+                {submissionResult.photo_analysis && (
+                  <div style={{ display: 'grid', gap: 6, padding: 12, borderRadius: 10, background: 'var(--bg-card)', border: '1px solid var(--border-color)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
+                      <strong style={{ fontSize: 13, color: 'var(--text-main)' }}>Gemini image check</strong>
+                      {submissionResult.photo_analysis.status === 'analyzed' && (
+                        <span style={{ fontSize: 11, fontWeight: 700, borderRadius: 999, padding: '4px 8px', background: submissionResult.photo_analysis.flood_relevance === 'does_not_support' ? 'var(--risk-severe-bg)' : submissionResult.photo_analysis.flood_relevance === 'supports' ? 'var(--risk-low-bg)' : 'var(--bg-pill)', color: submissionResult.photo_analysis.flood_relevance === 'does_not_support' ? 'var(--risk-severe)' : submissionResult.photo_analysis.flood_relevance === 'supports' ? 'var(--risk-low)' : 'var(--text-muted)' }}>
+                          {submissionResult.photo_analysis.flood_relevance === 'does_not_support' ? 'Does not support flooding' : submissionResult.photo_analysis.flood_relevance === 'supports' ? 'Visible flood evidence' : 'Unclear'} · {Math.round((submissionResult.photo_analysis.confidence || 0) * 100)}%
+                        </span>
+                      )}
+                    </div>
+                    <p style={{ margin: 0, fontSize: 12.5, lineHeight: 1.5, color: 'var(--text-main)' }}>
+                      {submissionResult.photo_analysis.status === 'analyzed' ? submissionResult.photo_analysis.description : submissionResult.photo_analysis.message || 'AI image analysis was unavailable.'}
+                    </p>
+                    {submissionResult.photo_analysis.rationale && <p style={{ margin: 0, fontSize: 11.5, lineHeight: 1.45, color: 'var(--text-muted)' }}>{submissionResult.photo_analysis.rationale}</p>}
+                    <p style={{ margin: 0, fontSize: 10.5, lineHeight: 1.4, color: 'var(--text-muted)' }}>AI image review is advisory. It cannot verify when or where the photo was taken.</p>
+                  </div>
+                )}
+
+                {(() => {
+                  const photoMetadata = submissionResult.photo_verification || {};
+                  const imageGps = photoMetadata.image_gps;
+                  const reportTime = submissionResult.time_server ? new Date(submissionResult.time_server).toLocaleString(language === 'hi' ? 'hi-IN' : language === 'mr' ? 'mr-IN' : 'en-IN') : 'Unavailable';
+                  const photoLocation = imageGps ? `${Number(imageGps.lat).toFixed(6)}° N, ${Number(imageGps.lon).toFixed(6)}° E` : `${Number(submissionResult.lat ?? lat).toFixed(6)}° N, ${Number(submissionResult.lon ?? lon).toFixed(6)}° E`;
+                  return <div style={{ display: 'grid', gap: 7, padding: 12, borderRadius: 10, background: 'var(--bg-card)', border: '1px solid var(--border-color)', fontSize: 11.5 }}>
+                    <strong style={{ fontSize: 13, color: 'var(--text-main)' }}>Photo and report metadata</strong>
+                    <div style={{ color: 'var(--text-muted)', overflowWrap: 'anywhere' }}><strong>Photo captured:</strong> {photoMetadata.image_capture_time ? `${photoMetadata.image_capture_time}${photoMetadata.image_capture_offset ? ` ${photoMetadata.image_capture_offset}` : ''} (EXIF)` : 'Capture time not present in image metadata'}</div>
+                    <div style={{ color: 'var(--text-muted)', overflowWrap: 'anywhere' }}><strong>Report submitted:</strong> {reportTime}</div>
+                    <div style={{ color: 'var(--text-muted)', overflowWrap: 'anywhere' }}><strong>{imageGps ? 'Photo GPS (EXIF)' : 'Reported GPS location'}:</strong> {photoLocation}</div>
+                    {!imageGps && <div style={{ color: 'var(--text-muted)', lineHeight: 1.4 }}>The photo did not include GPS metadata; this is the location attached to the report.</div>}
+                  </div>;
+                })()}
+              </section>
+            )}
+
             <div
               style={{
                 background: 'var(--bg-primary, #F5F0E7)',
@@ -298,6 +337,12 @@ export const ReportModal: FC<ReportModalProps> = ({
                   {submissionResult.trust_score} / 100
                 </span>
               </div>
+
+              {Number(submissionResult.trust_reasons?.photo_consistency_penalty) < 0 && (
+                <div style={{ color: 'var(--risk-severe, #dc2626)', fontSize: 11.5, lineHeight: 1.4 }}>
+                  Photo does not support the flood report: {submissionResult.trust_reasons.photo_consistency_penalty} points.
+                </div>
+              )}
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ color: 'var(--text-muted, #706D62)', fontWeight: 500 }}>Verification State:</span>

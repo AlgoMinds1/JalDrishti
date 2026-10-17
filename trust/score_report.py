@@ -31,7 +31,8 @@ def score_report(
     nearby_reports: List[dict] = None,
     reporter_info: dict = None,
     rainfall_override: Optional[float] = None,
-    terrain_override: Optional[dict] = None
+    terrain_override: Optional[dict] = None,
+    photo_assessment: Optional[dict] = None
 ) -> dict:
     """
     Evaluates a citizen report and produces a 0-100 trust score and state.
@@ -101,7 +102,13 @@ def score_report(
     # EXIF presence is recorded separately and is not treated as proof of authenticity.
     photo_pts = 0
     if has_photo:
-        photo_pts = 15  # EXIF validated, non-duplicate
+        photo_pts = 15  # Validated photo, unless AI assessment finds no supporting evidence.
+        if photo_assessment and photo_assessment.get("status") == "analyzed":
+            relevance = photo_assessment.get("flood_relevance")
+            if relevance == "does_not_support":
+                photo_pts = 0
+            elif relevance == "unclear":
+                photo_pts = 7
 
     # 6. Text Consistency (Max 5)
     text_pts = 0
@@ -109,6 +116,12 @@ def score_report(
         text_pts = 5
 
     raw_score = corroboration_pts + rain_pts + terrain_pts + reputation_pts + photo_pts + text_pts
+    photo_mismatch_penalty = 10 if (
+        has_photo
+        and photo_assessment
+        and photo_assessment.get("status") == "analyzed"
+        and photo_assessment.get("flood_relevance") == "does_not_support"
+    ) else 0
 
     # Apply Hard Abuse Gates:
     final_score = raw_score
@@ -139,6 +152,10 @@ def score_report(
         else:
             state = "Unverified"
 
+    # A clearly unrelated image is misleading evidence, so it should reduce
+    # the score even when another hard gate already capped the raw score.
+    final_score = max(0, final_score - photo_mismatch_penalty)
+
     return {
         "trust_score": round(float(final_score), 1),
         "trust_reasons": {
@@ -147,6 +164,7 @@ def score_report(
             "terrain_plausibility": terrain_pts,
             "reputation": reputation_pts,
             "photo": photo_pts,
+            "photo_consistency_penalty": -photo_mismatch_penalty,
             "text_consistency": text_pts
         },
         "state": state,
