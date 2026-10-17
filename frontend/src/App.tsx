@@ -22,6 +22,7 @@ import { SignInPage } from './pages/SignInPage';
 import { ScenarioReplayBar, type ScenarioId } from './components/ScenarioReplayBar';
 import { simulateEventScenario, type SegmentCollection } from './data/scenarioSimulation';
 import { WifiOff } from 'lucide-react';
+import { speechLocale, useAppLanguage } from './language';
 import {
   cachePredictions,
   getCachedPredictions,
@@ -30,6 +31,7 @@ import {
 } from './utils/offlineStorage';
 
 export function App() {
+  const { language } = useAppLanguage();
   type AppTab = 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay' | 'assistant' | 'settings';
   const tabForPath = (path: string): AppTab => ({ '/': 'home', '/landing': 'home', '/signin': 'signin', '/dashboard/live-map': 'map', '/dashboard/evaluation': 'evaluate', '/dashboard/limitations': 'limits', '/dashboard/replay': 'replay', '/dashboard/ai-chat': 'assistant', '/dashboard/settings': 'settings' } as Record<string, AppTab>)[path] ?? 'home';
   const pathForTab: Record<AppTab, string> = { home: '/landing', signin: '/signin', map: '/dashboard/live-map', evaluate: '/dashboard/evaluation', limits: '/dashboard/limitations', replay: '/dashboard/replay', assistant: '/dashboard/ai-chat', settings: '/dashboard/settings' };
@@ -56,6 +58,7 @@ export function App() {
   const [baseRoadSegments, setBaseRoadSegments] = useState<SegmentCollection | null>(null);
   const [simulationSummary, setSimulationSummary] = useState<{ mean_risk_score: number; increasing_segments: number; easing_segments: number } | null>(null);
   const apiUnavailable = useRef(false);
+  const spokenPushIds = useRef(new Set<string>());
   const [reportsData, setReportsData] = useState<any>(null);
   const [showReportsLayer, setShowReportsLayer] = useState<boolean>(true);
   const [targetCoords, setTargetCoords] = useState<{ lat: number; lon: number; name: string } | null>(null);
@@ -82,6 +85,30 @@ export function App() {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('jaldrishti_theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    if (!('serviceWorker' in navigator) || !('speechSynthesis' in window)) return;
+    const onPushNotice = (event: MessageEvent) => {
+      if (event.data?.type !== 'JALDRISHTI_PUSH_NOTICE') return;
+      const notice = event.data.notice;
+      const id = String(notice?.id ?? '');
+      if (!id || spokenPushIds.current.has(id)) return;
+      spokenPushIds.current.add(id);
+      const localized = notice.translations?.[language];
+      const title = String(localized?.title || notice.title || '').trim();
+      const body = String(localized?.body || notice.body || '').trim();
+      if (!title && !body) return;
+      window.speechSynthesis.cancel();
+      [title, body].filter(Boolean).forEach((text, index, parts) => {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = speechLocale(language);
+        if (index === parts.length - 1) utterance.onerror = () => spokenPushIds.current.delete(id);
+        window.speechSynthesis.speak(utterance);
+      });
+    };
+    navigator.serviceWorker.addEventListener('message', onPushNotice);
+    return () => navigator.serviceWorker.removeEventListener('message', onPushNotice);
+  }, [language]);
 
   // Register offline Service Worker
   useEffect(() => {

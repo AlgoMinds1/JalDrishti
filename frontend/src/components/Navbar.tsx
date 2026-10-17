@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type FC } from 'react';
+import { useCallback, useEffect, useState, type FC } from 'react';
 import axios from 'axios';
 import {
   Map,
@@ -49,8 +49,6 @@ export const Navbar: FC<NavbarProps> = ({
   const [unreadCount, setUnreadCount] = useState(0);
   const [isInboxOpen, setIsInboxOpen] = useState(false);
   const [speakingId, setSpeakingId] = useState<number | null>(null);
-  const knownNotificationIds = useRef(new Set<number>());
-  const hasNotificationBaseline = useRef(false);
   const [adminUnreadCount, setAdminUnreadCount] = useState(0);
   const [adminReportIds, setAdminReportIds] = useState<string[]>([]);
 
@@ -75,13 +73,6 @@ export const Navbar: FC<NavbarProps> = ({
     });
   }, [language, speakingId, t]);
 
-  const announceNewNotice = useCallback((notice: AppNotice) => {
-    if (!knownNotificationIds.current.has(notice.id)) {
-      knownNotificationIds.current.add(notice.id);
-      speakNotice(notice, true);
-    }
-  }, [speakNotice]);
-
   const fetchNotifications = useCallback(async () => {
     // If offline, read cached notifications from localStorage immediately
     if (typeof navigator !== 'undefined' && !navigator.onLine) {
@@ -104,14 +95,6 @@ export const Navbar: FC<NavbarProps> = ({
           // Ignore local storage quota limits
         }
       }
-      if (!hasNotificationBaseline.current) {
-        rows.forEach(row => knownNotificationIds.current.add(row.id));
-        hasNotificationBaseline.current = true;
-      } else {
-        const newRows = rows.filter(row => !knownNotificationIds.current.has(row.id));
-        if (newRows.length) announceNewNotice(newRows[0]);
-        rows.forEach(row => knownNotificationIds.current.add(row.id));
-      }
       setNotifications(rows);
       let readIds: number[] = [];
       try { readIds = JSON.parse(localStorage.getItem('jaldrishti_read_notifications') || '[]'); } catch { /* reset malformed local state */ }
@@ -126,7 +109,7 @@ export const Navbar: FC<NavbarProps> = ({
         return [];
       }
     }
-  }, [announceNewNotice]);
+  }, []);
 
   useEffect(() => {
     void fetchNotifications();
@@ -135,17 +118,6 @@ export const Navbar: FC<NavbarProps> = ({
   }, [fetchNotifications]);
 
   useEffect(() => () => window.speechSynthesis?.cancel(), []);
-
-  useEffect(() => {
-    const onServiceWorkerMessage = (event: MessageEvent) => {
-      if (event.data?.type !== 'JALDRISHTI_PUSH_NOTICE') return;
-      const notice = event.data.notice as AppNotice;
-      if (!notice || typeof notice.id !== 'number' || !notice.title || !notice.body) return;
-      announceNewNotice(notice);
-    };
-    navigator.serviceWorker?.addEventListener('message', onServiceWorkerMessage);
-    return () => navigator.serviceWorker?.removeEventListener('message', onServiceWorkerMessage);
-  }, [announceNewNotice]);
 
   useEffect(() => {
     const refreshAdminReports = async () => {

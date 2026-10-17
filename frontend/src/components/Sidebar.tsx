@@ -10,6 +10,7 @@ import {
   ShieldCheck
 } from 'lucide-react';
 import { useAppLanguage } from '../language';
+import { formatRelativeAge, getAgeStatusColor } from '../utils/formatRelativeAge';
 
 interface SidebarProps {
   activeTab: 'home' | 'signin' | 'map' | 'evaluate' | 'limits' | 'replay' | 'assistant' | 'settings';
@@ -44,7 +45,9 @@ export const Sidebar: FC<SidebarProps> = ({
   }, [activeTab]);
 
   const isMapSelected = selectedItem === 'map';
-  const { t } = useAppLanguage();
+  const { t, language } = useAppLanguage();
+  const rainAgeColor = getAgeStatusColor(rainAgeMin);
+  const locale = language === 'hi' ? 'hi-IN' : language === 'mr' ? 'mr-IN' : 'en-IN';
 
   return (
     <aside
@@ -282,8 +285,8 @@ export const Sidebar: FC<SidebarProps> = ({
                 width: '8px',
                 height: '8px',
                 borderRadius: '50%',
-                backgroundColor: 'var(--status-green, #16866A)',
-                boxShadow: '0 0 6px rgba(22, 134, 106, 0.6)'
+                backgroundColor: rainAgeColor,
+                boxShadow: `0 0 6px color-mix(in srgb, ${rainAgeColor} 60%, transparent)`
               }}
             />
             <div>
@@ -291,7 +294,7 @@ export const Sidebar: FC<SidebarProps> = ({
                 {t('rainData')}
               </div>
               <div style={{ fontSize: '10.5px', color: 'var(--text-muted, #706D62)' }}>
-                {t('updated')} {rainAgeMin} {t('minAgo')}
+                {t('updated')} {formatRelativeAge(rainAgeMin, locale)}
               </div>
             </div>
           </div>

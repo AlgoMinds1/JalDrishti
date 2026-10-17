@@ -1,6 +1,7 @@
 import { useState, useEffect, type FC, type Dispatch, type SetStateAction } from 'react';
 import { CalendarClock, CloudRain, Play, Pause, ChevronUp, ChevronDown } from 'lucide-react';
 import { useAppLanguage } from '../language';
+import { formatRelativeAge, getAgeStatusColor } from '../utils/formatRelativeAge';
 
 interface TimeSliderProps {
   currentHour: number;
@@ -25,6 +26,8 @@ export const TimeSlider: FC<TimeSliderProps> = ({
   onOpenReplay
 }) => {
   const { t, language } = useAppLanguage();
+  const locale = language === 'hi' ? 'hi-IN' : language === 'mr' ? 'mr-IN' : 'en-IN';
+  const rainAgeColor = getAgeStatusColor(rainAgeMin);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isOverviewExpanded, setIsOverviewExpanded] = useState(false);
 
@@ -190,8 +193,8 @@ export const TimeSlider: FC<TimeSliderProps> = ({
               <span style={{ fontSize: '10.5px', color: 'var(--text-muted, #706D62)' }}>
                 {t('radarAge')}
               </span>
-              <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--status-green, #16866A)' }}>
-                {new Intl.NumberFormat(language === 'hi' ? 'hi-IN' : language === 'mr' ? 'mr-IN' : 'en-IN').format(rainAgeMin)}m {t('ago')}
+              <span style={{ fontSize: '13px', fontWeight: 600, color: rainAgeColor }}>
+                {formatRelativeAge(rainAgeMin, locale)}
               </span>
             </div>
           </div>
